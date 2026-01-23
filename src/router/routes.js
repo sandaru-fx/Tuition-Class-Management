@@ -20,8 +20,14 @@ const routes = [
       { path: 'classes', component: () => import('pages/ClassesPage.vue') },
       { path: 'exams', component: () => import('pages/ExamsPage.vue') },
       { path: 'communication', component: () => import('pages/CommunicationPage.vue') },
-      { path: 'payments', component: () => import('pages/PaymentsPage.vue') },
       { path: 'attendance', component: () => import('pages/AttendancePage.vue') }
+    ]
+  },
+  {
+    path: '/student',
+    component: () => import('layouts/StudentLayout.vue'),
+    children: [
+        { path: '', component: () => import('pages/StudentDashboardPage.vue') }
     ]
   },
 

@@ -212,6 +212,7 @@ async function sendSMS() {
         smsMessage.value = ''
         fetchLogs()
     } catch (e) {
+        console.error(e)
         $q.notify({ type: 'negative', message: 'Failed to send SMS' })
     } finally {
         sendingSMS.value = false
@@ -229,6 +230,7 @@ async function postNotice() {
         showNoticeDialog.value = false
         noticeForm.value = { title: '', message: '', audience: 'All Students', is_pinned: false }
     } catch (e) {
+        console.error(e)
         $q.notify({ type: 'negative', message: 'Failed to post notice' })
     } finally {
         postingNotice.value = false

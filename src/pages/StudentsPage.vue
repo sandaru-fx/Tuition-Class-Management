@@ -131,6 +131,19 @@
              
              <q-toggle v-model="form.is_active" label="Active Student" />
 
+             <div class="q-mt-md q-pt-md border-top">
+                <div class="row items-center justify-between q-mb-sm">
+                    <div class="text-subtitle1 text-weight-bold font-outfit text-primary">Login Access</div>
+                    <q-toggle v-model="form.create_account" color="primary" label="Create Student Account" left-label />
+                </div>
+
+                <div v-if="form.create_account" class="q-gutter-y-sm bg-blue-grey-1 q-pa-md rounded-borders q-mt-sm">
+                    <div class="text-caption text-grey-7 q-mb-xs">The student will use these details to login to their portal.</div>
+                    <q-input outlined v-model="form.email" label="Student Email *" dense bg-color="white" :rules="[val => !!val || 'Required']" />
+                    <q-input outlined v-model="form.password" label="Initial Password *" dense type="password" bg-color="white" :rules="[val => !!val || 'Required']" />
+                </div>
+             </div>
+
             <div class="row justify-end q-mt-lg">
                  <q-btn flat label="Cancel" color="grey-7" v-close-popup no-caps class="q-mr-sm" />
                  <q-btn unelevated :label="isEditing ? 'Update Student' : 'Register Student'" color="black" type="submit" :loading="submitting" no-caps />
@@ -187,7 +200,10 @@ const form = ref({
   grade: '',
   address: '',
   gender: '',
-  is_active: true
+  is_active: true,
+  create_account: false,
+  email: '',
+  password: ''
 })
 
 const filteredStudents = computed(() => {
@@ -230,7 +246,10 @@ function openAddDialog() {
     grade: '',
     address: '',
     gender: '',
-    is_active: true
+    is_active: true,
+    create_account: false,
+    email: '',
+    password: ''
   }
   showDialog.value = true
 }
@@ -246,7 +265,12 @@ async function saveStudent() {
   try {
     const studentData = { ...form.value }
     delete studentData.id 
+    delete studentData.create_account
+    delete studentData.email
+    delete studentData.password
     
+    let studentId = form.value.id
+
     if (isEditing.value) {
       const { error } = await supabase
         .from('students')
@@ -255,11 +279,33 @@ async function saveStudent() {
       if (error) throw error
       $q.notify({ type: 'positive', message: 'Student updated successfully' })
     } else {
-      const { error } = await supabase
+      // 1. Create Student Record
+      const { data, error } = await supabase
         .from('students')
         .insert([studentData])
+        .select()
+        .single()
       if (error) throw error
+      
+      studentId = data.id
       $q.notify({ type: 'positive', message: 'Student registered successfully' })
+
+      // 2. Create Login Account (If checked)
+      if (form.value.create_account) {
+          const { error: rpcError } = await supabase.rpc('create_student_user', {
+              student_email: form.value.email,
+              student_password: form.value.password,
+              student_first_name: form.value.first_name,
+              student_db_id: studentId
+          })
+          
+          if (rpcError) {
+              console.error('RPC Error:', rpcError)
+              $q.notify({ type: 'warning', message: 'Student created, but Login creation failed. Email might exist.' })
+          } else {
+              $q.notify({ type: 'positive', message: 'Login account created successfully!' })
+          }
+      }
     }
     
     await fetchStudents()
@@ -319,5 +365,8 @@ onMounted(() => {
 }
 .transition-all {
   transition: all 0.3s ease;
+}
+.border-top {
+  border-top: 1px solid rgba(0,0,0,0.1);
 }
 </style>

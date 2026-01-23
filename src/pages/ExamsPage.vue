@@ -190,7 +190,6 @@ const classesOptions = ref([])
 const studentsList = ref([]) // Students in the selected class/exam
 const marksMap = ref({}) // Dictionary keyed by student_id to store marks/remarks
 
-const loading = ref(false)
 const submitting = ref(false)
 const savingMarks = ref(false)
 
@@ -224,7 +223,9 @@ async function fetchExams() {
     .from('exams')
     .select('*, classes(subject, grade)')
     .order('created_at', { ascending: false })
-  if (error) console.error(error)
+  if (error) {
+     console.error(error)
+  }
   else exams.value = data
 }
 
@@ -253,6 +254,7 @@ async function saveExam() {
         fetchExams()
         showCreateDialog.value = false
     } catch (e) {
+        console.error(e)
         $q.notify({ type: 'negative', message: 'Error creating exam' })
     } finally {
         submitting.value = false

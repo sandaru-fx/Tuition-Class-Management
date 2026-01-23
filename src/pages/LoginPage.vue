@@ -83,20 +83,32 @@ async function handleLogin() {
       throw new Error('System configuration error: Supabase not configured.')
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value,
     })
     
-    if (error) throw error
+    if (signInError) throw signInError
+
+    // Check Profile Role
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
     
     $q.notify({
       type: 'positive',
       message: 'Login successful!',
       position: 'top'
     })
-    // Redirect to dashboard
-    router.push('/dashboard')
+
+    // Redirect based on role
+    if (profile && profile.role === 'student') {
+        router.push('/student')
+    } else {
+        router.push('/dashboard')
+    }
   } catch (error) {
     $q.notify({
       type: 'negative',
