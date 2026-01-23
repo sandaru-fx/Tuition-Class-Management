@@ -3,7 +3,10 @@
     <!-- Header -->
     <div class="row items-center q-mb-xl">
       <div>
-        <h1 class="text-h4 text-weight-bold text-dark q-mb-xs font-outfit">Student Management</h1>
+        <h1 class="text-h4 text-weight-bold text-dark q-mb-xs font-outfit">
+          Student Management
+          <q-badge color="grey-3" text-color="grey-7" label="v2.1" class="q-ml-sm" />
+        </h1>
         <p class="text-grey-7 q-mb-none text-subtitle1">Manage student enrollments, profiles, and status.</p>
       </div>
       <q-space />
@@ -52,23 +55,23 @@
             <td class="q-pl-lg">
               <div class="row items-center">
                 <q-avatar size="36px" color="blue-1" text-color="blue-8" class="q-mr-md text-weight-bold">
-                  {{ student.first_name ? student.first_name.charAt(0) : '?' }}
+                  {{ (student.first_name || student.full_name || '?').charAt(0) }}
                 </q-avatar>
                 <div class="column">
-                  <span class="text-weight-bold text-dark">{{ student.first_name }} {{ student.last_name }}</span>
+                  <span class="text-weight-bold text-dark">{{ student.first_name || student.full_name }} {{ student.last_name || '' }}</span>
                   <span class="text-caption text-grey-6">{{ student.address }}</span>
                 </div>
               </div>
             </td>
             <td>
               <q-badge color="purple-1" text-color="purple-9" class="q-px-sm text-weight-bold">
-                {{ student.grade }}
+                {{ student.grade || 'N/A' }}
               </q-badge>
             </td>
             <td class="text-grey-8">{{ student.school || '-' }}</td>
              <td class="text-grey-8">
                 <div class="column">
-                    <span class="text-caption"><q-icon name="smartphone" class="q-mr-xs"/>{{ student.whatsapp_number }}</span>
+                    <span class="text-caption"><q-icon name="smartphone" class="q-mr-xs"/>{{ student.whatsapp_number || 'N/A' }}</span>
                     <span v-if="student.parent_phone" class="text-caption text-grey-6"><q-icon name="phone" class="q-mr-xs"/>{{ student.parent_phone }}</span>
                 </div>
             </td>
@@ -131,16 +134,20 @@
              
              <q-toggle v-model="form.is_active" label="Active Student" />
 
-             <div class="q-mt-md q-pt-md border-top">
-                <div class="row items-center justify-between q-mb-sm">
-                    <div class="text-subtitle1 text-weight-bold font-outfit text-primary">Login Access</div>
-                    <q-toggle v-model="form.create_account" color="primary" label="Create Student Account" left-label />
+             <div class="q-mt-md q-pt-md border-top bg-blue-grey-1 q-pa-sm rounded-borders">
+                <div class="row items-center justify-between q-pa-xs">
+                    <div class="text-subtitle1 text-weight-bolder font-outfit text-primary">
+                        <q-icon name="key" class="q-mr-xs" /> Login Access
+                    </div>
+                    <q-checkbox v-model="form.create_account" label="Enable Student Login" color="primary" />
                 </div>
 
-                <div v-if="form.create_account" class="q-gutter-y-sm bg-blue-grey-1 q-pa-md rounded-borders q-mt-sm">
-                    <div class="text-caption text-grey-7 q-mb-xs">The student will use these details to login to their portal.</div>
-                    <q-input outlined v-model="form.email" label="Student Email *" dense bg-color="white" :rules="[val => !!val || 'Required']" />
-                    <q-input outlined v-model="form.password" label="Initial Password *" dense type="password" bg-color="white" :rules="[val => !!val || 'Required']" />
+                <div v-show="form.create_account" class="q-mt-sm q-pa-md bg-white rounded-borders shadow-1">
+                    <div class="text-caption text-grey-7 q-mb-md">Enter an email and initial password for the student.</div>
+                    <div class="q-gutter-y-md">
+                        <q-input outlined v-model="form.email" label="Student Email *" dense :rules="[val => !!val || 'Required']" />
+                        <q-input outlined v-model="form.password" label="Initial Password *" dense type="password" :rules="[val => !!val || 'Required']" />
+                    </div>
                 </div>
              </div>
 
@@ -161,7 +168,7 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none text-grey-8">
-          Are you sure you want to delete <strong>{{ studentToDelete?.first_name }}</strong>?
+          Are you sure you want to delete <strong>{{ studentToDelete?.first_name || studentToDelete?.full_name }}</strong>?
         </q-card-section>
 
         <q-card-actions align="right">
@@ -212,6 +219,7 @@ const filteredStudents = computed(() => {
   return users.value.filter(s => 
     s.first_name?.toLowerCase().includes(query) || 
     s.last_name?.toLowerCase().includes(query) || 
+    (s.full_name && s.full_name.toLowerCase().includes(query)) ||
     s.whatsapp_number?.includes(query)
   )
 })
@@ -228,7 +236,7 @@ async function fetchStudents() {
     users.value = data
   } catch (error) {
     console.error(error)
-    $q.notify({ type: 'negative', message: 'Failed to load students' })
+    $q.notify({ type: 'negative', message: 'Failed to load students: ' + error.message })
   } finally {
     loading.value = false
   }
@@ -269,6 +277,9 @@ async function saveStudent() {
     delete studentData.email
     delete studentData.password
     
+    // Maintain compatibility with old full_name column
+    studentData.full_name = `${studentData.first_name} ${studentData.last_name}`.trim()
+    
     let studentId = form.value.id
 
     if (isEditing.value) {
@@ -285,7 +296,11 @@ async function saveStudent() {
         .insert([studentData])
         .select()
         .single()
-      if (error) throw error
+      
+      if (error) {
+          console.error('Insert Error:', error)
+          throw error
+      }
       
       studentId = data.id
       $q.notify({ type: 'positive', message: 'Student registered successfully' })
@@ -301,7 +316,7 @@ async function saveStudent() {
           
           if (rpcError) {
               console.error('RPC Error:', rpcError)
-              $q.notify({ type: 'warning', message: 'Student created, but Login creation failed. Email might exist.' })
+              $q.notify({ type: 'warning', message: 'Student created, but Login creation failed: ' + rpcError.message })
           } else {
               $q.notify({ type: 'positive', message: 'Login account created successfully!' })
           }
@@ -311,8 +326,12 @@ async function saveStudent() {
     await fetchStudents()
     showDialog.value = false
   } catch (error) {
-    console.error(error)
-    $q.notify({ type: 'negative', message: 'Error saving student' })
+    console.error('Final Save Error:', error)
+    $q.notify({ 
+        type: 'negative', 
+        message: 'Error saving student: ' + (error.message || 'Unknown error'),
+        caption: error.details || ''
+    })
   } finally {
     submitting.value = false
   }
