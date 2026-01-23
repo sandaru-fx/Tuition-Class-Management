@@ -27,7 +27,12 @@ const routes = [
     path: '/student',
     component: () => import('layouts/StudentLayout.vue'),
     children: [
-        { path: '', component: () => import('pages/StudentDashboardPage.vue') }
+        { path: '', component: () => import('pages/StudentDashboardPage.vue') },
+        { path: 'courses', component: () => import('pages/StudentCoursesPage.vue') },
+        { path: 'assignments', component: () => import('pages/StudentAssignmentsPage.vue') },
+        { path: 'grades', component: () => import('pages/StudentPerformancePage.vue') },
+        { path: 'schedule', component: () => import('pages/StudentSchedulePage.vue') },
+        { path: 'settings', component: () => import('pages/StudentSettingsPage.vue') }
     ]
   },
 
