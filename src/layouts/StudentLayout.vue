@@ -1,59 +1,73 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-grey-1">
+  <q-layout view="lHh LpR fFf" class="bg-gray-soft">
 
-    <q-header class="bg-white text-dark shadow-1" height-hint="64">
-      <q-toolbar class="q-py-sm q-px-md">
-        <q-btn flat round dense icon="menu" class="lt-md" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title class="text-weight-bold font-outfit text-primary q-ml-md">
-            Tuition<span class="text-dark">App</span>
-        </q-toolbar-title>
-
-        <!-- Search Bar (Hidden on small screens) -->
-        <q-input 
-            dense 
-            outlined 
-            v-model="search" 
-            placeholder="Search for lessons..." 
-            class="gt-sm q-ml-xl" 
-            style="width: 300px" 
-            bg-color="grey-1"
-            rounded
-        >
-            <template v-slot:prepend>
-                <q-icon name="search" color="grey-5" />
-            </template>
-        </q-input>
+    <!-- Top Bar: Clean & Minimal -->
+    <q-header class="bg-white/80 backdrop-blur text-slate-900 border-b border-slate-100" height-hint="72">
+      <q-toolbar class="q-py-md q-px-xl">
+        <q-btn flat round dense icon="menu" class="lt-md q-mr-sm" @click="toggleLeftDrawer" />
+        
+        <div class="row items-center gt-sm">
+             <div class="text-h6 font-outfit text-weight-black tracking-tighter">
+                ELEVATE<span class="text-blue-600">.</span>
+             </div>
+        </div>
 
         <q-space />
 
-        <div class="row items-center q-gutter-sm">
-            <!-- Dark Mode Toggle -->
-            <q-btn flat round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="grey-7" @click="toggleDark" />
+        <!-- Search bar: SaaS Styled -->
+        <div class="gt-xs relative-position q-mr-md" style="width: 350px">
+            <q-input 
+                dense 
+                borderless
+                v-model="search" 
+                placeholder="Search courses, lessons..." 
+                class="bg-slate-50 rounded-xl q-px-md overflow-hidden" 
+                input-class="text-weight-medium"
+            >
+                <template v-slot:prepend>
+                    <q-icon name="search" size="20px" class="text-slate-400" />
+                </template>
+            </q-input>
+        </div>
+
+        <div class="row items-center q-gutter-md">
+            <!-- Theme Toggle -->
+            <q-btn flat round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" size="12px" class="text-slate-500 hover:bg-slate-50" @click="toggleDark" />
 
             <!-- Notifications -->
-            <q-btn flat round color="grey-7" icon="notifications">
-                <q-badge color="red" floating>3</q-badge>
+            <q-btn flat round icon="notifications_none" size="12px" class="text-slate-500 hover:bg-slate-50">
+                <q-badge color="red" floating size="sm" rounded border-white />
             </q-btn>
 
-            <!-- Profile -->
-            <q-btn flat no-caps no-wrap class="q-ml-sm">
-                 <q-avatar color="blue-1" text-color="primary" font-size="14px" size="32px">
-                    {{ userInitials }}
-                 </q-avatar>
-                 <q-icon name="arrow_drop_down" size="16px" />
+            <q-separator vertical inset class="q-mx-sm bg-slate-100" />
 
-                 <q-menu>
-                    <q-list style="min-width: 150px">
-                        <q-item clickable v-close-popup>
-                            <q-item-section>Profile</q-item-section>
+            <!-- Profile Dropdown -->
+            <q-btn flat no-caps no-wrap class="q-pl-sm hover:bg-slate-50 rounded-lg">
+                 <div class="row items-center no-wrap">
+                    <div class="text-right q-mr-sm gt-xs">
+                        <div class="text-weight-bold text-caption text-slate-900 line-height-1">Sandaru Chamod</div>
+                        <div class="text-grey-6 text-caption text-weight-medium" style="font-size: 10px">Student ID: #20412</div>
+                    </div>
+                    <q-avatar size="36px" class="shadow-sm border-white border-2">
+                        <img src="https://ui-avatars.com/api/?name=Sandaru+Chamod&background=3b82f6&color=fff">
+                    </q-avatar>
+                 </div>
+                 <q-icon name="keyboard_arrow_down" size="16px" class="text-slate-400 q-ml-xs" />
+
+                 <q-menu transition-show="jump-down" transition-hide="jump-up" class="rounded-xl shadow-xl border-slate-50">
+                    <q-list style="min-width: 200px" class="q-pa-sm">
+                        <q-item clickable v-close-popup class="rounded-lg">
+                            <q-item-section avatar><q-icon name="person_outline" size="20px" /></q-item-section>
+                            <q-item-section class="text-weight-medium">My Profile</q-item-section>
                         </q-item>
-                        <q-item clickable v-close-popup>
-                            <q-item-section>Settings</q-item-section>
+                         <q-item clickable v-close-popup class="rounded-lg">
+                            <q-item-section avatar><q-icon name="settings" size="20px" /></q-item-section>
+                            <q-item-section class="text-weight-medium">Account Settings</q-item-section>
                         </q-item>
-                        <q-separator />
-                         <q-item clickable v-close-popup @click="logout" class="text-red">
-                            <q-item-section>Logout</q-item-section>
+                        <q-separator class="q-my-sm" />
+                         <q-item clickable v-close-popup @click="logout" class="text-red rounded-lg">
+                            <q-item-section avatar><q-icon name="logout" size="20px" /></q-item-section>
+                            <q-item-section class="text-weight-bold">Sign Out</q-item-section>
                         </q-item>
                     </q-list>
                  </q-menu>
@@ -62,67 +76,82 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" bordered class="bg-white">
-      <div class="column full-height">
-        <div class="q-pa-md row items-center">
-             <q-icon name="school" size="32px" color="primary" />
-             <div class="text-h6 font-outfit q-ml-sm text-weight-bold">Student<span class="text-primary">Portal</span></div>
+    <!-- Sidebar: Modern SaaS Style -->
+    <q-drawer v-model="leftDrawerOpen" side="left" bordered :width="280" class="bg-white border-r border-slate-100">
+      <div class="column full-height q-pa-lg">
+        
+        <!-- Logo for Sidebar -->
+        <div class="row items-center q-mb-xl q-px-sm justify-between">
+             <div class="text-h5 font-outfit text-weight-black tracking-tighter">
+                ELEVATE<span class="text-blue-600">.</span>
+             </div>
+             <q-btn flat round dense icon="chevron_left" class="lt-md" @click="toggleLeftDrawer" />
         </div>
 
-        <q-list padding class="q-mt-md">
-            <q-item clickable v-ripple to="/student" active-class="text-primary bg-blue-1">
+        <!-- Navigation Menu -->
+        <q-list class="q-gutter-y-sm">
+            <q-item clickable v-ripple to="/student" class="nav-item" active-class="nav-item--active">
                 <q-item-section avatar>
-                    <q-icon name="dashboard" />
+                    <q-icon name="grid_view" />
                 </q-item-section>
-                <q-item-section class="text-weight-bold">Dashboard</q-item-section>
+                <q-item-section class="text-weight-bold">Overview</q-item-section>
             </q-item>
 
-             <q-item clickable v-ripple to="/student/courses" active-class="text-primary bg-blue-1">
+             <q-item clickable v-ripple to="/student/courses" class="nav-item" active-class="nav-item--active">
                 <q-item-section avatar>
-                    <q-icon name="menu_book" />
+                    <q-icon name="auto_stories" />
                 </q-item-section>
-                <q-item-section class="text-weight-bold">My Courses</q-item-section>
+                <q-item-section class="text-weight-bold">Courses</q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/student/assignments" active-class="text-primary bg-blue-1">
+            <q-item clickable v-ripple to="/student/assignments" class="nav-item" active-class="nav-item--active">
                 <q-item-section avatar>
-                    <q-icon name="assignment" />
+                    <q-icon name="assignment_turned_in" />
                 </q-item-section>
                 <q-item-section class="text-weight-bold">Assignments</q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/student/grades" active-class="text-primary bg-blue-1">
+            <q-item clickable v-ripple to="/student/grades" class="nav-item" active-class="nav-item--active">
                 <q-item-section avatar>
-                    <q-icon name="grade" />
+                    <q-icon name="bar_chart" />
                 </q-item-section>
-                <q-item-section class="text-weight-bold">Grades</q-item-section>
+                <q-item-section class="text-weight-bold">Performance</q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/student/schedule" active-class="text-primary bg-blue-1">
+            <q-item clickable v-ripple to="/student/schedule" class="nav-item" active-class="nav-item--active">
                 <q-item-section avatar>
-                    <q-icon name="event" />
+                    <q-icon name="calendar_today" />
                 </q-item-section>
-                <q-item-section class="text-weight-bold">Schedule</q-item-section>
+                <q-item-section class="text-weight-bold">Calendar</q-item-section>
             </q-item>
         </q-list>
 
         <q-space />
 
-         <q-list padding class="q-mb-md">
-             <q-item clickable v-ripple to="/student/settings" active-class="text-primary bg-blue-1">
+         <!-- Bottom Navigation -->
+         <q-list class="q-gutter-y-sm q-mb-md">
+             <q-item clickable v-ripple to="/student/settings" class="nav-item" active-class="nav-item--active">
                 <q-item-section avatar>
-                    <q-icon name="settings" />
+                    <q-icon name="tune" />
                 </q-item-section>
                 <q-item-section class="text-weight-bold">Settings</q-item-section>
             </q-item>
             
-            <q-item clickable v-ripple @click="logout" class="text-red-7">
+            <q-item clickable v-ripple @click="logout" class="nav-item text-red-5">
                 <q-item-section avatar>
                     <q-icon name="logout" />
                 </q-item-section>
                 <q-item-section class="text-weight-bold">Logout</q-item-section>
             </q-item>
          </q-list>
+
+         <!-- Sidebar Footer: Upgrade Promo -->
+         <div class="bg-blue-600 rounded-2xl q-pa-md text-white q-mt-md relative-position overflow-hidden shadow-2xl">
+             <q-icon name="auto_awesome" class="absolute shadow-none opacity-20" size="60px" style="top: -10px; right: -10px" />
+             <div class="text-weight-bold q-mb-xs">Unlock Pro!</div>
+             <div class="text-caption opacity-80 q-mb-sm">Get AI tutoring and deep analytics.</div>
+             <q-btn unelevated color="white" text-color="blue-600" label="Go Pro" no-caps class="full-width rounded-lg text-weight-black" size="sm" />
+         </div>
       </div>
     </q-drawer>
 
@@ -145,13 +174,6 @@ const $q = useQuasar()
 const studentProfile = ref(null)
 const leftDrawerOpen = ref(true)
 const search = ref('')
-
-const userInitials = computed(() => {
-    if (!studentProfile.value?.full_name) return 'ST'
-    const parts = studentProfile.value.full_name.split(' ')
-    if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase()
-    return parts[0][0].toUpperCase()
-})
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -181,7 +203,7 @@ async function fetchProfile() {
 async function logout() {
   await supabase.auth.signOut()
   router.push('/login')
-  $q.notify({ type: 'positive', message: 'Logged out' })
+  $q.notify({ type: 'positive', message: 'Logged out successfully' })
 }
 
 onMounted(() => {
@@ -190,30 +212,87 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap');
+
 .font-outfit {
   font-family: 'Outfit', sans-serif;
 }
 
-// Dark Mode Overrides
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.bg-gray-soft {
+    background-color: #F8FAFC; // bg-slate-50
+}
+
+.line-height-1 {
+    line-height: 1.2;
+}
+
+.tracking-tighter {
+    letter-spacing: -0.05em;
+}
+
+// SaaS Navigation Item Styles
+.nav-item {
+    border-radius: 12px;
+    color: #64748b; // text-slate-500
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 10px 16px;
+    
+    .q-icon {
+        font-size: 20px;
+    }
+
+    &--active {
+        background: #2563eb !important; // bg-blue-600
+        color: white !important;
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+    }
+
+    &:hover:not(&--active) {
+        background: #f1f5f9; // bg-slate-100
+        color: #1e293b; // text-slate-800
+    }
+}
+
+// Dark Mode Overrides: SaaS Refinement
 .body--dark {
+    .bg-gray-soft {
+        background-color: #0f172a !important; // slate-900
+    }
     .q-layout {
-        background-color: #111827 !important; // Deep Dark Blue
+        background-color: #0f172a !important;
     }
     .q-header {
-        background-color: #1F2937 !important; // Slightly lighter
-        color: #F9FAFB !important;
+        background-color: rgba(30, 41, 59, 0.8) !important; // slate-800 with opacity
+        border-bottom-color: #334155;
+        color: #f1f5f9 !important;
     }
     .q-drawer {
-        background-color: #1F2937 !important;
-        border-right: 1px solid #374151;
+        background-color: #1e293b !important; // slate-800
+        border-right-color: #334155;
             
-        .q-item {
-             color: #D1D5DB;
-             &.q-router-link--active {
-                 color: #3B82F6 !important; // Brighter Blue
-                 background-color: rgba(59, 130, 246, 0.15) !important;
-             }
+        .text-slate-900, .text-dark {
+            color: #f1f5f9 !important;
         }
+
+        .nav-item {
+            color: #94a3b8;
+            &:hover:not(&--active) {
+                background: #334155;
+                color: white;
+            }
+        }
+    }
+    
+    .bg-white {
+        background-color: #1e293b !important;
+    }
+    
+    .bg-slate-50 {
+        background-color: #0f172a !important;
     }
 }
 </style>

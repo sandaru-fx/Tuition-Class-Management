@@ -1,47 +1,66 @@
 <template>
-  <q-page class="q-pa-md q-pa-lg-xl bg-grey-1">
+  <q-page class="q-pa-lg q-pa-xl-xl bg-gray-soft">
     
-    <!-- Hero Section: Resume Learning -->
-    <div class="row q-mb-lg">
+    <!-- Hero Section: Premium SaaS Banner -->
+    <div class="row q-mb-xl">
         <div class="col-12">
-            <q-card class="bg-dark text-white rounded-borders-lg shadow-2 overflow-hidden relative-position hover-scale">
-                <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" class="absolute-full opacity-30" style="filter: grayscale(100%) brightness(0.4);" />
+            <q-card flat class="hero-card text-white overflow-hidden relative-position shadow-2xl">
+                <!-- Glowing Background Elements -->
+                <div class="glow-1"></div>
+                <div class="glow-2"></div>
                 
-                <q-card-section class="q-pa-lg q-pa-md-xl relative-position z-top row items-center">
-                    <div class="col-12 col-md-8">
-                        <div class="text-subtitle1 text-blue-3 text-weight-bold text-uppercase letter-spacing-1 q-mb-sm">
-                            <q-icon name="waving_hand" /> Welcome Back, {{ studentProfile?.full_name?.split(' ')[0] || 'Student' }}!
+                <q-card-section class="q-pa-xl relative-position z-top row items-center no-wrap">
+                    <div class="col-12 col-md-7">
+                        <div class="badge-glass q-mb-lg inline-block">
+                             <q-icon name="sparkles" size="14px" class="q-mr-xs text-blue-3" />
+                             <span class="text-caption text-weight-bold tracking-widest text-uppercase">Recommended for you</span>
                         </div>
-                        <h1 class="text-h3 text-weight-bolder q-mb-md font-outfit leading-tight">
-                            Ready to master <br/> <span class="text-blue-4">Quadratic Equations?</span>
+                        
+                        <h1 class="text-h2 text-weight-black q-my-sm font-outfit leading-none tracking-tighter">
+                            Welcome Back, <br/>
+                            <span class="text-gradient">{{ studentProfile?.full_name?.split(' ')[0] || 'Sandaru' }}</span>
                         </h1>
-                        <p class="text-grey-4 text-body1 q-mb-lg" style="max-width: 600px;">
-                            You left off at <strong>Chapter 3: Algebra</strong>. Continue where you stopped to keep your streak alive!
+                        
+                        <p class="text-h6 text-blue-1 q-mt-md q-mb-xl font-medium opacity-80" style="max-width: 500px; line-height: 1.6">
+                            You're doing great! Last session you completed <span class="text-white text-weight-bold">Chapter 3: Linear Equations</span>. Ready for more?
                         </p>
-                        <q-btn 
-                            unelevated 
-                            color="blue-6" 
-                            text-color="white" 
-                            class="q-px-xl q-py-sm text-weight-bold shadow-blue"
-                            rounded
-                            icon-right="play_circle"
-                            label="Resume Learning" 
-                        />
+                        
+                        <div class="row q-gutter-md">
+                            <q-btn 
+                                unelevated 
+                                color="white" 
+                                text-color="blue-7" 
+                                class="q-px-xl q-py-md text-weight-black rounded-xl hover-scale transition-all"
+                                icon-right="play_arrow"
+                                label="Continue Learning" 
+                                no-caps
+                            />
+                             <q-btn 
+                                flat 
+                                class="q-px-lg text-white white-glass rounded-xl text-weight-bold"
+                                icon="calendar_today"
+                                label="My Schedule" 
+                                no-caps
+                            />
+                        </div>
                     </div>
-                    <!-- Circular Progress (Visual Candy) -->
-                    <div class="col-12 col-md-4 row justify-center gt-sm">
-                         <q-circular-progress
-                            show-value
-                            :value="65"
-                            size="160px"
-                            :thickness="0.15"
-                            color="blue-4"
-                            track-color="grey-8"
-                            class="text-blue-2 text-weight-bold text-h4"
-                            reverse
-                        >
-                            65%
-                        </q-circular-progress>
+
+                    <!-- Visual Representation: 3D Elements Placeholder or Chart -->
+                    <div class="col-md-5 gt-sm row justify-center perspective">
+                         <div class="stats-glass q-pa-lg text-center floating">
+                             <q-circular-progress
+                                show-value
+                                :value="72"
+                                size="180px"
+                                :thickness="0.12"
+                                color="white"
+                                track-color="white-opacity-10"
+                                class="text-white text-weight-black text-h3"
+                            >
+                                72<span style="font-size: 16px; opacity: 0.7">%</span>
+                            </q-circular-progress>
+                            <div class="q-mt-lg text-weight-bold text-subtitle1 opacity-90">Weekly Completion</div>
+                         </div>
                     </div>
                 </q-card-section>
             </q-card>
@@ -50,106 +69,94 @@
 
     <div class="row q-col-gutter-xl">
         
-        <!-- Left Column: Main Content -->
+        <!-- Main Content Area -->
         <div class="col-12 col-lg-8">
             
-            <!-- Quick Stats -->
-            <div class="row q-col-gutter-md q-mb-xl">
-                <div class="col-12 col-sm-6">
-                    <q-card flat class="bg-white rounded-borders-lg border-light q-pa-md row items-center no-wrap">
-                        <q-avatar color="green-1" text-color="green-7" icon="check_circle" size="50px" font-size="28px" />
-                         <div class="q-ml-md">
-                            <div class="text-h5 text-weight-bolder font-outfit text-dark">92%</div>
-                            <div class="text-caption text-grey-6 text-uppercase text-weight-bold">Attendance</div>
-                        </div>
-                    </q-card>
-                </div>
-                 <div class="col-12 col-sm-6">
-                    <q-card flat class="bg-white rounded-borders-lg border-light q-pa-md row items-center no-wrap">
-                        <q-avatar color="orange-1" text-color="orange-8" icon="emoji_events" size="50px" font-size="28px" />
-                         <div class="q-ml-md">
-                            <div class="text-h5 text-weight-bolder font-outfit text-dark">78/100</div>
-                            <div class="text-caption text-grey-6 text-uppercase text-weight-bold">Last Result</div>
-                        </div>
-                    </q-card>
-                </div>
+            <!-- Quick Insights Header -->
+            <div class="row items-center justify-between q-mb-lg">
+                <div class="text-h5 font-outfit text-weight-black text-slate-900 tracking-tight">Current Progress</div>
+                <q-btn flat dense no-caps color="blue-6" label="Manage all courses" icon-right="chevron_right" class="text-weight-bold" />
             </div>
 
-            <!-- My Courses -->
-            <div class="row items-center justify-between q-mb-md">
-                <div class="text-h5 font-outfit text-weight-bold text-dark">My Courses</div>
-                <q-btn flat dense no-caps color="primary" label="View All" icon-right="arrow_forward" />
-            </div>
-
+            <!-- Enhanced Course Grid -->
             <div class="row q-col-gutter-lg q-mb-xl">
-                <div class="col-12" v-for="course in courses" :key="course.id">
-                    <q-card flat bordered class="rounded-borders-lg hover-border-primary transition-all">
-                        <q-card-section class="row items-center cursor-pointer">
-                            <q-avatar rounded size="60px" :color="course.color" text-color="white" class="q-mr-md shadow-2">
-                                <span class="text-h6 text-weight-bold">{{ course.code }}</span>
-                            </q-avatar>
-                            
+                <div class="col-12 col-md-6" v-for="course in courses" :key="course.id">
+                    <q-card flat class="course-card q-pa-md transition-all">
+                        <div class="row items-start no-wrap">
+                            <div :class="`icon-box bg-${course.color}-soft text-${course.color}-600 q-mr-md`">
+                                <q-icon :name="course.icon" size="24px" />
+                            </div>
                             <div class="col">
-                                <div class="text-h6 text-weight-bold text-dark line-clamp-1">{{ course.name }}</div>
-                                <div class="text-caption text-grey-7 q-mb-sm">{{ course.lessons_completed }} / {{ course.total_lessons }} Lessons Completed</div>
-                                <q-linear-progress :value="course.progress" size="6px" :color="course.progress_color" rounded track-color="grey-2" />
+                                <div class="text-weight-black text-slate-900 text-subtitle1 q-mb-xs line-height-1">{{ course.name }}</div>
+                                <div class="text-caption text-slate-400 text-weight-medium q-mb-md">Standard Level • Grade 11</div>
+                                
+                                <div class="row items-center justify-between q-mb-xs">
+                                    <span class="text-caption text-weight-bold text-slate-900">{{ Math.round(course.progress * 100) }}% Completed</span>
+                                    <span class="text-caption text-slate-400">{{ course.lessons_completed }}/{{ course.total_lessons }}</span>
+                                </div>
+                                <q-linear-progress :value="course.progress" size="8px" :color="course.progress_color" rounded track-color="slate-50" />
                             </div>
-
-                             <div class="col-auto q-ml-md">
-                                <q-btn round flat icon="chevron_right" color="grey-5" />
-                            </div>
-                        </q-card-section>
+                        </div>
                     </q-card>
                 </div>
             </div>
 
+            <!-- Activity / Performance (Optional visual) -->
+            <div class="bg-white rounded-3xl q-pa-xl border-dashed border-2 border-slate-100 text-center q-mb-xl">
+                <q-icon name="insights" size="48px" color="slate-200" class="q-mb-md" />
+                <div class="text-h6 text-slate-900 text-weight-black">Learning Activity</div>
+                <p class="text-slate-400 q-mb-lg">Your study hours have increased by 15% this week. Keep it up!</p>
+                <!-- Placeholder for a Small Chart if needed -->
+                <div class="row justify-center q-gutter-x-sm">
+                    <div v-for="n in 7" :key="n" class="bg-slate-50 rounded-lg" :style="`width: 30px; height: ${30 + (Math.random() * 50)}px`" />
+                </div>
+            </div>
         </div>
 
-        <!-- Right Column: Sidebar Widgets -->
+        <!-- Sidebar Widgets -->
         <div class="col-12 col-lg-4">
             
-            <!-- Deadline Widget -->
-            <q-card flat bordered class="rounded-borders-lg bg-white q-mb-lg border-light">
-                <q-card-section class="row items-center justify-between q-pb-xs">
-                    <div class="text-h6 font-outfit text-weight-bold">Due This Week</div>
-                    <q-badge color="red-1" text-color="red-8" rounded label="2 Pending" />
-                </q-card-section>
+            <!-- Deadline Card -->
+            <q-card flat class="bg-white rounded-3xl q-mb-xl overflow-hidden border border-slate-50">
+                <q-card-section class="q-pa-lg">
+                    <div class="row items-center justify-between q-mb-lg">
+                        <div class="text-h6 text-weight-black text-slate-900 font-outfit">Upcoming</div>
+                        <q-btn round flat icon="more_horiz" color="slate-300" />
+                    </div>
 
-                <q-list separator>
-                    <q-item v-for="task in deadlines" :key="task.id" class="q-py-md">
-                        <q-item-section avatar top>
-                           <q-checkbox v-model="task.completed" color="grey-4" keep-color />
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label class="text-weight-bold text-dark">{{ task.title }}</q-item-label>
-                            <q-item-label caption class="text-red-5 text-weight-medium">
-                                <q-icon name="schedule" size="12px" class="q-mr-xs" />Due {{ task.due_date }}
-                            </q-item-label>
-                        </q-item-section>
-                        <q-item-section side>
-                            <q-btn flat round dense icon="upload_file" color="primary" size="sm" />
-                        </q-item-section>
-                    </q-item>
-                </q-list>
-                 <q-card-actions align="center" class="q-pt-none q-pb-md">
-                    <q-btn flat no-caps color="grey-7" label="View Calendar" size="sm" />
-                </q-card-actions>
+                    <q-list class="q-gutter-y-md">
+                        <q-item v-for="task in deadlines" :key="task.id" class="deadline-item q-pa-md transition-all">
+                            <q-item-section avatar>
+                                <div :class="`day-box ${task.urgent ? 'bg-red-50 text-red-600' : 'bg-slate-50 text-slate-500'}`">
+                                    <div class="text-weight-black">{{ task.day }}</div>
+                                    <div class="text-caption text-weight-bold" style="font-size: 10px">{{ task.month }}</div>
+                                </div>
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label class="text-weight-black text-slate-900">{{ task.title }}</q-item-label>
+                                <q-item-label caption class="text-weight-bold text-slate-400">{{ task.time }}</q-item-label>
+                            </q-item-section>
+                            <q-item-section side>
+                                <q-btn flat round icon="chevron_right" color="slate-300" size="sm" />
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+
+                    <q-btn flat no-caps color="blue-6" label="View full calendar" class="full-width q-mt-lg text-weight-bold" />
+                </q-card-section>
             </q-card>
 
-            <!-- AI Recommendation Mock -->
-            <q-card class="bg-gradient-purple text-white rounded-borders-lg shadow-2 relative-position overflow-hidden">
-                <div class="absolute-right" style="top: -20px; right: -20px; opacity: 0.2">
-                    <q-icon name="auto_awesome" size="120px" />
+            <!-- AI Insight Widget -->
+            <q-card flat class="bg-slate-900 text-white rounded-3xl q-pa-lg relative-position overflow-hidden shadow-xl">
+                 <div class="absolute-right" style="top: -20px; right: -20px; opacity: 0.1">
+                    <q-icon name="psychology" size="180px" />
                 </div>
-                <q-card-section class="relative-position z-top">
-                     <div class="row items-center q-mb-sm">
-                        <q-icon name="psychology" size="sm" class="q-mr-sm" />
-                        <div class="text-subtitle2 text-weight-bold text-uppercase opacity-80">AI Insight</div>
-                     </div>
-                     <div class="text-h6 text-weight-bold q-mb-xs">Weak in Algebra?</div>
-                     <p class="text-body2 opacity-90 q-mb-md">Your last quiz score was 55%. We recommend a quick review session.</p>
-                     <q-btn unelevated color="white" text-color="purple-9" label="Start Review" no-caps class="full-width text-weight-bold" />
-                </q-card-section>
+                <div class="badge-glass-dark q-mb-md inline-block">
+                    <span class="text-weight-bold tracking-widest text-uppercase" style="font-size: 10px">AI Assistant</span>
+                </div>
+                <div class="text-h6 text-weight-black q-mb-xs line-height-1">You're doing great in Science!</div>
+                <p class="text-body2 text-slate-400 q-mb-xl">Based on your recent tests, you might want to spend 15 more minutes on Organic Chemistry tonight.</p>
+                <q-btn unelevated color="blue-6" label="Start Review" no-caps class="full-width rounded-xl text-weight-black q-py-sm" />
             </q-card>
 
         </div>
@@ -165,16 +172,18 @@ import { supabase } from 'boot/supabase'
 const studentProfile = ref(null)
 const loading = ref(true)
 
-// Mock Data for Portfolio Showcase
+// Refined Mock Data
 const courses = ref([
-    { id: 1, name: 'Mathematics - Grade 11', code: 'MA', progress: 0.65, progress_color: 'blue', color: 'blue-5', lessons_completed: 13, total_lessons: 20 },
-    { id: 2, name: 'Science - Grade 11', code: 'SC', progress: 0.40, progress_color: 'orange', color: 'orange-5', lessons_completed: 8, total_lessons: 20 },
-    { id: 3, name: 'English Literature', code: 'EN', progress: 0.90, progress_color: 'green', color: 'green-5', lessons_completed: 18, total_lessons: 20 },
+    { id: 1, name: 'Advanced Mathematics', code: 'MA', progress: 0.72, progress_color: 'blue-6', color: 'blue', icon: 'functions', lessons_completed: 18, total_lessons: 25 },
+    { id: 2, name: 'Physics & Relativity', code: 'PH', progress: 0.45, progress_color: 'orange-6', color: 'orange', icon: 'lightbulb', lessons_completed: 9, total_lessons: 20 },
+    { id: 3, name: 'Modern Biology', code: 'BI', progress: 0.88, progress_color: 'green-6', color: 'green', icon: 'biotech', lessons_completed: 22, total_lessons: 25 },
+    { id: 4, name: 'Global History', code: 'HI', progress: 0.30, progress_color: 'purple-6', color: 'purple', icon: 'public', lessons_completed: 6, total_lessons: 20 },
 ])
 
 const deadlines = ref([
-    { id: 1, title: 'Algebra Worksheet 3.2', due_date: 'Tomorrow, 5:00 PM', completed: false },
-    { id: 2, title: 'Science Lab Report', due_date: 'Friday, 10:00 AM', completed: false },
+    { id: 1, title: 'Calculus Assignment', time: '05:00 PM', day: '24', month: 'JAN', urgent: true },
+    { id: 2, title: 'Physics Lab Viva', time: '10:00 AM', day: '26', month: 'JAN', urgent: false },
+    { id: 3, title: 'Biology Report', time: '02:00 PM', day: '28', month: 'JAN', urgent: false },
 ])
 
 async function fetchProfile() {
@@ -199,57 +208,143 @@ async function fetchProfile() {
 onMounted(() => {
   fetchProfile()
 })
-
 </script>
 
 <style lang="scss" scoped>
-.font-outfit {
-  font-family: 'Outfit', sans-serif;
-}
-.leading-tight {
-    line-height: 1.1;
-}
-.rounded-borders-lg {
-    border-radius: 20px;
-}
-.border-light {
-    border: 1px solid #f3f4f6;
-}
-.opacity-30 {
-    opacity: 0.3;
-}
-.opacity-80 {
-    opacity: 0.8;
-}
-.opacity-90 {
-    opacity: 0.9;
-}
-.shadow-blue {
-    box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
-}
-.hover-scale {
-    transition: transform 0.3s ease;
-    &:hover {
-        transform: scale(1.01);
+.font-outfit { font-family: 'Outfit', sans-serif; }
+.leading-none { line-height: 1; }
+.tracking-tighter { letter-spacing: -3px; }
+
+.bg-gray-soft { background-color: #F8FAFC; }
+
+// Hero Card Styling
+.hero-card {
+    background: #1e293b;
+    border-radius: 40px;
+    z-index: 1;
+    
+    .glow-1 {
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(37, 99, 235, 0.4) 0%, transparent 70%);
+        z-index: 0;
+    }
+    .glow-2 {
+        position: absolute;
+        bottom: -150px;
+        left: -100px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
+        z-index: 0;
     }
 }
-.hover-border-primary {
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
+
+.text-gradient {
+    background: linear-gradient(to right, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.badge-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 100px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.badge-glass-dark {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 14px;
+    border-radius: 100px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.white-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    &:hover { background: rgba(255, 255, 255, 0.1); }
+}
+
+.stats-glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+// Stats & Cards
+.course-card {
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    
     &:hover {
-        border-color: #3b82f6; // Tailwind blue-500
-        background: #fdfdfd;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border-color: #3b82f6;
     }
 }
-.bg-gradient-purple {
-    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+
+.bg-blue-soft { background: #eff6ff; }
+.bg-orange-soft { background: #fff7ed; }
+.bg-green-soft { background: #f0fdf4; }
+.bg-purple-soft { background: #faf5ff; }
+
+.deadline-item {
+    border-radius: 16px;
+    &:hover { background: #f8fafc; }
+}
+
+.day-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+.transition-all { transition: all 0.3s ease; }
+.hover-scale:hover { transform: scale(1.05); }
+
+// Dark Mode
+.body--dark {
+    .bg-gray-soft { background-color: #0f172a !important; }
+    .course-card, .bg-white { 
+        background-color: #1e293b !important;
+        border-color: #334155;
+    }
+    .text-slate-900 { color: #f1f5f9 !important; }
+    .text-slate-400 { color: #94a3b8 !important; }
+    .bg-slate-50, .deadline-item:hover { background: #334155 !important; }
 }
 </style>
