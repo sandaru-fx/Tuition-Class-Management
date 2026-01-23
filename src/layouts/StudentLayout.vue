@@ -38,8 +38,8 @@
 
             <!-- Profile -->
             <q-btn flat no-caps no-wrap class="q-ml-sm">
-                 <q-avatar size="32px">
-                    <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+                 <q-avatar color="blue-1" text-color="primary" font-size="14px" size="32px">
+                    {{ userInitials }}
                  </q-avatar>
                  <q-icon name="arrow_drop_down" size="16px" />
 
