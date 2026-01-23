@@ -237,23 +237,49 @@ body {
 // SaaS Navigation Item Styles
 .nav-item {
     border-radius: 12px;
-    color: #64748b; // text-slate-500
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 10px 16px;
+    color: #64748B; // text-slate-500
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 12px 16px;
+    margin: 4px 0;
+    position: relative;
+    overflow: hidden;
     
     .q-icon {
-        font-size: 20px;
-    }
-
-    &--active {
-        background: #2563eb !important; // bg-blue-600
-        color: white !important;
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        font-size: 22px;
+        transition: all 0.3s ease;
     }
 
     &:hover:not(&--active) {
-        background: #f1f5f9; // bg-slate-100
-        color: #1e293b; // text-slate-800
+        background: #F8FAFC; // bg-slate-50
+        color: #0F172A; // text-slate-900
+        transform: translateX(6px);
+        
+        .q-icon {
+            color: #2563EB;
+            transform: scale(1.1);
+        }
+    }
+
+    &--active {
+        background: #EFF6FF !important; // bg-blue-50 (Light Mode Rule)
+        color: #2563EB !important;
+        font-weight: 700;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            height: 70%;
+            width: 4px;
+            background: #2563EB;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 2px 0 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .q-icon {
+            color: #2563EB !important;
+        }
     }
 }
 
