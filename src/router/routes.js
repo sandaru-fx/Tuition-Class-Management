@@ -39,6 +39,20 @@ const routes = [
   // Always leave this as last one,
   // but you can also remove it
   {
+    path: '/teacher',
+    component: () => import('layouts/TeacherLayout.vue'),
+    children: [
+        { path: '', component: () => import('pages/teacher/TeacherDashboardPage.vue') },
+        // Add more teacher routes here as we build them
+        { path: 'classes', component: () => import('pages/ErrorNotFound.vue') }, // Placeholder
+        { path: 'assignments', component: () => import('pages/ErrorNotFound.vue') }, // Placeholder
+        { path: 'students', component: () => import('pages/ErrorNotFound.vue') }, // Placeholder
+    ]
+  },
+
+  // Always leave this as last one,
+  // but you can also remove it
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },

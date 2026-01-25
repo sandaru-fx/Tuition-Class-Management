@@ -106,6 +106,8 @@ async function handleLogin() {
     // Redirect based on role
     if (profile && profile.role === 'student') {
         router.push('/student')
+    } else if (profile && profile.role === 'teacher') {
+        router.push('/teacher')
     } else {
         router.push('/dashboard')
     }
