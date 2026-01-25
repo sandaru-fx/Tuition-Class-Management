@@ -211,6 +211,7 @@ function getRoleTextColor(role) {
 
 // Mock status getter as simple active check
 function getParams() {
+    // Status is always active for now
     return { status: 'Active', color: 'green' }
 }
 
