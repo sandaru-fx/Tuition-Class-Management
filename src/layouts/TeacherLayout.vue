@@ -57,35 +57,35 @@
            <div class="text-overline text-grey-6 q-mb-sm q-pl-sm">MENU</div>
            
            <q-list padding class="menu-list">
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/teacher'" to="/teacher" class="rounded-borders q-mb-xs">
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher'" to="/teacher" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
                  <q-icon name="dashboard" />
                </q-item-section>
                <q-item-section class="text-weight-medium">Dashboard</q-item-section>
              </q-item>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/teacher/classes'" to="/teacher/classes" class="rounded-borders q-mb-xs">
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/classes'" to="/teacher/classes" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
                  <q-icon name="class" />
                </q-item-section>
                <q-item-section class="text-weight-medium">My Classes</q-item-section>
              </q-item>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/teacher/assignments'" to="/teacher/assignments" class="rounded-borders q-mb-xs">
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/assignments'" to="/teacher/assignments" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
                  <q-icon name="assignment" />
                </q-item-section>
                <q-item-section class="text-weight-medium">Assignments</q-item-section>
              </q-item>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/teacher/students'" to="/teacher/students" class="rounded-borders q-mb-xs">
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/students'" to="/teacher/students" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
                  <q-icon name="people" />
                </q-item-section>
                <q-item-section class="text-weight-medium">My Students</q-item-section>
              </q-item>
              
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/teacher/reports'" to="/teacher/reports" class="rounded-borders q-mb-xs">
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/reports'" to="/teacher/reports" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
                  <q-icon name="assessment" />
                </q-item-section>
@@ -96,7 +96,7 @@
            <div class="text-overline text-grey-6 q-mt-xl q-mb-sm q-pl-sm">SETTINGS</div>
            
            <q-list padding class="menu-list">
-             <q-item clickable v-ripple to="/teacher/profile" class="rounded-borders q-mb-xs">
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/profile'" to="/teacher/profile" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
                  <q-icon name="person" />
                </q-item-section>
@@ -173,8 +173,8 @@ async function handleLogout() {
   transition: all 0.2s ease;
 }
 .menu-list .q-item:hover {
-  background: #f5f5f5;
-  color: #000;
+  background: #EFF6FF; // Blue 50
+  color: #2563EB; // Blue 600
 }
 .line-height-tight {
   line-height: 1.2;

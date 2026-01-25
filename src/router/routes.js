@@ -43,10 +43,11 @@ const routes = [
     component: () => import('layouts/TeacherLayout.vue'),
     children: [
         { path: '', component: () => import('pages/teacher/TeacherDashboardPage.vue') },
-        // Add more teacher routes here as we build them
-        { path: 'classes', component: () => import('pages/ErrorNotFound.vue') }, // Placeholder
-        { path: 'assignments', component: () => import('pages/ErrorNotFound.vue') }, // Placeholder
-        { path: 'students', component: () => import('pages/ErrorNotFound.vue') }, // Placeholder
+        { path: 'classes', component: () => import('pages/teacher/TeacherClassesPage.vue') },
+        { path: 'assignments', component: () => import('pages/teacher/TeacherAssignmentsPage.vue') },
+        { path: 'students', component: () => import('pages/teacher/TeacherStudentsPage.vue') },
+        { path: 'reports', component: () => import('pages/teacher/TeacherReportsPage.vue') },
+        { path: 'profile', component: () => import('pages/teacher/TeacherProfilePage.vue') }
     ]
   },
 
