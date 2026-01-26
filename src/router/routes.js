@@ -11,6 +11,7 @@ const routes = [
   {
     path: '/dashboard',
     component: () => import('layouts/DashboardLayout.vue'),
+    meta: { requiresAuth: true, roles: ['admin'] },
     children: [
       { path: '', component: () => import('pages/DashboardPage.vue') },
       { path: 'profile', component: () => import('pages/ProfilePage.vue') },
@@ -26,6 +27,7 @@ const routes = [
   {
     path: '/student',
     component: () => import('layouts/StudentLayout.vue'),
+    meta: { requiresAuth: true, roles: ['student', 'admin'] },
     children: [
         { path: '', component: () => import('pages/StudentDashboardPage.vue') },
         { path: 'courses', component: () => import('pages/StudentCoursesPage.vue') },
@@ -41,6 +43,7 @@ const routes = [
   {
     path: '/teacher',
     component: () => import('layouts/TeacherLayout.vue'),
+    meta: { requiresAuth: true, roles: ['teacher', 'admin'] },
     children: [
         { path: '', component: () => import('pages/teacher/TeacherDashboardPage.vue') },
         { path: 'classes', component: () => import('pages/teacher/TeacherClassesPage.vue') },
