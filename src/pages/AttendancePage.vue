@@ -94,7 +94,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { classService } from 'src/services/classService'
 import { attendanceService } from 'src/services/attendanceService'
 import { date } from 'quasar'
 

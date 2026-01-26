@@ -181,7 +181,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { examService } from 'src/services/examService'
-import { classService } from 'src/services/classService'
 
 import { useAppStore } from 'src/stores/app'
 

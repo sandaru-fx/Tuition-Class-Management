@@ -184,10 +184,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { paymentService } from 'src/services/paymentService'
-import { classService } from 'src/services/classService'
 import { studentService } from 'src/services/studentService'
 
 import { useAppStore } from 'src/stores/app'
