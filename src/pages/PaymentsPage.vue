@@ -190,11 +190,16 @@ import { paymentService } from 'src/services/paymentService'
 import { classService } from 'src/services/classService'
 import { studentService } from 'src/services/studentService'
 
+import { useAppStore } from 'src/stores/app'
+
 const $q = useQuasar()
+const appStore = useAppStore()
 const tab = ref('collect')
 const submitting = ref(false)
 const payments = ref([])
-const classOptions = ref([])
+
+// Computed Options from Store
+const classOptions = computed(() => appStore.classes)
 
 // Search state
 const selectedStudent = ref(null)
@@ -212,9 +217,6 @@ const lastPayment = ref(null)
 
 async function fetchInitialData() {
     try {
-        // Fetch Classes
-        classOptions.value = await classService.getOptions()
-        
         // Fetch Payments
         await fetchPayments()
 

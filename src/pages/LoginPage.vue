@@ -69,6 +69,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { supabase } from 'boot/supabase'
+import { useAuthStore } from 'src/stores/auth'
+
+const authStore = useAuthStore()
 
 const $q = useQuasar()
 const router = useRouter()
@@ -90,12 +93,8 @@ async function handleLogin() {
     
     if (signInError) throw signInError
 
-    // Check Profile Role
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
+    // Use store to fetch profile
+    const profile = await authStore.fetchProfile(user.id)
     
     $q.notify({
       type: 'positive',

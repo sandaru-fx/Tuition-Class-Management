@@ -99,26 +99,22 @@ import { attendanceService } from 'src/services/attendanceService'
 import { date } from 'quasar'
 
 
+import { useAppStore } from 'src/stores/app'
+
 const $q = useQuasar()
+const appStore = useAppStore()
 const loading = ref(false)
 const saving = ref(false)
 const searched = ref(false)
 
 const selectedClass = ref(null)
 const selectedDate = ref(date.formatDate(Date.now(), 'YYYY-MM-DD'))
-const classOptions = ref([])
 const students = ref([])
 
-// Computed Stats
-const presentCount = computed(() => students.value.filter(s => s.status === 'Present').length)
+// Computed Options from Store
+const classOptions = computed(() => appStore.classes)
 
-async function fetchClasses() {
-    try {
-        classOptions.value = await classService.getOptions()
-    } catch (error) {
-        console.error(error)
-    }
-}
+// No local fetch needed, handled by Store in Layouts
 
 async function fetchAttendanceList() {
     if (!selectedClass.value) {
@@ -162,7 +158,7 @@ async function saveAttendance() {
 }
 
 onMounted(() => {
-    fetchClasses()
+    // Classes are already fetched by Layout in appStore.initData()
 })
 </script>
 

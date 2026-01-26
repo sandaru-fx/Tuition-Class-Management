@@ -16,10 +16,10 @@
                 <div class="row justify-between items-start">
                    <div>
                       <q-badge color="blue-1" text-color="blue-8" :label="cls.grade" class="q-mb-sm font-weight-bold" />
-                      <div class="text-h6 text-weight-bold text-slate-800">{{ cls.name }}</div>
+                      <div class="text-h6 text-weight-bold text-slate-800">{{ cls.subject }}</div>
                       <div class="text-caption text-slate-500 q-mt-xs flex items-center">
                          <q-icon name="schedule" class="q-mr-xs" size="14px"/>
-                         {{ cls.days }} • {{ cls.time }}
+                         {{ cls.day_of_week }} • {{ cls.start_time }} - {{ cls.end_time }}
                       </div>
                    </div>
                    <q-avatar size="40px" font-size="20px" color="blue-50" text-color="blue-600" icon="class" rounded />
@@ -31,7 +31,7 @@
              <q-card-actions align="between" class="q-px-md q-py-md bg-grey-1-light">
                 <div class="text-caption text-slate-600">
                    <q-icon name="groups" class="q-mr-xs" />
-                   <strong>{{ cls.students }}</strong> Students
+                   <strong>-</strong> Students
                 </div>
                 <div class="text-caption text-slate-600">
                    <q-icon name="meeting_room" class="q-mr-xs" />
@@ -45,16 +45,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { classService } from 'src/services/classService'
+import { useQuasar } from 'quasar'
 
-const classes = ref([
-    { id: 1, name: 'Advanced Level Physics', grade: 'Grade 12', days: 'Mon, Wed', time: '02:00 PM - 04:00 PM', students: 45, hall: 'Main Hall' },
-    { id: 2, name: 'General Chemistry', grade: 'Grade 11', days: 'Tue, Thu', time: '04:00 PM - 06:00 PM', students: 32, hall: 'Lab A' },
-    { id: 3, name: 'Pure Mathematics', grade: 'Grade 13', days: 'Sat', time: '08:00 AM - 12:00 PM', students: 50, hall: 'Lecture Room 1' },
-    { id: 4, name: 'Biology Revision', grade: 'Grade 13', days: 'Fri', time: '03:00 PM - 06:00 PM', students: 35, hall: 'Main Hall' },
-    { id: 5, name: 'Physics Theory', grade: 'Grade 12', days: 'Sun', time: '08:00 AM - 11:00 AM', students: 42, hall: 'Hall B' },
-    { id: 6, name: 'O/L Science Support', grade: 'Grade 10', days: 'Wed', time: '04:30 PM - 06:30 PM', students: 18, hall: 'Lab B' }
-])
+const $q = useQuasar()
+const classes = ref([])
+const loading = ref(false)
+
+async function fetchMyClasses() {
+    loading.value = true
+    try {
+        // In the future, this should filter by teacher_id using authStore
+        classes.value = await classService.getAll()
+    } catch (error) {
+        console.error(error)
+        $q.notify({ type: 'negative', message: 'Failed to load classes' })
+    } finally {
+        loading.value = false
+    }
+}
+
+onMounted(() => {
+    fetchMyClasses()
+})
 </script>
 
 <style scoped>

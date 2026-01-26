@@ -183,13 +183,18 @@ import { useQuasar } from 'quasar'
 import { examService } from 'src/services/examService'
 import { classService } from 'src/services/classService'
 
+import { useAppStore } from 'src/stores/app'
+
 const $q = useQuasar()
+const appStore = useAppStore()
 const tab = ref('list')
 const search = ref('')
 const exams = ref([])
-const classesOptions = ref([])
 const studentsList = ref([]) // Students in the selected class/exam
 const marksMap = ref({}) // Dictionary keyed by student_id to store marks/remarks
+
+// Computed Options from Store
+const classesOptions = computed(() => appStore.classes)
 
 const submitting = ref(false)
 const savingMarks = ref(false)
@@ -228,17 +233,8 @@ async function fetchExams() {
   }
 }
 
-async function fetchClasses() {
-  try {
-    classesOptions.value = await classService.getOptions()
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 function openCreateDialog() {
     form.value = { name: '', class_id: null, date: new Date().toISOString().split('T')[0], total_marks: 100 }
-    fetchClasses()
     showCreateDialog.value = true
 }
 

@@ -45,11 +45,11 @@
             <q-btn flat no-caps no-wrap class="q-pl-sm hover:bg-slate-50 rounded-lg">
                  <div class="row items-center no-wrap">
                     <div class="text-right q-mr-sm gt-xs">
-                        <div class="text-weight-bold text-caption text-slate-900 line-height-1">Sandaru Chamod</div>
-                        <div class="text-grey-6 text-caption text-weight-medium" style="font-size: 10px">Student ID: #20412</div>
+                        <div class="text-weight-bold text-caption text-slate-900 line-height-1">{{ authStore.profile?.full_name || 'Student' }}</div>
+                        <div class="text-grey-6 text-caption text-weight-medium text-capitalize" style="font-size: 10px">{{ authStore.profile?.role || 'Member' }}</div>
                     </div>
                     <q-avatar size="36px" class="shadow-sm border-white border-2">
-                        <img src="https://ui-avatars.com/api/?name=Sandaru+Chamod&background=3b82f6&color=fff">
+                        <img :src="`https://ui-avatars.com/api/?name=${authStore.profile?.full_name || 'User'}&background=3b82f6&color=fff`">
                     </q-avatar>
                  </div>
                  <q-icon name="keyboard_arrow_down" size="16px" class="text-slate-400 q-ml-xs" />
@@ -165,13 +165,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { supabase } from 'boot/supabase'
 import { useQuasar } from 'quasar'
+import { useAuthStore } from 'src/stores/auth'
+import { useAppStore } from 'src/stores/app'
 
 const router = useRouter()
 const $q = useQuasar()
+const authStore = useAuthStore()
+const appStore = useAppStore()
 
-const studentProfile = ref(null)
 const leftDrawerOpen = ref(true)
 const search = ref('')
 
@@ -183,31 +185,14 @@ function toggleDark() {
     $q.dark.toggle()
 }
 
-async function fetchProfile() {
-  try {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-      
-      studentProfile.value = profile
-    }
-  } catch (error) {
-    console.error('Error fetching profile:', error)
-  }
-}
-
 async function logout() {
-  await supabase.auth.signOut()
+  await authStore.signOut()
   router.push('/login')
   $q.notify({ type: 'positive', message: 'Logged out successfully' })
 }
 
 onMounted(() => {
-    fetchProfile()
+    appStore.initData()
 })
 </script>
 

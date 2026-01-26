@@ -23,8 +23,8 @@
              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
            </q-avatar>
            <div class="column text-left display-xs-hide">
-             <span class="text-weight-bold text-body2 line-height-tight">Admin User</span>
-             <span class="text-caption text-grey-6 line-height-tight">Administrator</span>
+             <span class="text-weight-bold text-body2 line-height-tight">{{ authStore.profile?.full_name || 'User' }}</span>
+             <span class="text-caption text-grey-6 text-capitalize line-height-tight">{{ authStore.profile?.role || 'Member' }}</span>
            </div>
            <q-menu auto-close class="q-mt-md">
              <q-list style="min-width: 150px">
@@ -152,10 +152,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { supabase } from 'boot/supabase'
+import { useAuthStore } from 'src/stores/auth'
+import { useAppStore } from 'src/stores/app'
+
+const authStore = useAuthStore()
+const appStore = useAppStore()
 
 const leftDrawerOpen = ref(false)
 const router = useRouter()
@@ -166,10 +170,13 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
+onMounted(() => {
+  appStore.initData()
+})
+
 async function handleLogout() {
   try {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    await authStore.signOut()
     router.push('/login')
     $q.notify({
       type: 'positive',
@@ -177,16 +184,8 @@ async function handleLogout() {
       position: 'top'
     })
   } catch (error) {
-    if (error.message.includes('missing')) {
-       // Graceful fallback for dev without net
-       router.push('/login')
-       return
-    }
-    $q.notify({
-      type: 'negative',
-      message: 'Error logging out',
-      position: 'top'
-    })
+    console.error('Logout error:', error)
+    router.push('/login')
   }
 }
 </script>
