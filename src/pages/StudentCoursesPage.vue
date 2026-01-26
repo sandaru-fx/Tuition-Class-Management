@@ -149,6 +149,42 @@ const courses = ref([
         icon: 'biotech', 
         lessons: 15,
         duration: '6 Weeks'
+    },
+    { 
+        id: 5, 
+        name: 'Applied Mechanics I', 
+        code: 'PHY-405', 
+        instructor: 'Dr. Karunaratne',
+        progress: 0.25, 
+        progress_color: 'red-6', 
+        color: 'orange', 
+        icon: 'settings_input_component', 
+        lessons: 30,
+        duration: '14 Weeks'
+    },
+    { 
+        id: 6, 
+        name: 'Microeconomics Theory', 
+        code: 'ECO-201', 
+        instructor: 'Mrs. Jayawardena',
+        progress: 0.60, 
+        progress_color: 'blue-6', 
+        color: 'blue', 
+        icon: 'trending_up', 
+        lessons: 22,
+        duration: '10 Weeks'
+    },
+    { 
+        id: 7, 
+        name: 'British Literature', 
+        code: 'ENG-304', 
+        instructor: 'Ms. Perera',
+        progress: 0.15, 
+        progress_color: 'purple-6', 
+        color: 'purple', 
+        icon: 'menu_book', 
+        lessons: 12,
+        duration: '8 Weeks'
     }
 ])
 </script>

@@ -113,6 +113,24 @@ const schedule = ref([
         room: 'Lab 4',
         active: false 
     },
+    { 
+        time: '03:45', 
+        period: 'PM', 
+        title: 'History of Art', 
+        instructor: 'Ms. Perera', 
+        type: 'Virtual', 
+        room: 'Online',
+        active: false 
+    },
+    { 
+        time: '05:30', 
+        period: 'PM', 
+        title: 'Chemistry Quiz', 
+        instructor: 'Dr. Fernando', 
+        type: 'Exam', 
+        room: 'Hall A',
+        active: false 
+    },
 ])
 </script>
 
