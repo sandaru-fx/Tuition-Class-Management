@@ -4,7 +4,7 @@ export const classService = {
   async getAll() {
     const { data, error } = await supabase
       .from('classes')
-      .select('*, teacher:teacher_id(full_name)')
+      .select('*, teacher:profiles(full_name)')
       .order('created_at', { ascending: false })
     if (error) throw error
     return data
