@@ -186,7 +186,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { supabase } from 'boot/supabase'
+import { paymentService } from 'src/services/paymentService'
+import { classService } from 'src/services/classService'
+import { studentService } from 'src/services/studentService'
 
 const $q = useQuasar()
 const tab = ref('collect')
@@ -209,36 +211,31 @@ const form = ref({
 const lastPayment = ref(null)
 
 async function fetchInitialData() {
-    // Fetch Classes
-    const { data: classes } = await supabase.from('classes').select('id, subject, grade')
-    if (classes) {
-        classOptions.value = classes.map(c => ({
-            label: `${c.subject} - ${c.grade}`,
-            value: c.id
-        }))
-    }
-    
-    // Fetch Payments
-    fetchPayments()
+    try {
+        // Fetch Classes
+        classOptions.value = await classService.getOptions()
+        
+        // Fetch Payments
+        await fetchPayments()
 
-    // Fetch Students Cache
-    const { data: students } = await supabase.from('students').select('id, first_name, last_name, whatsapp_number').eq('is_active', true)
-    if (students) {
+        // Fetch Students Cache
+        const students = await studentService.getAll()
         allStudents.value = students.map(s => ({
             label: `${s.first_name} ${s.last_name} (${s.whatsapp_number})`,
             value: s.id,
             ...s
         }))
+    } catch (error) {
+        console.error(error)
     }
 }
 
 async function fetchPayments() {
-    const { data } = await supabase
-        .from('payments')
-        .select('*, students(first_name, last_name)')
-        .order('created_at', { ascending: false })
-        .limit(20)
-    payments.value = data || []
+    try {
+        payments.value = await paymentService.getRecentPayments()
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 function filterStudents (val, update) {
@@ -267,9 +264,7 @@ async function processPayment() {
             is_printed: true
         }
 
-        const { data, error } = await supabase.from('payments').insert([payload]).select().single()
-        if (error) throw error
-
+        const data = await paymentService.processPayment(payload)
         $q.notify({ type: 'positive', message: 'Payment recorded!' })
         
         // Prepare Receipt Data

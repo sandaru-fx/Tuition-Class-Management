@@ -94,8 +94,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { supabase } from 'boot/supabase'
+import { classService } from 'src/services/classService'
+import { attendanceService } from 'src/services/attendanceService'
 import { date } from 'quasar'
+
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -111,12 +113,10 @@ const students = ref([])
 const presentCount = computed(() => students.value.filter(s => s.status === 'Present').length)
 
 async function fetchClasses() {
-    const { data } = await supabase.from('classes').select('id, subject, grade')
-    if (data) {
-        classOptions.value = data.map(c => ({
-            label: `${c.subject} - ${c.grade}`,
-            value: c.id
-        }))
+    try {
+        classOptions.value = await classService.getOptions()
+    } catch (error) {
+        console.error(error)
     }
 }
 
@@ -131,40 +131,10 @@ async function fetchAttendanceList() {
     students.value = []
 
     try {
-        // 1. Fetch all students (In future: filter by class enrollment)
-        // For now, assuming all students can attend any class
-        const { data: allStudents, error: studentError } = await supabase
-            .from('students')
-            .select('id, first_name, last_name, whatsapp_number')
-            .eq('is_active', true)
-            .order('first_name')
-        
-        if (studentError) throw studentError
-
-        // 2. Fetch existing attendance for this date
-        const { data: logs, error: logError } = await supabase
-            .from('attendance_logs')
-            .select('student_id, status')
-            .eq('class_id', selectedClass.value)
-            .eq('date', selectedDate.value)
-        
-        if (logError) throw logError
-
-        // 3. Merge data
-        // If log exists, use that status. Else default to 'Absent' (Safer default for marking) or 'Present'
-        // Let's default to 'Absent' so user has to explicitly mark them Present? 
-        // Or default 'Present' if it's easier. Let's do 'Absent' initially for clarity.
-        const logMap = new Map()
-        logs.forEach(l => logMap.set(l.student_id, l.status))
-
-        students.value = allStudents.map(s => ({
-            ...s,
-            status: logMap.get(s.id) || 'Absent' // Default Absent until marked
-        }))
-
+        students.value = await attendanceService.getAttendanceList(selectedClass.value, selectedDate.value)
     } catch (e) {
         console.error(e)
-        $q.notify({ type: 'negative', message: 'Failed to load list' })
+        $q.notify({ type: 'negative', message: 'Failed to load list: ' + e.message })
     } finally {
         loading.value = false
     }
@@ -181,21 +151,7 @@ function markAll(status) {
 async function saveAttendance() {
     saving.value = true
     try {
-        const upsertData = students.value.map(s => ({
-            student_id: s.id,
-            class_id: selectedClass.value,
-            date: selectedDate.value,
-            status: s.status,
-            marked_by: null // Auth uid will be handled by DB default if using Supabase Auth, else null
-        }))
-
-        // We use upsert to handle updates
-        const { error } = await supabase
-            .from('attendance_logs')
-            .upsert(upsertData, { onConflict: 'student_id, class_id, date' })
-
-        if (error) throw error
-        
+        await attendanceService.saveAttendance(selectedClass.value, selectedDate.value, students.value)
         $q.notify({ type: 'positive', message: 'Attendance saved successfully!' })
     } catch (e) {
         console.error(e)

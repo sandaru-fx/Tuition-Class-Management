@@ -183,7 +183,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { supabase } from 'boot/supabase'
+import { studentService } from 'src/services/studentService'
+import { supabase } from 'boot/supabase' // Still needed for RPC account creation until moved to service
 
 const $q = useQuasar()
 const search = ref('')
@@ -227,13 +228,7 @@ const filteredStudents = computed(() => {
 async function fetchStudents() {
   loading.value = true
   try {
-    const { data, error } = await supabase
-      .from('students')
-      .select('*')
-      .order('created_at', { ascending: false })
-    
-    if (error) throw error
-    users.value = data
+    users.value = await studentService.getAll()
   } catch (error) {
     console.error(error)
     $q.notify({ type: 'negative', message: 'Failed to load students: ' + error.message })
@@ -283,25 +278,11 @@ async function saveStudent() {
     let studentId = form.value.id
 
     if (isEditing.value) {
-      const { error } = await supabase
-        .from('students')
-        .update(studentData)
-        .eq('id', form.value.id)
-      if (error) throw error
+      await studentService.update(form.value.id, studentData)
       $q.notify({ type: 'positive', message: 'Student updated successfully' })
     } else {
       // 1. Create Student Record
-      const { data, error } = await supabase
-        .from('students')
-        .insert([studentData])
-        .select()
-        .single()
-      
-      if (error) {
-          console.error('Insert Error:', error)
-          throw error
-      }
-      
+      const data = await studentService.create(studentData)
       studentId = data.id
       $q.notify({ type: 'positive', message: 'Student registered successfully' })
 
@@ -346,12 +327,7 @@ async function deleteStudent() {
   if (!studentToDelete.value) return
   deleting.value = true
   try {
-    const { error } = await supabase
-      .from('students')
-      .delete()
-      .eq('id', studentToDelete.value.id)
-      
-    if (error) throw error
+    await studentService.delete(studentToDelete.value.id)
     $q.notify({ type: 'positive', message: 'Student deleted' })
     await fetchStudents()
     showDeleteDialog.value = false

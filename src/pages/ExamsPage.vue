@@ -180,7 +180,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { supabase } from 'boot/supabase'
+import { examService } from 'src/services/examService'
+import { classService } from 'src/services/classService'
 
 const $q = useQuasar()
 const tab = ref('list')
@@ -219,23 +220,19 @@ const filteredExams = computed(() => {
 })
 
 async function fetchExams() {
-  const { data, error } = await supabase
-    .from('exams')
-    .select('*, classes(subject, grade)')
-    .order('created_at', { ascending: false })
-  if (error) {
-     console.error(error)
+  try {
+    exams.value = await examService.getAll()
+  } catch (error) {
+    console.error(error)
+    $q.notify({ type: 'negative', message: 'Failed to load exams' })
   }
-  else exams.value = data
 }
 
 async function fetchClasses() {
-  const { data, error } = await supabase.from('classes').select('id, subject, grade')
-  if (!error) {
-      classesOptions.value = data.map(c => ({
-          label: `${c.subject} - ${c.grade}`,
-          value: c.id
-      }))
+  try {
+    classesOptions.value = await classService.getOptions()
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -248,8 +245,7 @@ function openCreateDialog() {
 async function saveExam() {
     submitting.value = true
     try {
-        const { error } = await supabase.from('exams').insert([form.value])
-        if (error) throw error
+        await examService.create(form.value)
         $q.notify({ type: 'positive', message: 'Exam created!' })
         fetchExams()
         showCreateDialog.value = false
@@ -266,24 +262,24 @@ async function openMarksDialog(exam) {
     showMarksDialog.value = true
     studentsList.value = []
     
-    // 1. Fetch all students (In real app, filter by class if you had Student-Class enrollment)
-    // For now, we assume ALL students are available for any exam (Simple model)
-    const { data: students } = await supabase.from('students').select('*').eq('is_active', true).order('first_name')
-    studentsList.value = students || []
-
-    // 2. Fetch existing marks
-    const { data: results } = await supabase.from('exam_results').select('*').eq('exam_id', exam.id)
-    
-    // 3. Initialize marks map
-    marksMap.value = {}
-    studentsList.value.forEach(s => {
-        const existing = results?.find(r => r.student_id === s.id)
-        marksMap.value[s.id] = {
-            marks: existing ? existing.marks_obtained : null,
-            remarks: existing ? existing.remarks : '',
-            existing_id: existing ? existing.id : null // to know if update or insert
-        }
-    })
+    try {
+        const { students, results } = await examService.getStudentMarks(exam.id)
+        studentsList.value = students
+        
+        // 3. Initialize marks map
+        marksMap.value = {}
+        studentsList.value.forEach(s => {
+            const existing = results?.find(r => r.student_id === s.id)
+            marksMap.value[s.id] = {
+                marks: existing ? existing.marks_obtained : null,
+                remarks: existing ? existing.remarks : '',
+                existing_id: existing ? existing.id : null
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        $q.notify({ type: 'negative', message: 'Failed to load students' })
+    }
 }
 
 async function saveMarks() {
@@ -292,9 +288,8 @@ async function saveMarks() {
         const upserts = []
         for (const student of studentsList.value) {
             const entry = marksMap.value[student.id]
-            if (entry.marks !== null || entry.remarks) { // Only save if there's data
+            if (entry.marks !== null || entry.remarks) {
                 upserts.push({
-                    id: entry.existing_id || undefined, // undefined lets Supabase generate new ID if needed? No, better relying on conflict
                     exam_id: selectedExam.value.id,
                     student_id: student.id,
                     marks_obtained: entry.marks,
@@ -304,8 +299,7 @@ async function saveMarks() {
         }
         
         if (upserts.length > 0) {
-            const { error } = await supabase.from('exam_results').upsert(upserts, { onConflict: 'exam_id, student_id' })
-            if (error) throw error
+            await examService.saveMarks(upserts)
         }
         
         $q.notify({ type: 'positive', message: 'Marks saved successfully!' })
@@ -319,10 +313,14 @@ async function saveMarks() {
 }
 
 async function confirmDelete(exam) {
-    // Basic delete implementation
     if(confirm('Delete this exam?')) {
-        await supabase.from('exams').delete().eq('id', exam.id)
-        fetchExams()
+        try {
+            await examService.delete(exam.id)
+            fetchExams()
+        } catch (error) {
+            console.error(error)
+            $q.notify({ type: 'negative', message: 'Failed to delete exam' })
+        }
     }
 }
 
