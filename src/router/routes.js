@@ -10,7 +10,7 @@ const routes = [
   },
   {
     path: '/dashboard',
-    component: () => import('layouts/DashboardLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true, roles: ['admin'] },
     children: [
       { path: '', component: () => import('pages/DashboardPage.vue') },
@@ -26,7 +26,7 @@ const routes = [
   },
   {
     path: '/student',
-    component: () => import('layouts/StudentLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true, roles: ['student', 'admin'] },
     children: [
         { path: '', component: () => import('pages/StudentDashboardPage.vue') },
@@ -42,7 +42,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/teacher',
-    component: () => import('layouts/TeacherLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true, roles: ['teacher', 'admin'] },
     children: [
         { path: '', component: () => import('pages/teacher/TeacherDashboardPage.vue') },

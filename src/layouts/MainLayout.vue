@@ -1,66 +1,94 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-transparent q-py-md transition-all" style="backdrop-filter: blur(10px); z-index: 9999; pointer-events: auto; transform: translateZ(0);">
-      <q-toolbar class="q-px-xl">
-        
-        <!-- Left: Logo -->
-        <q-toolbar-title class="text-weight-bolder text-h5 col-shrink q-pl-none" style="min-width: 150px">
-          Class<span class="text-grey-5">Master</span>.
+    <!-- Header -->
+    <q-header elevated class="bg-primary text-white">
+      <q-toolbar>
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+
+        <q-toolbar-title>
+          LMS Portal
         </q-toolbar-title>
 
-        <!-- Center: Navigation -->
-        <div class="row q-gutter-md absolute-center gt-xs">
-          <q-btn flat no-caps label="Features" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
-          <q-btn flat no-caps label="About" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
-          <q-btn flat no-caps label="Pricing" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
+        <div class="q-gutter-sm row items-center no-wrap">
+          <q-btn round dense flat icon="notifications">
+            <q-badge color="red" text-color="white" floating>2</q-badge>
+          </q-btn>
+          <q-btn round flat>
+            <q-avatar size="26px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            </q-avatar>
+            <q-menu>
+              <q-list style="min-width: 100px">
+                <q-item clickable v-close-popup @click="logout">
+                  <q-item-section>Logout</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
         </div>
-
-        <q-space />
-
-        <!-- Right: Actions -->
-        <div class="row q-gutter-sm items-center col-shrink justify-end" style="min-width: 150px">
-          <q-btn flat no-caps label="Login" class="text-white text-weight-bold" to="/login" />
-          <q-btn 
-            unelevated 
-            rounded 
-            no-caps 
-            label="Get Started" 
-            class="bg-white text-black text-weight-bold q-px-lg hover-scale"
-            to="/register"
-          />
-        </div>
-        
-        <q-btn flat round icon="menu" class="lt-sm text-white q-ml-sm" @click="leftDrawerOpen = !leftDrawerOpen" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      side="right"
-      overlay
-      behavior="mobile"
-      class="bg-dark text-white"
-    >
-      <q-list padding class="text-center q-pt-xl">
-        <q-item clickable v-ripple @click="leftDrawerOpen = false">
-          <q-item-section>Features</q-item-section>
-        </q-item>
-        <q-item clickable v-ripple @click="leftDrawerOpen = false">
-          <q-item-section>About</q-item-section>
-        </q-item>
-        <q-item clickable v-ripple @click="leftDrawerOpen = false">
-          <q-item-section>Pricing</q-item-section>
-        </q-item>
-        <q-separator dark class="q-my-md" />
-        <q-item clickable v-ripple to="/login" @click="leftDrawerOpen = false">
-          <q-item-section class="text-weight-bold">Login</q-item-section>
-        </q-item>
-        <q-item>
-          <q-btn block unelevated rounded color="white" text-color="black" label="Get Started" class="full-width text-weight-bold" to="/register" @click="leftDrawerOpen = false" />
-        </q-item>
+    <!-- Sidebar -->
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+      <div class="q-pa-md text-center">
+        <q-avatar size="80px" class="q-mb-sm">
+          <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+        </q-avatar>
+        <div class="text-weight-bold">{{ userProfile?.name || 'User' }}</div>
+        <div class="text-caption text-grey">{{ userProfile?.role?.toUpperCase() || 'GUEST' }}</div>
+      </div>
+
+      <q-separator />
+
+      <q-list class="q-mt-md">
+        <!-- Student Links -->
+        <template v-if="isStudent">
+            <q-item to="/student/dashboard" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="dashboard" /></q-item-section>
+                <q-item-section>Dashboard</q-item-section>
+            </q-item>
+            <q-item to="/student/courses" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="library_books" /></q-item-section>
+                <q-item-section>My Courses</q-item-section>
+            </q-item>
+            <q-item to="/student/catalog" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="shopping_cart" /></q-item-section>
+                <q-item-section>Course Catalog</q-item-section>
+            </q-item>
+        </template>
+
+        <!-- Teacher Links -->
+        <template v-if="isTeacher">
+            <q-item to="/teacher/dashboard" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="analytics" /></q-item-section>
+                <q-item-section>Dashboard</q-item-section>
+            </q-item>
+            <q-item to="/teacher/classes" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="class" /></q-item-section>
+                <q-item-section>My Classes</q-item-section>
+            </q-item>
+        </template>
+
+        <!-- Admin Links -->
+        <template v-if="isAdmin">
+            <q-item to="/admin/dashboard" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="admin_panel_settings" /></q-item-section>
+                <q-item-section>Admin Overview</q-item-section>
+            </q-item>
+            <q-item to="/admin/users" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="people" /></q-item-section>
+                <q-item-section>Users</q-item-section>
+            </q-item>
+             <q-item to="/admin/courses" active-class="text-primary bg-blue-1" clickable v-ripple>
+                <q-item-section avatar><q-icon name="school" /></q-item-section>
+                <q-item-section>Manage Courses</q-item-section>
+            </q-item>
+        </template>
       </q-list>
     </q-drawer>
 
+    <!-- Page Content -->
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -68,7 +96,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from 'stores/auth' // Assuming you have this
+
+const router = useRouter()
+const authStore = useAuthStore()
 
 const leftDrawerOpen = ref(false)
+
+const userProfile = computed(() => authStore.profile)
+const isStudent = computed(() => userProfile.value?.role === 'student' || true) // fallback for dev
+const isTeacher = computed(() => userProfile.value?.role === 'teacher')
+const isAdmin = computed(() => userProfile.value?.role === 'admin')
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+async function logout() {
+  await authStore.signOut()
+  router.push('/login')
+}
 </script>
