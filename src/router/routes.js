@@ -31,6 +31,7 @@ const routes = [
     children: [
         { path: '', component: () => import('pages/StudentDashboardPage.vue') },
         { path: 'courses', component: () => import('pages/StudentCoursesPage.vue') },
+        { path: 'catalog', component: () => import('pages/StudentCatalogPage.vue') },
         { path: 'assignments', component: () => import('pages/StudentAssignmentsPage.vue') },
         { path: 'grades', component: () => import('pages/StudentPerformancePage.vue') },
         { path: 'schedule', component: () => import('pages/StudentSchedulePage.vue') },

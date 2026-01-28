@@ -12,8 +12,7 @@
             </p>
         </div>
         <div class="col-12 col-md-auto q-mt-md q-mt-md-none row q-gutter-sm">
-             <q-btn unelevated color="blue-6" label="Browse Catalog" no-caps class="rounded-xl q-px-lg text-weight-bold shadow-soft" icon="explore" />
-             <q-btn outline color="slate-300" text-color="slate-600" label="Filter" no-caps class="rounded-xl q-px-lg text-weight-bold" icon="tune" />
+             <q-btn to="/student/catalog" unelevated color="blue-6" label="Browse Catalog" no-caps class="rounded-xl q-px-lg text-weight-bold shadow-soft" icon="explore" />
         </div>
     </div>
 
@@ -35,13 +34,23 @@
     </div>
 
     <!-- Courses Grid -->
-    <div class="row q-col-gutter-xl">
+    <div v-if="loading" class="row justify-center q-pa-xl">
+         <q-spinner color="primary" size="3em" />
+    </div>
+
+    <div v-else-if="courses.length === 0" class="text-center text-grey q-pa-xl">
+        <q-icon name="school" size="4rem" />
+        <div class="text-h6 q-mt-md">You have not enrolled in any courses yet.</div>
+        <q-btn to="/student/catalog" color="primary" flat label="Go to Catalog" />
+    </div>
+
+    <div v-else class="row q-col-gutter-xl">
         <div class="col-12 col-md-6 col-lg-4" v-for="course in courses" :key="course.id">
             <q-card flat class="course-card-full bg-white overflow-hidden shadow-soft hover-lift transition-all border-slate">
                 <!-- Thumbnail Placeholder with Gradient -->
-                <div :class="`course-thumbnail bg-gradient-${course.color} relative-position`">
+                <div :class="`course-thumbnail bg-gradient-${course.color || 'blue'} relative-position`">
                     <div class="absolute-center">
-                        <q-icon :name="course.icon" size="64px" class="text-white opacity-40 pulse-slow" />
+                        <q-icon :name="course.icon || 'school'" size="64px" class="text-white opacity-40 pulse-slow" />
                     </div>
                     <div class="absolute-bottom-left q-pa-md">
                         <q-badge :color="course.progress === 1 ? 'green' : 'blue-6'" class="rounded-lg q-pa-sm text-weight-bold shadow-md">
@@ -56,7 +65,7 @@
                          <div class="text-caption text-slate-400 font-bold">{{ course.instructor }}</div>
                     </div>
                     
-                    <div class="text-h6 text-weight-black text-slate-900 q-mb-md line-height-1 font-outfit">
+                    <div class="text-h6 text-weight-black text-slate-900 q-mb-md line-height-1 font-outfit ellipsis-2-lines" style="min-height: 3rem">
                         {{ course.name }}
                     </div>
 
@@ -71,7 +80,7 @@
                         <span class="text-caption text-weight-black text-slate-900">{{ Math.round(course.progress * 100) }}% Progress</span>
                         <q-icon name="trending_up" color="green-6" size="16px" v-if="course.progress > 0" />
                     </div>
-                    <q-linear-progress :value="course.progress" size="8px" :color="course.progress_color" rounded track-color="slate-50" />
+                    <q-linear-progress :value="course.progress" size="8px" :color="course.progress_color || 'blue'" rounded track-color="slate-50" />
                     
                     <div class="q-mt-xl">
                         <q-btn 
@@ -92,101 +101,68 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { supabase } from 'boot/supabase'
+
+const loading = ref(true)
+const courses = ref([])
 
 const stats = ref([
-    { label: 'Active Courses', value: '4', icon: 'auto_stories', color: 'blue' },
-    { label: 'Completed', value: '12', icon: 'verified', color: 'green' },
-    { label: 'Certificates', value: '3', icon: 'workspace_premium', color: 'orange' },
-    { label: 'Study Hours', value: '48h', icon: 'timer', color: 'purple' },
+    { label: 'Active Courses', value: '0', icon: 'auto_stories', color: 'blue' },
+    { label: 'Completed', value: '0', icon: 'verified', color: 'green' },
+    { label: 'Certificates', value: '0', icon: 'workspace_premium', color: 'orange' },
+    { label: 'Study Hours', value: '0h', icon: 'timer', color: 'purple' },
 ])
 
-const courses = ref([
-    { 
-        id: 1, 
-        name: 'Advanced Quadratic Equations', 
-        code: 'MAT-401', 
-        instructor: 'Dr. Wickramasinghe',
-        progress: 0.72, 
-        progress_color: 'blue-6', 
-        color: 'blue', 
-        icon: 'functions', 
-        lessons: 24,
-        duration: '12 Weeks'
-    },
-    { 
-        id: 2, 
-        name: 'Quantum Physics Fundamentals', 
-        code: 'PHY-302', 
-        instructor: 'Prof. Perera',
-        progress: 0.45, 
-        progress_color: 'orange-6', 
-        color: 'orange', 
-        icon: 'lightbulb', 
-        lessons: 18,
-        duration: '10 Weeks'
-    },
-    { 
-        id: 3, 
-        name: 'Organic Chemistry II', 
-        code: 'CHE-205', 
-        instructor: 'Dr. Fernando',
-        progress: 0.88, 
-        progress_color: 'green-6', 
-        color: 'green', 
-        icon: 'science', 
-        lessons: 20,
-        duration: '8 Weeks'
-    },
-    { 
-        id: 4, 
-        name: 'Cell Biology & Genetics', 
-        code: 'BIO-101', 
-        instructor: 'Prof. Silva',
-        progress: 1.0, 
-        progress_color: 'green-6', 
-        color: 'blue-grey', 
-        icon: 'biotech', 
-        lessons: 15,
-        duration: '6 Weeks'
-    },
-    { 
-        id: 5, 
-        name: 'Applied Mechanics I', 
-        code: 'PHY-405', 
-        instructor: 'Dr. Karunaratne',
-        progress: 0.25, 
-        progress_color: 'red-6', 
-        color: 'orange', 
-        icon: 'settings_input_component', 
-        lessons: 30,
-        duration: '14 Weeks'
-    },
-    { 
-        id: 6, 
-        name: 'Microeconomics Theory', 
-        code: 'ECO-201', 
-        instructor: 'Mrs. Jayawardena',
-        progress: 0.60, 
-        progress_color: 'blue-6', 
-        color: 'blue', 
-        icon: 'trending_up', 
-        lessons: 22,
-        duration: '10 Weeks'
-    },
-    { 
-        id: 7, 
-        name: 'British Literature', 
-        code: 'ENG-304', 
-        instructor: 'Ms. Perera',
-        progress: 0.15, 
-        progress_color: 'purple-6', 
-        color: 'purple', 
-        icon: 'menu_book', 
-        lessons: 12,
-        duration: '8 Weeks'
+async function fetchMyCourses() {
+    loading.value = true
+    try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+
+        const { data, error } = await supabase
+            .from('enrollments')
+            .select(`
+                *,
+                course:courses (
+                    *,
+                    teacher:profiles (name)
+                )
+            `)
+            .eq('student_id', user.id)
+
+        if (error) throw error
+        
+        // Map Supabase data to UI format
+        courses.value = data.map(enrollment => {
+            const c = enrollment.course
+            return {
+                id: c.id,
+                name: c.title,
+                code: c.id.substring(0, 6).toUpperCase(), // Mock Code
+                instructor: c.teacher?.name || 'Unknown',
+                progress: 0.1, // Mock progress
+                progress_color: 'blue-6',
+                color: 'blue',
+                icon: 'school',
+                lessons: 10, // Mock
+                duration: 'Semester 1' // Mock
+            }
+        })
+
+        // Update stats
+        stats.value[0].value = courses.value.length.toString()
+
+    } catch (err) {
+        console.error('Error fetching my courses:', err)
+    } finally {
+        loading.value = false
     }
-])
+}
+
+onMounted(() => {
+    fetchMyCourses()
+})
 </script>
 
 <style lang="scss" scoped>
