@@ -54,6 +54,12 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         const userRole = authStore.profile?.role
         
         if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+            console.log('Router Check Failed:', {
+                path: to.path,
+                userRole,
+                allowedRoles,
+                user: authStore.user?.email
+            })
             // Unauthorized -> Send them to their respective home
             if (userRole === 'student') next('/student')
             else if (userRole === 'teacher') next('/teacher')
