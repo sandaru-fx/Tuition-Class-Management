@@ -12,7 +12,7 @@
         <div class="row q-gutter-md absolute-center gt-xs">
           <q-btn flat no-caps label="Solutions" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
           <q-btn flat no-caps label="Why Us" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
-          <q-btn flat no-caps label="Pricing" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
+          <q-btn flat no-caps label="Community" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
         </div>
 
         <q-space />
@@ -49,7 +49,7 @@
           <q-item-section>Why Us</q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="leftDrawerOpen = false">
-          <q-item-section>Pricing</q-item-section>
+          <q-item-section>Community</q-item-section>
         </q-item>
         <q-separator dark class="q-my-md" />
         <q-item clickable v-ripple to="/login" @click="leftDrawerOpen = false">

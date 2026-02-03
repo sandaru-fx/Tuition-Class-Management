@@ -163,78 +163,71 @@
       </div>
     </div>
 
-    <!-- Pricing Section -->
+    <!-- Free Platform / Community Section -->
     <div class="q-py-xl q-px-md bg-dark">
-      <div class="text-center q-mb-xl scroll-reveal" ref="pricingTitle">
-        <h2 class="text-h3 text-weight-bold text-gradient-academic">Flexible Pricing for Every Institution</h2>
-        <p class="text-grey-5">Choose the plan that fits your needs</p>
+      <div class="text-center q-mb-xl scroll-reveal" ref="communityTitle">
+        <h2 class="text-h3 text-weight-bold text-gradient-academic">Free & Open for All Institutions</h2>
+        <p class="text-grey-5">No hidden costs. No subscriptions. Just powerful tools for education.</p>
       </div>
 
       <div class="row q-col-gutter-lg container q-mx-auto" style="max-width: 1200px">
         
-        <!-- Starter Plan -->
-        <div class="col-12 col-md-4 scroll-reveal delay-1" ref="pricing1">
-          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 column justify-between">
-            <div>
-              <div class="text-h6 text-weight-bold q-mb-sm">Starter</div>
-              <div class="text-caption text-grey-5 q-mb-md">For small colleges</div>
-              <div class="text-h3 text-weight-bold q-mb-xs">$499<span class="text-caption">/month</span></div>
-              <div class="text-caption text-grey-6 q-mb-lg">Up to 1,000 students</div>
-              <q-separator dark class="q-my-md" />
-              <div class="text-left q-mb-md">
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Basic Analytics</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Single Campus</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Email Support</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> 5 Departments</div>
-              </div>
-            </div>
-            <q-btn outline rounded color="white" label="Get Started" class="full-width" no-caps />
+        <!-- Free Forever -->
+        <div class="col-12 col-md-4 scroll-reveal delay-1" ref="community1">
+          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 glow-blue" style="border: 2px solid rgba(59, 130, 246, 0.3)">
+            <q-icon name="favorite" size="60px" color="red-5" class="q-mb-md" />
+            <h3 class="text-h5 text-weight-bold q-mb-sm">100% Free</h3>
+            <p class="text-grey-5">
+              No pricing tiers, no premium features locked behind paywalls. Every feature is available to every institution, completely free.
+            </p>
           </div>
         </div>
 
-        <!-- Professional Plan -->
-        <div class="col-12 col-md-4 scroll-reveal delay-2" ref="pricing2">
-          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 column justify-between glow-blue" style="border: 2px solid rgba(59, 130, 246, 0.3)">
-            <div>
-              <div class="badge-academic q-mb-md">Most Popular</div>
-              <div class="text-h6 text-weight-bold q-mb-sm">Professional</div>
-              <div class="text-caption text-grey-5 q-mb-md">For mid-size universities</div>
-              <div class="text-h3 text-weight-bold q-mb-xs">$1,499<span class="text-caption">/month</span></div>
-              <div class="text-caption text-grey-6 q-mb-lg">Up to 10,000 students</div>
-              <q-separator dark class="q-my-md" />
-              <div class="text-left q-mb-md">
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Advanced Analytics</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Multi-Campus Support</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Priority Support</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Unlimited Departments</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> API Access</div>
-              </div>
-            </div>
-            <q-btn unelevated rounded color="primary" label="Get Started" class="full-width" no-caps />
+        <!-- Open Source -->
+        <div class="col-12 col-md-4 scroll-reveal delay-2" ref="community2">
+          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100">
+            <q-icon name="code" size="60px" color="green-5" class="q-mb-md" />
+            <h3 class="text-h5 text-weight-bold q-mb-sm">Open Source</h3>
+            <p class="text-grey-5">
+              Built with transparency in mind. Customize, extend, and adapt the platform to your institution's unique needs.
+            </p>
           </div>
         </div>
 
-        <!-- Enterprise Plan -->
-        <div class="col-12 col-md-4 scroll-reveal delay-3" ref="pricing3">
-          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 column justify-between">
-            <div>
-              <div class="text-h6 text-weight-bold q-mb-sm">Enterprise</div>
-              <div class="text-caption text-grey-5 q-mb-md">For large institutions</div>
-              <div class="text-h3 text-weight-bold q-mb-xs">Custom</div>
-              <div class="text-caption text-grey-6 q-mb-lg">Unlimited students</div>
-              <q-separator dark class="q-my-md" />
-              <div class="text-left q-mb-md">
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Everything in Professional</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Dedicated Support</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> Custom Integrations</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> SLA Guarantee</div>
-                <div class="q-mb-sm"><q-icon name="check" color="green" /> On-Premise Option</div>
-              </div>
-            </div>
-            <q-btn outline rounded color="white" label="Contact Sales" class="full-width" no-caps />
+        <!-- Community Driven -->
+        <div class="col-12 col-md-4 scroll-reveal delay-3" ref="community3">
+          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100">
+            <q-icon name="groups" size="60px" color="amber-5" class="q-mb-md" />
+            <h3 class="text-h5 text-weight-bold q-mb-sm">Community Driven</h3>
+            <p class="text-grey-5">
+              Join a growing community of educators and developers working together to improve educational technology.
+            </p>
           </div>
         </div>
 
+      </div>
+
+      <!-- What You Get -->
+      <div class="text-center q-mt-xl scroll-reveal delay-4" ref="features">
+        <div class="container q-mx-auto" style="max-width: 900px">
+          <div class="glass-card-premium q-pa-xl rounded-xl">
+            <h4 class="text-h6 text-weight-bold q-mb-lg">Everything Included</h4>
+            <div class="row q-col-gutter-md text-left">
+              <div class="col-12 col-sm-6">
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Unlimited Students & Departments</div>
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Advanced Analytics & Reporting</div>
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Multi-Campus Management</div>
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Research Tracking</div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Role-Based Access Control</div>
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Secure Data Management</div>
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Regular Updates</div>
+                <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Community Support</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -268,13 +261,14 @@
     <!-- Footer / CTA -->
     <div class="q-py-xl bg-black text-center border-top-white-10">
       <h2 class="text-h4 text-weight-bold q-mb-lg text-gradient-academic">Ready to Transform Your Institution?</h2>
+      <p class="text-grey-5 q-mb-lg">Get started today - no credit card required, no setup fees</p>
       
       <div class="row justify-center q-gutter-md q-mb-xl">
         <q-btn 
           unelevated
           rounded
           color="primary" 
-          label="Start Free Trial" 
+          label="Get Started Free" 
           size="lg" 
           no-caps 
           class="q-px-xl glow-blue"
@@ -284,15 +278,16 @@
           outline
           rounded
           color="white" 
-          label="Schedule Demo" 
+          label="View Documentation" 
           size="lg" 
           no-caps 
           class="q-px-xl"
+          icon="menu_book"
         />
       </div>
 
       <div class="text-grey-7 text-caption">
-        &copy; 2026 Academic Management System. All rights reserved.
+        &copy; 2026 Academic Management System. Free & Open Source.
       </div>
     </div>
 
