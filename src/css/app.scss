@@ -214,3 +214,108 @@ body {
     box-shadow: 0 16px 48px rgba(59, 130, 246, 0.15), inset 0 0 20px rgba(59, 130, 246, 0.08);
   }
 }
+
+// ===================================
+// LIGHT MODE - EDUCATIONAL DESIGN
+// ===================================
+
+// Background Colors
+.bg-academic-white { background-color: #FFFFFF !important; }
+.bg-academic-light { background-color: #F8FAFC !important; }
+.bg-academic-blue-light { background-color: #EFF6FF !important; }
+.bg-academic-blue-dark { background-color: #1E3A8A !important; }
+.bg-academic-grey { background-color: #F1F5F9 !important; }
+
+// Text Colors
+.text-academic-dark { color: #1E293B !important; }
+.text-academic-medium { color: #64748B !important; }
+.text-academic-muted { color: #94A3B8 !important; }
+.text-academic-blue { color: #1E3A8A !important; }
+.text-academic-gold { color: #D97706 !important; }
+
+// Light Mode Cards
+.card-light {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    border-color: #CBD5E1;
+  }
+}
+
+// Light Mode Card with Blue Accent
+.card-light-blue {
+  background: #FFFFFF;
+  border: 1px solid #DBEAFE;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+    transform: translateY(-4px);
+    border-color: #93C5FD;
+  }
+}
+
+// Gradient Text (Light Mode)
+.text-gradient-academic-light {
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+// Section Divider
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #E2E8F0, transparent);
+}
+
+// Light Mode Badge
+.badge-light {
+  background: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid #DBEAFE;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+// Button Styles for Light Mode
+.btn-academic-primary {
+  background: #3B82F6;
+  color: #FFFFFF;
+  border: none;
+  
+  &:hover {
+    background: #2563EB;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.btn-academic-secondary {
+  background: #FFFFFF;
+  color: #1E3A8A;
+  border: 2px solid #1E3A8A;
+  
+  &:hover {
+    background: #1E3A8A;
+    color: #FFFFFF;
+  }
+}
+
+// Hero Background Pattern
+.hero-pattern-light {
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(217, 119, 6, 0.05) 0%, transparent 50%);
+}
