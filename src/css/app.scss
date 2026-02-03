@@ -83,4 +83,17 @@ body {
   }
 }
 
+
 .h-100 { height: 100%; }
+
+// Nav Utilities
+.bg-white-10 { background: rgba(255, 255, 255, 0.1) !important; }
+.backdrop-blur-sm { 
+  backdrop-filter: blur(4px); 
+  -webkit-backdrop-filter: blur(4px); 
+}
+.hover-scale { 
+  transition: transform 0.2s; 
+  &:hover { transform: scale(1.05); } 
+}
+.transition-all { transition: all 0.3s ease !important; }

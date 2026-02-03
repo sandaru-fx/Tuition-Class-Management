@@ -6,6 +6,21 @@
       <div class="absolute-full bg-radial-gradient"></div>
     </div>
 
+    <!-- Back to Home Button -->
+    <div class="absolute-top-left q-pa-lg z-top">
+      <q-btn 
+        flat 
+        no-caps 
+        color="white" 
+        icon="arrow_back" 
+        label="Back to Home" 
+        to="/" 
+        class="bg-white-10 backdrop-blur-sm rounded-borders hover-scale transition-all"
+        padding="8px 16px"
+      />
+    </div>
+
+
     <!-- Login Card -->
     <div class="glass-card q-pa-xl column items-center text-center relative-position z-top" style="max-width: 400px; width: 90%;">
       <h1 class="text-h4 text-weight-bolder q-mb-xs">Welcome Back</h1>
