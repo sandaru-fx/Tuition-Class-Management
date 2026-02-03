@@ -60,6 +60,127 @@
       </q-parallax>
     </div>
 
+    <!-- Problem & Solution Section -->
+    <div class="q-py-xl q-px-md bg-black">
+      <div class="container q-mx-auto" style="max-width: 1200px">
+        
+        <!-- Section Title -->
+        <div class="text-center q-mb-xl scroll-reveal" ref="whyTitle">
+          <h2 class="text-h3 text-weight-bold text-gradient-academic q-mb-sm">Why ClassMaster?</h2>
+          <p class="text-grey-5">Solving the real challenges in higher education management</p>
+        </div>
+
+        <!-- Problem-Solution Grid -->
+        <div class="row q-col-gutter-xl">
+          
+          <!-- Problems Column -->
+          <div class="col-12 col-md-6 scroll-reveal delay-1" ref="problemsCol">
+            <div class="q-mb-lg">
+              <h3 class="text-h5 text-weight-bold q-mb-md" style="color: #EF4444">The Challenge</h3>
+              <p class="text-grey-6">Common pain points in traditional education management</p>
+            </div>
+
+            <!-- Problem 1 -->
+            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #EF4444">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="table_chart" size="40px" color="red-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Drowning in Spreadsheets</div>
+                  <div class="text-caption text-grey-5">Manual data entry across disconnected systems wastes hours daily</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Problem 2 -->
+            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #EF4444">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="payments" size="40px" color="red-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Payment Tracking Chaos</div>
+                  <div class="text-caption text-grey-5">Missed payments, manual invoicing, and reconciliation nightmares</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Problem 3 -->
+            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #EF4444">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="event_busy" size="40px" color="red-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Scheduling Conflicts</div>
+                  <div class="text-caption text-grey-5">Double-bookings, room conflicts, and last-minute changes</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Problem 4 -->
+            <div class="glass-card-premium q-pa-lg rounded-xl" style="border-left: 3px solid #EF4444">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="visibility_off" size="40px" color="red-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Limited Visibility</div>
+                  <div class="text-caption text-grey-5">No real-time insights into student performance or institutional metrics</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solutions Column -->
+          <div class="col-12 col-md-6 scroll-reveal delay-2" ref="solutionsCol">
+            <div class="q-mb-lg">
+              <h3 class="text-h5 text-weight-bold q-mb-md" style="color: #10B981">The ClassMaster Solution</h3>
+              <p class="text-grey-6">Modern tools that transform how you work</p>
+            </div>
+
+            <!-- Solution 1 -->
+            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #10B981">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="integration_instructions" size="40px" color="green-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Unified Platform</div>
+                  <div class="text-caption text-grey-5">All data in one place with automated workflows and real-time sync</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Solution 2 -->
+            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #10B981">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="account_balance_wallet" size="40px" color="green-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Automated Finance</div>
+                  <div class="text-caption text-grey-5">Smart invoicing, payment tracking, and instant reconciliation</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Solution 3 -->
+            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #10B981">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="auto_awesome" size="40px" color="green-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Intelligent Scheduling</div>
+                  <div class="text-caption text-grey-5">AI-powered conflict resolution with instant notifications</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Solution 4 -->
+            <div class="glass-card-premium q-pa-lg rounded-xl" style="border-left: 3px solid #10B981">
+              <div class="row items-center q-gutter-md">
+                <q-icon name="insights" size="40px" color="green-5" />
+                <div class="col">
+                  <div class="text-weight-bold q-mb-xs">Advanced Analytics</div>
+                  <div class="text-caption text-grey-5">Real-time dashboards with actionable insights and predictive analytics</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <!-- Dashboard Preview Section -->
     <div class="q-py-xl q-px-md bg-black relative-position">
       <div class="text-center q-mb-xl scroll-reveal" ref="dashboardPreview">
