@@ -10,8 +10,8 @@
 
         <!-- Center: Navigation -->
         <div class="row q-gutter-md absolute-center gt-xs">
-          <q-btn flat no-caps label="Features" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
-          <q-btn flat no-caps label="About" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
+          <q-btn flat no-caps label="Solutions" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
+          <q-btn flat no-caps label="Why Us" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
           <q-btn flat no-caps label="Pricing" class="text-white text-weight-regular opacity-80 hover-opacity-100" />
         </div>
 
@@ -43,10 +43,10 @@
     >
       <q-list padding class="text-center q-pt-xl">
         <q-item clickable v-ripple @click="leftDrawerOpen = false">
-          <q-item-section>Features</q-item-section>
+          <q-item-section>Solutions</q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="leftDrawerOpen = false">
-          <q-item-section>About</q-item-section>
+          <q-item-section>Why Us</q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="leftDrawerOpen = false">
           <q-item-section>Pricing</q-item-section>

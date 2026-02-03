@@ -97,3 +97,108 @@ body {
   &:hover { transform: scale(1.05); } 
 }
 .transition-all { transition: all 0.3s ease !important; }
+
+// ===================================
+// ACADEMIC COLOR PALETTE (Higher Education)
+// ===================================
+
+.academic-theme {
+  --primary-deep-blue: #1E3A8A;
+  --secondary-gold: #D97706;
+  --accent-green: #047857;
+  --bg-rich-black: #0A0A0A;
+}
+
+// Academic Gradient Text
+.text-gradient-academic {
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Professional Glow Effects
+.glow-blue {
+  box-shadow: 0 0 20px rgba(30, 58, 138, 0.3), 0 0 40px rgba(59, 130, 246, 0.2);
+}
+
+.glow-gold {
+  box-shadow: 0 0 20px rgba(217, 119, 6, 0.3), 0 0 40px rgba(245, 158, 11, 0.2);
+}
+
+.glow-subtle {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+// Scroll Reveal Animations
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  
+  &.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  
+  &.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  
+  &.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Staggered Animation Delays
+@for $i from 1 through 6 {
+  .delay-#{$i} {
+    transition-delay: #{$i * 0.1}s;
+  }
+}
+
+// Enhanced Glassmorphism for Institutional Feel
+.glass-card-premium {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.03);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(30, 58, 138, 0.3);
+    box-shadow: 0 12px 40px rgba(30, 58, 138, 0.2), inset 0 0 20px rgba(59, 130, 246, 0.05);
+    transform: translateY(-4px);
+  }
+}
+
+// Academic Badge/Certification Styles
+.badge-academic {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  background: rgba(30, 58, 138, 0.1);
+  border: 1px solid rgba(30, 58, 138, 0.3);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3B82F6;
+}

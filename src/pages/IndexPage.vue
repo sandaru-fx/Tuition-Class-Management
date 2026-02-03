@@ -5,7 +5,9 @@
     <div class="hero-section relative-position window-height flex flex-center">
       <q-parallax :height="height" :speed="0.5">
         <template v-slot:media>
-          <img src="~assets/hero-abstract.png" style="opacity: 0.4; filter: contrast(1.2) brightness(0.8);">
+          <img src="~assets/hero-abstract.png" style="opacity: 0.3; filter: contrast(1.3) brightness(0.7);">
+          <!-- Academic Gradient Overlay -->
+          <div class="absolute-full" style="background: radial-gradient(circle at 30% 50%, rgba(30, 58, 138, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(217, 119, 6, 0.1) 0%, transparent 50%);"></div>
         </template>
 
         <template v-slot:content="scope">
@@ -15,106 +17,282 @@
                  transform: `translateY(${scope.percentScrolled * 50}px)`
                }">
              
-            <h1 class="text-super-large text-uppercase q-mb-md fade-in-up" style="animation-delay: 0.2s">
-              Educate.<br>Manage.<br>Excel.
+            <h1 class="text-super-large text-uppercase q-mb-md fade-in-up text-gradient-academic" style="animation-delay: 0.2s">
+              Academic<br>Excellence,<br>Simplified.
             </h1>
             
-            <p class="text-h5 text-grey-5 q-mb-xl fade-in-up" style="animation-delay: 0.4s; max-width: 600px;">
-              The ultimate monochrome management system for modern tuition institutes.
+            <p class="text-h5 text-grey-4 q-mb-lg fade-in-up" style="animation-delay: 0.4s; max-width: 700px; line-height: 1.6;">
+              Empower your institution with advanced analytics, multi-campus management, and research tracking—all in one unified platform.
             </p>
 
-            <div class="fade-in-up" style="animation-delay: 0.6s">
+            <div class="row q-gutter-sm items-center fade-in-up" style="animation-delay: 0.6s">
               <q-btn 
                 rounded 
-                color="white" 
-                text-color="black" 
+                unelevated
+                color="primary" 
+                text-color="white" 
                 label="Get Started" 
+                size="lg" 
+                class="q-px-xl q-py-sm text-weight-bold glow-blue"
+                no-caps
+                to="/register"
+              />
+              <q-btn 
+                rounded 
+                outline
+                color="white" 
+                label="Watch Demo" 
                 size="lg" 
                 class="q-px-xl q-py-sm text-weight-bold"
                 no-caps
+                icon="play_circle"
               />
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="row q-gutter-md q-mt-xl fade-in-up" style="animation-delay: 0.8s">
+              <div class="badge-academic">ISO 27001 Certified</div>
+              <div class="badge-academic">GDPR Compliant</div>
+              <div class="badge-academic">99.9% Uptime</div>
             </div>
           </div>
         </template>
       </q-parallax>
     </div>
 
-    <!-- Features Section -->
-    <div class="q-py-xl q-px-md bg-black relative-position z-top">
-      <div class="text-center q-mb-xl">
-        <h2 class="text-h3 text-weight-bold text-gradient">Why Choose Us?</h2>
-        <div class="text-grey-6">Premium tools for premium education.</div>
+    <!-- Dashboard Preview Section -->
+    <div class="q-py-xl q-px-md bg-black relative-position">
+      <div class="text-center q-mb-xl scroll-reveal" ref="dashboardPreview">
+        <h2 class="text-h3 text-weight-bold text-gradient-academic q-mb-sm">See It In Action</h2>
+        <p class="text-grey-5">Real-time insights for institutional excellence</p>
+      </div>
+
+      <div class="container q-mx-auto scroll-reveal delay-1" style="max-width: 1200px" ref="dashboardMockup">
+        <div class="glass-card-premium q-pa-lg rounded-xl glow-subtle">
+          <div class="row q-col-gutter-md">
+            <!-- Mock Dashboard Cards -->
+            <div class="col-12 col-md-4">
+              <div class="q-pa-md bg-white-10 rounded-borders">
+                <div class="text-caption text-grey-5 q-mb-xs">Total Students</div>
+                <div class="text-h4 text-weight-bold">50,247</div>
+                <div class="text-caption text-green q-mt-xs">↑ 12% this semester</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="q-pa-md bg-white-10 rounded-borders">
+                <div class="text-caption text-grey-5 q-mb-xs">Active Departments</div>
+                <div class="text-h4 text-weight-bold">524</div>
+                <div class="text-caption text-blue q-mt-xs">Across 12 campuses</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="q-pa-md bg-white-10 rounded-borders">
+                <div class="text-caption text-grey-5 q-mb-xs">Research Publications</div>
+                <div class="text-h4 text-weight-bold">1,847</div>
+                <div class="text-caption text-amber q-mt-xs">This academic year</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Section - Academic Focus -->
+    <div class="q-py-xl q-px-md bg-dark relative-position">
+      <div class="text-center q-mb-xl scroll-reveal" ref="featuresTitle">
+        <h2 class="text-h3 text-weight-bold text-gradient-academic">Built for Higher Education</h2>
+        <div class="text-grey-6">Comprehensive tools for modern institutions</div>
       </div>
 
       <div class="row q-col-gutter-xl container q-mx-auto" style="max-width: 1200px">
         
-        <!-- Feature 1: Scheduling -->
-        <div class="col-12 col-md-4">
-          <div class="glass-card column items-center text-center q-pa-xl rounded-borders h-100">
-             <div class="icon-container q-mb-lg">
-               <q-img src="~assets/feature-schedule.png" width="100px" />
-             </div>
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Smart Scheduling</h3>
-             <p class="text-grey-5">Automate your timetables with AI-driven conflict resolution and easy updates.</p>
+        <!-- Feature 1: Advanced Analytics -->
+        <div class="col-12 col-md-6 scroll-reveal delay-1" ref="feature1">
+          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
+             <q-icon name="analytics" size="60px" color="primary" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold q-mb-sm">Advanced Analytics & Reporting</h3>
+             <p class="text-grey-5">Track academic performance, research output, and institutional metrics with comprehensive dashboards tailored for higher education.</p>
           </div>
         </div>
 
-        <!-- Feature 2: Analytics -->
-        <div class="col-12 col-md-4">
-          <div class="glass-card column items-center text-center q-pa-xl rounded-borders h-100">
-             <div class="icon-container q-mb-lg">
-               <q-img src="~assets/feature-analytics.png" width="100px" />
-             </div>
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Deep Analytics</h3>
-             <p class="text-grey-5">Visualize student performance and financial growth with crystal clear monochrome charts.</p>
+        <!-- Feature 2: Multi-Department Management -->
+        <div class="col-12 col-md-6 scroll-reveal delay-2" ref="feature2">
+          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
+             <q-icon name="account_tree" size="60px" color="amber" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold q-mb-sm">Multi-Department Management</h3>
+             <p class="text-grey-5">Seamlessly manage multiple faculties, departments, and campuses from one unified platform with role-based access control.</p>
           </div>
         </div>
 
-        <!-- Feature 3: Security -->
-        <div class="col-12 col-md-4">
-          <div class="glass-card column items-center text-center q-pa-xl rounded-borders h-100">
-             <div class="icon-container q-mb-lg">
-               <q-icon name="lock" size="80px" color="white" class="opacity-80" />
-             </div>
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Total Security</h3>
-             <p class="text-grey-5">Enterprise-grade encryption keeps your student data and payments safe.</p>
+        <!-- Feature 3: Research Tracking -->
+        <div class="col-12 col-md-6 scroll-reveal delay-3" ref="feature3">
+          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
+             <q-icon name="menu_book" size="60px" color="green" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold q-mb-sm">Research & Publication Tracking</h3>
+             <p class="text-grey-5">Monitor research projects, publications, and academic contributions across your institution with detailed analytics.</p>
+          </div>
+        </div>
+
+        <!-- Feature 4: Accreditation -->
+        <div class="col-12 col-md-6 scroll-reveal delay-4" ref="feature4">
+          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
+             <q-icon name="verified" size="60px" color="blue-4" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold q-mb-sm">Accreditation & Compliance</h3>
+             <p class="text-grey-5">Maintain compliance with educational standards and accreditation requirements effortlessly with automated reporting.</p>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- Trust / Stats Section -->
-    <div class="q-py-xl bg-dark text-center">
+    <!-- Stats Section -->
+    <div class="q-py-xl bg-black text-center scroll-reveal" ref="statsSection">
       <div class="row justify-center q-col-gutter-lg">
         <div class="col-12 col-sm-3">
-          <div class="text-h2 text-weight-bolder">1000+</div>
-          <div class="text-uppercase text-caption letter-spacing-2">Students Managed</div>
+          <div class="text-h2 text-weight-bolder text-gradient-academic">500+</div>
+          <div class="text-uppercase text-caption letter-spacing-2 text-grey-5">Departments Managed</div>
         </div>
-         <div class="col-12 col-sm-3">
-          <div class="text-h2 text-weight-bolder">100%</div>
-          <div class="text-uppercase text-caption letter-spacing-2">Uptime</div>
+        <div class="col-12 col-sm-3">
+          <div class="text-h2 text-weight-bolder text-gradient-academic">50,000+</div>
+          <div class="text-uppercase text-caption letter-spacing-2 text-grey-5">Students Enrolled</div>
         </div>
+        <div class="col-12 col-sm-3">
+          <div class="text-h2 text-weight-bolder text-gradient-academic">99.9%</div>
+          <div class="text-uppercase text-caption letter-spacing-2 text-grey-5">Uptime Guarantee</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div class="q-py-xl q-px-md bg-dark">
+      <div class="text-center q-mb-xl scroll-reveal" ref="pricingTitle">
+        <h2 class="text-h3 text-weight-bold text-gradient-academic">Flexible Pricing for Every Institution</h2>
+        <p class="text-grey-5">Choose the plan that fits your needs</p>
+      </div>
+
+      <div class="row q-col-gutter-lg container q-mx-auto" style="max-width: 1200px">
+        
+        <!-- Starter Plan -->
+        <div class="col-12 col-md-4 scroll-reveal delay-1" ref="pricing1">
+          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 column justify-between">
+            <div>
+              <div class="text-h6 text-weight-bold q-mb-sm">Starter</div>
+              <div class="text-caption text-grey-5 q-mb-md">For small colleges</div>
+              <div class="text-h3 text-weight-bold q-mb-xs">$499<span class="text-caption">/month</span></div>
+              <div class="text-caption text-grey-6 q-mb-lg">Up to 1,000 students</div>
+              <q-separator dark class="q-my-md" />
+              <div class="text-left q-mb-md">
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Basic Analytics</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Single Campus</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Email Support</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> 5 Departments</div>
+              </div>
+            </div>
+            <q-btn outline rounded color="white" label="Get Started" class="full-width" no-caps />
+          </div>
+        </div>
+
+        <!-- Professional Plan -->
+        <div class="col-12 col-md-4 scroll-reveal delay-2" ref="pricing2">
+          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 column justify-between glow-blue" style="border: 2px solid rgba(59, 130, 246, 0.3)">
+            <div>
+              <div class="badge-academic q-mb-md">Most Popular</div>
+              <div class="text-h6 text-weight-bold q-mb-sm">Professional</div>
+              <div class="text-caption text-grey-5 q-mb-md">For mid-size universities</div>
+              <div class="text-h3 text-weight-bold q-mb-xs">$1,499<span class="text-caption">/month</span></div>
+              <div class="text-caption text-grey-6 q-mb-lg">Up to 10,000 students</div>
+              <q-separator dark class="q-my-md" />
+              <div class="text-left q-mb-md">
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Advanced Analytics</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Multi-Campus Support</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Priority Support</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Unlimited Departments</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> API Access</div>
+              </div>
+            </div>
+            <q-btn unelevated rounded color="primary" label="Get Started" class="full-width" no-caps />
+          </div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="col-12 col-md-4 scroll-reveal delay-3" ref="pricing3">
+          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 column justify-between">
+            <div>
+              <div class="text-h6 text-weight-bold q-mb-sm">Enterprise</div>
+              <div class="text-caption text-grey-5 q-mb-md">For large institutions</div>
+              <div class="text-h3 text-weight-bold q-mb-xs">Custom</div>
+              <div class="text-caption text-grey-6 q-mb-lg">Unlimited students</div>
+              <q-separator dark class="q-my-md" />
+              <div class="text-left q-mb-md">
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Everything in Professional</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Dedicated Support</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> Custom Integrations</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> SLA Guarantee</div>
+                <div class="q-mb-sm"><q-icon name="check" color="green" /> On-Premise Option</div>
+              </div>
+            </div>
+            <q-btn outline rounded color="white" label="Contact Sales" class="full-width" no-caps />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="q-py-xl q-px-md bg-black">
+      <div class="text-center q-mb-xl scroll-reveal" ref="faqTitle">
+        <h2 class="text-h3 text-weight-bold text-gradient-academic">Frequently Asked Questions</h2>
+        <p class="text-grey-5">Everything you need to know</p>
+      </div>
+
+      <div class="container q-mx-auto scroll-reveal delay-1" style="max-width: 800px" ref="faqList">
+        <q-list dark class="glass-card-premium rounded-xl">
+          <q-expansion-item
+            dark
+            v-for="(faq, index) in faqs"
+            :key="index"
+            :label="faq.question"
+            header-class="text-weight-bold"
+            expand-icon-class="text-primary"
+          >
+            <q-card dark class="bg-transparent">
+              <q-card-section class="text-grey-5">
+                {{ faq.answer }}
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
       </div>
     </div>
 
     <!-- Footer / CTA -->
     <div class="q-py-xl bg-black text-center border-top-white-10">
-      <h2 class="text-h4 text-weight-bold q-mb-lg">Ready to transform your institute?</h2>
+      <h2 class="text-h4 text-weight-bold q-mb-lg text-gradient-academic">Ready to Transform Your Institution?</h2>
       
       <div class="row justify-center q-gutter-md q-mb-xl">
-        <q-input 
-          dark 
-          outlined 
-          placeholder="Enter your email" 
-          class="col-10 col-sm-4"
-          bg-color="transparent"
+        <q-btn 
+          unelevated
+          rounded
+          color="primary" 
+          label="Start Free Trial" 
+          size="lg" 
+          no-caps 
+          class="q-px-xl glow-blue"
+          to="/register"
         />
-        <q-btn outline color="white" label="Join Waitlist" size="lg" no-caps />
+        <q-btn 
+          outline
+          rounded
+          color="white" 
+          label="Schedule Demo" 
+          size="lg" 
+          no-caps 
+          class="q-px-xl"
+        />
       </div>
 
       <div class="text-grey-7 text-caption">
-        &copy; 2026 Tuition Management System. All rights reserved.
+        &copy; 2026 Academic Management System. All rights reserved.
       </div>
     </div>
 
@@ -122,14 +300,62 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
 const height = ref(800)
 
+const faqs = ref([
+  {
+    question: 'How does multi-campus management work?',
+    answer: 'Our platform allows you to manage multiple campuses from a single dashboard. Each campus can have its own departments, students, and staff, while maintaining centralized reporting and analytics.'
+  },
+  {
+    question: 'Is the system compliant with educational data regulations?',
+    answer: 'Yes, we are fully compliant with FERPA, GDPR, and other major educational data protection regulations. All data is encrypted at rest and in transit, and we maintain ISO 27001 certification.'
+  },
+  {
+    question: 'Can we integrate with existing student information systems?',
+    answer: 'Absolutely! We offer robust API access and pre-built integrations with major SIS platforms. Our team can also help with custom integrations for your specific needs.'
+  },
+  {
+    question: 'What kind of analytics and reporting is available?',
+    answer: 'We provide comprehensive analytics including student performance tracking, research output metrics, departmental analytics, financial reporting, and custom dashboards tailored to your institution\'s KPIs.'
+  },
+  {
+    question: 'What support options are available?',
+    answer: 'All plans include email support. Professional plans get priority support with faster response times. Enterprise customers receive dedicated account managers and 24/7 phone support.'
+  }
+])
+
+// Scroll reveal logic
+let observer = null
+
 onMounted(() => {
   height.value = $q.screen.height
+
+  // Initialize Intersection Observer for scroll reveals
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed')
+      }
+    })
+  }, {
+    threshold: 0.1
+  })
+
+  // Observe all scroll-reveal elements
+  document.querySelectorAll('.scroll-reveal').forEach(el => {
+    observer.observe(el)
+  })
+})
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
 })
 
 </script>
