@@ -284,6 +284,84 @@
       </div>
     </div>
 
+    <!-- Integration Ecosystem Section -->
+    <div class="q-py-xl q-px-md bg-dark">
+      <div class="container q-mx-auto" style="max-width: 1200px">
+        
+        <!-- Section Title -->
+        <div class="text-center q-mb-xl scroll-reveal" ref="integrationTitle">
+          <h2 class="text-h3 text-weight-bold text-gradient-academic q-mb-sm">Seamlessly Integrates With Your Tools</h2>
+          <p class="text-grey-5">Connect with the services you already use</p>
+        </div>
+
+        <!-- Integration Grid -->
+        <div class="row q-col-gutter-lg justify-center">
+          
+          <!-- Zoom Integration -->
+          <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-1" ref="integration1">
+            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="videocam" size="60px" color="blue-5" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold q-mb-sm">Zoom</h4>
+              <p class="text-caption text-grey-5">Live streaming and virtual classroom integration with automated recording</p>
+            </div>
+          </div>
+
+          <!-- Stripe Integration -->
+          <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-2" ref="integration2">
+            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="payment" size="60px" color="purple-5" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold q-mb-sm">Stripe</h4>
+              <p class="text-caption text-grey-5">Secure payment processing with automated invoicing and reconciliation</p>
+            </div>
+          </div>
+
+          <!-- Google Calendar Integration -->
+          <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-3" ref="integration3">
+            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="event" size="60px" color="amber-5" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold q-mb-sm">Google Calendar</h4>
+              <p class="text-caption text-grey-5">Sync schedules and send automatic reminders to students and staff</p>
+            </div>
+          </div>
+
+          <!-- AWS S3 Integration -->
+          <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-4" ref="integration4">
+            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="cloud" size="60px" color="orange-5" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold q-mb-sm">AWS S3</h4>
+              <p class="text-caption text-grey-5">Secure cloud storage for documents, recordings, and student files</p>
+            </div>
+          </div>
+
+          <!-- SendGrid Integration -->
+          <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-5" ref="integration5">
+            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="email" size="60px" color="cyan-5" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold q-mb-sm">SendGrid</h4>
+              <p class="text-caption text-grey-5">Automated email notifications and communication workflows</p>
+            </div>
+          </div>
+
+          <!-- API Access -->
+          <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-6" ref="integration6">
+            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="api" size="60px" color="green-5" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold q-mb-sm">Custom API</h4>
+              <p class="text-caption text-grey-5">Build your own integrations with our comprehensive REST API</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Integration CTA -->
+        <div class="text-center q-mt-xl scroll-reveal delay-7" ref="integrationCta">
+          <p class="text-grey-5 q-mb-md">Need a specific integration? We're always expanding our ecosystem.</p>
+          <q-btn outline rounded color="white" label="View All Integrations" no-caps class="q-px-lg" />
+        </div>
+
+      </div>
+    </div>
+
     <!-- Free Platform / Community Section -->
     <div class="q-py-xl q-px-md bg-dark">
       <div class="text-center q-mb-xl scroll-reveal" ref="communityTitle">

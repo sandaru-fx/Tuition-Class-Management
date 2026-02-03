@@ -202,3 +202,15 @@ body {
   letter-spacing: 0.5px;
   color: #3B82F6;
 }
+
+// Integration Card Hover Effects
+.integration-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 16px 48px rgba(59, 130, 246, 0.15), inset 0 0 20px rgba(59, 130, 246, 0.08);
+  }
+}
