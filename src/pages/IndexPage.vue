@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-dark text-white overflow-hidden">
+  <q-page class="bg-black text-white overflow-hidden">
     
     <!-- Hero Section -->
     <div class="hero-section relative-position window-height flex flex-center">
@@ -21,7 +21,7 @@
               Academic<br>Excellence,<br>Simplified.
             </h1>
             
-            <p class="text-h5 text-grey-4 q-mb-lg fade-in-up" style="animation-delay: 0.4s; max-width: 700px; line-height: 1.6;">
+            <p class="text-h5 text-grey-3 q-mb-lg fade-in-up" style="animation-delay: 0.4s; max-width: 700px; line-height: 1.6;">
               Empower your institution with advanced analytics, multi-campus management, and research tracking—all in one unified platform.
             </p>
 
@@ -77,7 +77,7 @@
           <div class="col-12 col-md-6 scroll-reveal delay-1" ref="problemsCol">
             <div class="q-mb-lg">
               <h3 class="text-h5 text-weight-bold q-mb-md" style="color: #EF4444">The Challenge</h3>
-              <p class="text-grey-6">Common pain points in traditional education management</p>
+              <p class="text-grey-4">Common pain points in traditional education management</p>
             </div>
 
             <!-- Problem 1 -->
@@ -129,7 +129,7 @@
           <div class="col-12 col-md-6 scroll-reveal delay-2" ref="solutionsCol">
             <div class="q-mb-lg">
               <h3 class="text-h5 text-weight-bold q-mb-md" style="color: #10B981">The ClassMaster Solution</h3>
-              <p class="text-grey-6">Modern tools that transform how you work</p>
+              <p class="text-grey-4">Modern tools that transform how you work</p>
             </div>
 
             <!-- Solution 1 -->
@@ -222,7 +222,7 @@
     <div class="q-py-xl q-px-md bg-dark relative-position">
       <div class="text-center q-mb-xl scroll-reveal" ref="featuresTitle">
         <h2 class="text-h3 text-weight-bold text-gradient-academic">Built for Higher Education</h2>
-        <div class="text-grey-6">Comprehensive tools for modern institutions</div>
+        <div class="text-grey-4">Comprehensive tools for modern institutions</div>
       </div>
 
       <div class="row q-col-gutter-xl container q-mx-auto" style="max-width: 1200px">
@@ -485,7 +485,7 @@
         />
       </div>
 
-      <div class="text-grey-7 text-caption">
+      <div class="text-grey-4 text-caption">
         &copy; 2026 Academic Management System. Free & Open Source.
       </div>
     </div>
