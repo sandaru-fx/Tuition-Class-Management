@@ -2,43 +2,36 @@
   <q-page class="bg-white text-academic-dark overflow-hidden">
     
     <!-- Hero Section -->
-    <div class="hero-section relative-position window-height flex flex-center">
-      <q-parallax :height="height" :speed="0.5">
-        <template v-slot:media>
-          <!-- Light Pattern Background -->
-          <div class="absolute-full hero-pattern-light"></div>
-          <!-- Subtle Academic Gradient Overlay -->
-          <div class="absolute-full" style="background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.03) 0%, transparent 40%);"></div>
-        </template>
-
-        <template v-slot:content="scope">
-          <div class="absolute column items-center q-pa-md text-center" 
-               :style="{
-                 opacity: 1 - scope.percentScrolled,
-                 transform: `translateY(${scope.percentScrolled * 50}px)`
-               }">
-             
-            <h1 class="text-super-large text-uppercase q-mb-md fade-in-up text-gradient-academic-light" style="animation-delay: 0.2s">
-              Academic<br>Excellence,<br>Simplified.
+    <div class="hero-section relative-position window-height flex flex-center bg-academic-white overflow-hidden hero-pattern-light">
+      <div class="container q-mx-auto q-px-md" style="max-width: 1400px; z-index: 2">
+        <div class="row items-center q-col-gutter-xl">
+          
+          <!-- Left Content -->
+          <div class="col-12 col-md-6 text-left fade-in-up">
+            <div class="badge-light q-mb-md inline-block">The Unified OS for Higher Education</div>
+            
+            <h1 class="text-h2 text-weight-bolder q-mb-md text-academic-blue" style="line-height: 1.1; font-size: clamp(2.5rem, 5vw, 4.5rem);">
+              Academic Excellence,<br>
+              <span class="text-gradient-academic-light text-uppercase">Simplified.</span>
             </h1>
             
-            <p class="text-h5 text-academic-medium q-mb-lg fade-in-up" style="animation-delay: 0.4s; max-width: 700px; line-height: 1.6;">
-              Empower your institution with advanced analytics, multi-campus management, and research tracking—all in one unified platform.
+            <p class="text-h6 text-academic-medium q-mb-xl" style="max-width: 550px; line-height: 1.6;">
+              Empower your institution with advanced analytics, multi-campus management, and research tracking—all in one unified, professional platform.
             </p>
 
-            <div class="row q-gutter-sm items-center fade-in-up" style="animation-delay: 0.6s">
+            <div class="row q-gutter-md">
               <q-btn 
-                rounded 
                 unelevated
+                rounded
                 class="q-px-xl q-py-sm text-weight-bold btn-academic-primary"
-                label="Get Started" 
+                label="Get Started Free" 
                 size="lg" 
                 no-caps
                 to="/register"
               />
               <q-btn 
-                rounded 
                 unelevated
+                rounded
                 class="q-px-xl q-py-sm text-weight-bold btn-academic-secondary"
                 label="Watch Demo" 
                 size="lg" 
@@ -48,14 +41,68 @@
             </div>
 
             <!-- Trust Badges -->
-            <div class="row q-gutter-md q-mt-xl fade-in-up" style="animation-delay: 0.8s">
-              <div class="badge-light">ISO 27001 Certified</div>
-              <div class="badge-light">GDPR Compliant</div>
-              <div class="badge-light">99.9% Uptime</div>
+            <div class="row q-gutter-md q-mt-xl opacity-80">
+              <div class="row items-center q-gutter-xs">
+                <q-icon name="verified_user" color="primary" />
+                <span class="text-caption text-weight-bold">ISO 27001</span>
+              </div>
+              <div class="row items-center q-gutter-xs">
+                <q-icon name="security" color="primary" />
+                <span class="text-caption text-weight-bold">GDPR Ready</span>
+              </div>
+              <div class="row items-center q-gutter-xs">
+                <q-icon name="cloud_done" color="primary" />
+                <span class="text-caption text-weight-bold">99.9% Uptime</span>
+              </div>
             </div>
           </div>
-        </template>
-      </q-parallax>
+
+          <!-- Right Content: Dashboard Preview -->
+          <div class="col-12 col-md-6 gt-sm fade-in-up" style="animation-delay: 0.4s">
+            <div class="relative-position">
+              <!-- Floating Abstract Shapes -->
+              <div class="absolute-top-right rounded-circle bg-blue-1" style="width: 300px; height: 300px; filter: blur(100px); opacity: 0.5; z-index: -1"></div>
+              
+              <!-- Dashboard Mockup Card -->
+              <div class="card-light-blue q-pa-md rounded-xl shadow-2xl overflow-hidden" style="border: 4px solid #fff; transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);">
+                <div class="bg-academic-white rounded-lg q-pa-md border-light">
+                  <div class="row items-center q-mb-md">
+                    <div class="text-weight-bold text-academic-blue">Academic Insights</div>
+                    <q-space />
+                    <q-icon name="more_horiz" color="grey-7" />
+                  </div>
+                  <div class="row q-col-gutter-sm">
+                    <div class="col-6">
+                      <div class="q-pa-md bg-academic-blue-light rounded-borders">
+                        <div class="text-caption text-academic-medium">Students</div>
+                        <div class="text-h6 text-weight-bold">50.2K</div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="q-pa-md bg-green-1 rounded-borders">
+                        <div class="text-caption text-academic-medium">Research</div>
+                        <div class="text-h6 text-weight-bold">1.8K</div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="q-mt-sm bg-academic-light rounded-borders q-pa-sm" style="height: 120px">
+                        <div class="row items-center q-gutter-xs q-mb-xs">
+                          <div class="bg-primary rounded" style="width: 20px; height: 60px"></div>
+                          <div class="bg-blue-4 rounded" style="width: 20px; height: 80px"></div>
+                          <div class="bg-primary rounded" style="width: 20px; height: 40px"></div>
+                          <div class="bg-blue-3 rounded" style="width: 20px; height: 90px"></div>
+                          <div class="bg-primary rounded" style="width: 20px; height: 110px"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
     </div>
 
     <!-- Problem & Solution Section -->
