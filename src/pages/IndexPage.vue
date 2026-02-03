@@ -1,13 +1,14 @@
 <template>
-  <q-page class="bg-black text-white overflow-hidden">
+  <q-page class="bg-white text-academic-dark overflow-hidden">
     
     <!-- Hero Section -->
     <div class="hero-section relative-position window-height flex flex-center">
       <q-parallax :height="height" :speed="0.5">
         <template v-slot:media>
-          <img src="~assets/hero-abstract.png" style="opacity: 0.3; filter: contrast(1.3) brightness(0.7);">
-          <!-- Academic Gradient Overlay -->
-          <div class="absolute-full" style="background: radial-gradient(circle at 30% 50%, rgba(30, 58, 138, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(217, 119, 6, 0.1) 0%, transparent 50%);"></div>
+          <!-- Light Pattern Background -->
+          <div class="absolute-full hero-pattern-light"></div>
+          <!-- Subtle Academic Gradient Overlay -->
+          <div class="absolute-full" style="background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.03) 0%, transparent 40%);"></div>
         </template>
 
         <template v-slot:content="scope">
@@ -17,11 +18,11 @@
                  transform: `translateY(${scope.percentScrolled * 50}px)`
                }">
              
-            <h1 class="text-super-large text-uppercase q-mb-md fade-in-up text-gradient-academic" style="animation-delay: 0.2s">
+            <h1 class="text-super-large text-uppercase q-mb-md fade-in-up text-gradient-academic-light" style="animation-delay: 0.2s">
               Academic<br>Excellence,<br>Simplified.
             </h1>
             
-            <p class="text-h5 text-grey-3 q-mb-lg fade-in-up" style="animation-delay: 0.4s; max-width: 700px; line-height: 1.6;">
+            <p class="text-h5 text-academic-medium q-mb-lg fade-in-up" style="animation-delay: 0.4s; max-width: 700px; line-height: 1.6;">
               Empower your institution with advanced analytics, multi-campus management, and research tracking—all in one unified platform.
             </p>
 
@@ -29,21 +30,18 @@
               <q-btn 
                 rounded 
                 unelevated
-                color="primary" 
-                text-color="white" 
+                class="q-px-xl q-py-sm text-weight-bold btn-academic-primary"
                 label="Get Started" 
                 size="lg" 
-                class="q-px-xl q-py-sm text-weight-bold glow-blue"
                 no-caps
                 to="/register"
               />
               <q-btn 
                 rounded 
-                outline
-                color="white" 
+                unelevated
+                class="q-px-xl q-py-sm text-weight-bold btn-academic-secondary"
                 label="Watch Demo" 
                 size="lg" 
-                class="q-px-xl q-py-sm text-weight-bold"
                 no-caps
                 icon="play_circle"
               />
@@ -51,9 +49,9 @@
 
             <!-- Trust Badges -->
             <div class="row q-gutter-md q-mt-xl fade-in-up" style="animation-delay: 0.8s">
-              <div class="badge-academic">ISO 27001 Certified</div>
-              <div class="badge-academic">GDPR Compliant</div>
-              <div class="badge-academic">99.9% Uptime</div>
+              <div class="badge-light">ISO 27001 Certified</div>
+              <div class="badge-light">GDPR Compliant</div>
+              <div class="badge-light">99.9% Uptime</div>
             </div>
           </div>
         </template>
@@ -61,13 +59,13 @@
     </div>
 
     <!-- Problem & Solution Section -->
-    <div class="q-py-xl q-px-md bg-black">
+    <div class="q-py-xl q-px-md bg-academic-light">
       <div class="container q-mx-auto" style="max-width: 1200px">
         
         <!-- Section Title -->
         <div class="text-center q-mb-xl scroll-reveal" ref="whyTitle">
-          <h2 class="text-h3 text-weight-bold text-gradient-academic q-mb-sm">Why ClassMaster?</h2>
-          <p class="text-grey-5">Solving the real challenges in higher education management</p>
+          <h2 class="text-h3 text-weight-bold text-gradient-academic-light q-mb-sm">Why ClassMaster?</h2>
+          <p class="text-academic-medium">Solving the real challenges in higher education management</p>
         </div>
 
         <!-- Problem-Solution Grid -->
@@ -76,50 +74,50 @@
           <!-- Problems Column -->
           <div class="col-12 col-md-6 scroll-reveal delay-1" ref="problemsCol">
             <div class="q-mb-lg">
-              <h3 class="text-h5 text-weight-bold q-mb-md" style="color: #EF4444">The Challenge</h3>
-              <p class="text-grey-4">Common pain points in traditional education management</p>
+              <h3 class="text-h5 text-weight-bold q-mb-md text-negative">The Challenge</h3>
+              <p class="text-academic-medium">Common pain points in traditional education management</p>
             </div>
 
             <!-- Problem 1 -->
-            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #EF4444">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="table_chart" size="40px" color="red-5" />
+            <div class="card-light q-pa-lg q-mb-md rounded-xl" style="border-left: 4px solid #ef4444">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="table_chart" size="40px" color="negative" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Drowning in Spreadsheets</div>
-                  <div class="text-caption text-grey-5">Manual data entry across disconnected systems wastes hours daily</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Drowning in Spreadsheets</div>
+                  <div class="text-caption text-academic-medium">Manual data entry across disconnected systems wastes hours daily</div>
                 </div>
               </div>
             </div>
 
             <!-- Problem 2 -->
-            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #EF4444">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="payments" size="40px" color="red-5" />
+            <div class="card-light q-pa-lg q-mb-md rounded-xl" style="border-left: 4px solid #ef4444">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="payments" size="40px" color="negative" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Payment Tracking Chaos</div>
-                  <div class="text-caption text-grey-5">Missed payments, manual invoicing, and reconciliation nightmares</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Payment Tracking Chaos</div>
+                  <div class="text-caption text-academic-medium">Missed payments, manual invoicing, and reconciliation nightmares</div>
                 </div>
               </div>
             </div>
 
             <!-- Problem 3 -->
-            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #EF4444">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="event_busy" size="40px" color="red-5" />
+            <div class="card-light q-pa-lg q-mb-md rounded-xl" style="border-left: 4px solid #ef4444">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="event_busy" size="40px" color="negative" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Scheduling Conflicts</div>
-                  <div class="text-caption text-grey-5">Double-bookings, room conflicts, and last-minute changes</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Scheduling Conflicts</div>
+                  <div class="text-caption text-academic-medium">Double-bookings, room conflicts, and last-minute changes</div>
                 </div>
               </div>
             </div>
 
             <!-- Problem 4 -->
-            <div class="glass-card-premium q-pa-lg rounded-xl" style="border-left: 3px solid #EF4444">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="visibility_off" size="40px" color="red-5" />
+            <div class="card-light q-pa-lg rounded-xl" style="border-left: 4px solid #ef4444">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="visibility_off" size="40px" color="negative" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Limited Visibility</div>
-                  <div class="text-caption text-grey-5">No real-time insights into student performance or institutional metrics</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Limited Visibility</div>
+                  <div class="text-caption text-academic-medium">No real-time insights into student performance or institutional metrics</div>
                 </div>
               </div>
             </div>
@@ -128,50 +126,50 @@
           <!-- Solutions Column -->
           <div class="col-12 col-md-6 scroll-reveal delay-2" ref="solutionsCol">
             <div class="q-mb-lg">
-              <h3 class="text-h5 text-weight-bold q-mb-md" style="color: #10B981">The ClassMaster Solution</h3>
-              <p class="text-grey-4">Modern tools that transform how you work</p>
+              <h3 class="text-h5 text-weight-bold q-mb-md text-positive">The ClassMaster Solution</h3>
+              <p class="text-academic-medium">Modern tools that transform how you work</p>
             </div>
 
             <!-- Solution 1 -->
-            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #10B981">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="integration_instructions" size="40px" color="green-5" />
+            <div class="card-light q-pa-lg q-mb-md rounded-xl" style="border-left: 4px solid #10b981">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="integration_instructions" size="40px" color="positive" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Unified Platform</div>
-                  <div class="text-caption text-grey-5">All data in one place with automated workflows and real-time sync</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Unified Platform</div>
+                  <div class="text-caption text-academic-medium">All data in one place with automated workflows and real-time sync</div>
                 </div>
               </div>
             </div>
 
             <!-- Solution 2 -->
-            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #10B981">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="account_balance_wallet" size="40px" color="green-5" />
+            <div class="card-light q-pa-lg q-mb-md rounded-xl" style="border-left: 4px solid #10b981">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="account_balance_wallet" size="40px" color="positive" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Automated Finance</div>
-                  <div class="text-caption text-grey-5">Smart invoicing, payment tracking, and instant reconciliation</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Automated Finance</div>
+                  <div class="text-caption text-academic-medium">Smart invoicing, payment tracking, and instant reconciliation</div>
                 </div>
               </div>
             </div>
 
             <!-- Solution 3 -->
-            <div class="glass-card-premium q-pa-lg q-mb-md rounded-xl" style="border-left: 3px solid #10B981">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="auto_awesome" size="40px" color="green-5" />
+            <div class="card-light q-pa-lg q-mb-md rounded-xl" style="border-left: 4px solid #10b981">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="auto_awesome" size="40px" color="positive" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Intelligent Scheduling</div>
-                  <div class="text-caption text-grey-5">AI-powered conflict resolution with instant notifications</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Intelligent Scheduling</div>
+                  <div class="text-caption text-academic-medium">AI-powered conflict resolution with instant notifications</div>
                 </div>
               </div>
             </div>
 
             <!-- Solution 4 -->
-            <div class="glass-card-premium q-pa-lg rounded-xl" style="border-left: 3px solid #10B981">
-              <div class="row items-center q-gutter-md">
-                <q-icon name="insights" size="40px" color="green-5" />
+            <div class="card-light q-pa-lg rounded-xl" style="border-left: 4px solid #10b981">
+              <div class="row items-center q-gutter-md no-wrap">
+                <q-icon name="insights" size="40px" color="positive" />
                 <div class="col">
-                  <div class="text-weight-bold q-mb-xs">Advanced Analytics</div>
-                  <div class="text-caption text-grey-5">Real-time dashboards with actionable insights and predictive analytics</div>
+                  <div class="text-weight-bold text-academic-dark q-mb-xs">Advanced Analytics</div>
+                  <div class="text-caption text-academic-medium">Real-time dashboards with actionable insights and predictive analytics</div>
                 </div>
               </div>
             </div>
@@ -182,35 +180,35 @@
     </div>
 
     <!-- Dashboard Preview Section -->
-    <div class="q-py-xl q-px-md bg-black relative-position">
+    <div class="q-py-xl q-px-md bg-white relative-position">
       <div class="text-center q-mb-xl scroll-reveal" ref="dashboardPreview">
-        <h2 class="text-h3 text-weight-bold text-gradient-academic q-mb-sm">See It In Action</h2>
-        <p class="text-grey-5">Real-time insights for institutional excellence</p>
+        <h2 class="text-h3 text-weight-bold text-gradient-academic-light q-mb-sm">See It In Action</h2>
+        <p class="text-academic-medium">Real-time insights for institutional excellence</p>
       </div>
 
       <div class="container q-mx-auto scroll-reveal delay-1" style="max-width: 1200px" ref="dashboardMockup">
-        <div class="glass-card-premium q-pa-lg rounded-xl glow-subtle">
+        <div class="card-light-blue q-pa-lg rounded-xl">
           <div class="row q-col-gutter-md">
             <!-- Mock Dashboard Cards -->
             <div class="col-12 col-md-4">
-              <div class="q-pa-md bg-white-10 rounded-borders">
-                <div class="text-caption text-grey-5 q-mb-xs">Total Students</div>
-                <div class="text-h4 text-weight-bold">50,247</div>
-                <div class="text-caption text-green q-mt-xs">↑ 12% this semester</div>
+              <div class="q-pa-md bg-academic-blue-light rounded-borders">
+                <div class="text-caption text-academic-medium q-mb-xs">Total Students</div>
+                <div class="text-h4 text-weight-bold text-academic-dark">50,247</div>
+                <div class="text-caption text-positive q-mt-xs text-weight-bold">↑ 12% this semester</div>
               </div>
             </div>
             <div class="col-12 col-md-4">
-              <div class="q-pa-md bg-white-10 rounded-borders">
-                <div class="text-caption text-grey-5 q-mb-xs">Active Departments</div>
-                <div class="text-h4 text-weight-bold">524</div>
-                <div class="text-caption text-blue q-mt-xs">Across 12 campuses</div>
+              <div class="q-pa-md bg-academic-blue-light rounded-borders">
+                <div class="text-caption text-academic-medium q-mb-xs">Active Departments</div>
+                <div class="text-h4 text-weight-bold text-academic-dark">524</div>
+                <div class="text-caption text-primary q-mt-xs text-weight-bold">Across 12 campuses</div>
               </div>
             </div>
             <div class="col-12 col-md-4">
-              <div class="q-pa-md bg-white-10 rounded-borders">
-                <div class="text-caption text-grey-5 q-mb-xs">Research Publications</div>
-                <div class="text-h4 text-weight-bold">1,847</div>
-                <div class="text-caption text-amber q-mt-xs">This academic year</div>
+              <div class="q-pa-md bg-academic-blue-light rounded-borders">
+                <div class="text-caption text-academic-medium q-mb-xs">Research Publications</div>
+                <div class="text-h4 text-weight-bold text-academic-dark">1,847</div>
+                <div class="text-caption text-warning q-mt-xs text-weight-bold">This academic year</div>
               </div>
             </div>
           </div>
@@ -219,47 +217,47 @@
     </div>
 
     <!-- Features Section - Academic Focus -->
-    <div class="q-py-xl q-px-md bg-dark relative-position">
+    <div class="q-py-xl q-px-md bg-academic-light relative-position">
       <div class="text-center q-mb-xl scroll-reveal" ref="featuresTitle">
-        <h2 class="text-h3 text-weight-bold text-gradient-academic">Built for Higher Education</h2>
-        <div class="text-grey-4">Comprehensive tools for modern institutions</div>
+        <h2 class="text-h3 text-weight-bold text-gradient-academic-light">Built for Higher Education</h2>
+        <p class="text-academic-medium">Comprehensive tools for modern institutions</p>
       </div>
 
       <div class="row q-col-gutter-xl container q-mx-auto" style="max-width: 1200px">
         
         <!-- Feature 1: Advanced Analytics -->
         <div class="col-12 col-md-6 scroll-reveal delay-1" ref="feature1">
-          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
+          <div class="card-light column q-pa-xl rounded-xl h-100">
              <q-icon name="analytics" size="60px" color="primary" class="q-mb-md" />
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Advanced Analytics & Reporting</h3>
-             <p class="text-grey-5">Track academic performance, research output, and institutional metrics with comprehensive dashboards tailored for higher education.</p>
+             <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">Advanced Analytics & Reporting</h3>
+             <p class="text-academic-medium">Track academic performance, research output, and institutional metrics with comprehensive dashboards tailored for higher education.</p>
           </div>
         </div>
 
         <!-- Feature 2: Multi-Department Management -->
         <div class="col-12 col-md-6 scroll-reveal delay-2" ref="feature2">
-          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
-             <q-icon name="account_tree" size="60px" color="amber" class="q-mb-md" />
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Multi-Department Management</h3>
-             <p class="text-grey-5">Seamlessly manage multiple faculties, departments, and campuses from one unified platform with role-based access control.</p>
+          <div class="card-light column q-pa-xl rounded-xl h-100">
+             <q-icon name="account_tree" size="60px" color="warning" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">Multi-Department Management</h3>
+             <p class="text-academic-medium">Seamlessly manage multiple faculties, departments, and campuses from one unified platform with role-based access control.</p>
           </div>
         </div>
 
         <!-- Feature 3: Research Tracking -->
         <div class="col-12 col-md-6 scroll-reveal delay-3" ref="feature3">
-          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
-             <q-icon name="menu_book" size="60px" color="green" class="q-mb-md" />
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Research & Publication Tracking</h3>
-             <p class="text-grey-5">Monitor research projects, publications, and academic contributions across your institution with detailed analytics.</p>
+          <div class="card-light column q-pa-xl rounded-xl h-100">
+             <q-icon name="menu_book" size="60px" color="positive" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">Research & Publication Tracking</h3>
+             <p class="text-academic-medium">Maintain a complete record of scholarly activities, research grants, and publications for faculty members and departments.</p>
           </div>
         </div>
 
         <!-- Feature 4: Accreditation -->
         <div class="col-12 col-md-6 scroll-reveal delay-4" ref="feature4">
-          <div class="glass-card-premium column q-pa-xl rounded-borders h-100">
-             <q-icon name="verified" size="60px" color="blue-4" class="q-mb-md" />
-             <h3 class="text-h5 text-weight-bold q-mb-sm">Accreditation & Compliance</h3>
-             <p class="text-grey-5">Maintain compliance with educational standards and accreditation requirements effortlessly with automated reporting.</p>
+          <div class="card-light column q-pa-xl rounded-xl h-100">
+             <q-icon name="assignment_turned_in" size="60px" color="primary" class="q-mb-md" />
+             <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">Accreditation & Compliance</h3>
+             <p class="text-academic-medium">Automate document collection and reporting required for institutional accreditation and government compliance standards.</p>
           </div>
         </div>
 
@@ -267,87 +265,87 @@
     </div>
 
     <!-- Stats Section -->
-    <div class="q-py-xl bg-black text-center scroll-reveal" ref="statsSection">
+    <div class="q-py-xl bg-academic-blue-light text-center scroll-reveal" ref="statsSection">
       <div class="row justify-center q-col-gutter-lg">
         <div class="col-12 col-sm-3">
-          <div class="text-h2 text-weight-bolder text-gradient-academic">500+</div>
-          <div class="text-uppercase text-caption letter-spacing-2 text-grey-5">Departments Managed</div>
+          <div class="text-h2 text-weight-bolder text-gradient-academic-light">500+</div>
+          <div class="text-uppercase text-caption letter-spacing-2 text-academic-medium">Departments Managed</div>
         </div>
         <div class="col-12 col-sm-3">
-          <div class="text-h2 text-weight-bolder text-gradient-academic">50,000+</div>
-          <div class="text-uppercase text-caption letter-spacing-2 text-grey-5">Students Enrolled</div>
+          <div class="text-h2 text-weight-bolder text-gradient-academic-light">50,000+</div>
+          <div class="text-uppercase text-caption letter-spacing-2 text-academic-medium">Students Enrolled</div>
         </div>
         <div class="col-12 col-sm-3">
-          <div class="text-h2 text-weight-bolder text-gradient-academic">99.9%</div>
-          <div class="text-uppercase text-caption letter-spacing-2 text-grey-5">Uptime Guarantee</div>
+          <div class="text-h2 text-weight-bolder text-gradient-academic-light">99.9%</div>
+          <div class="text-uppercase text-caption letter-spacing-2 text-academic-medium">Uptime Guarantee</div>
         </div>
       </div>
     </div>
 
     <!-- Integration Ecosystem Section -->
-    <div class="q-py-xl q-px-md bg-dark">
+    <div class="q-py-xl q-px-md bg-white">
       <div class="container q-mx-auto" style="max-width: 1200px">
         
         <!-- Section Title -->
         <div class="text-center q-mb-xl scroll-reveal" ref="integrationTitle">
-          <h2 class="text-h3 text-weight-bold text-gradient-academic q-mb-sm">Seamlessly Integrates With Your Tools</h2>
-          <p class="text-grey-5">Connect with the services you already use</p>
+          <h2 class="text-h3 text-weight-bold text-gradient-academic-light q-mb-sm">Seamlessly Integrates With Your Tools</h2>
+          <p class="text-academic-medium">Connect with the services you already use</p>
         </div>
 
-        <!-- Integration Grid -->
+          <!-- Integration Grid -->
         <div class="row q-col-gutter-lg justify-center">
           
           <!-- Zoom Integration -->
           <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-1" ref="integration1">
-            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
-              <q-icon name="videocam" size="60px" color="blue-5" class="q-mb-md" />
-              <h4 class="text-h6 text-weight-bold q-mb-sm">Zoom</h4>
-              <p class="text-caption text-grey-5">Live streaming and virtual classroom integration with automated recording</p>
+            <div class="card-light q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="videocam" size="60px" color="blue" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-sm">Zoom</h4>
+              <p class="text-caption text-academic-medium">Live streaming and virtual classroom integration with automated recording</p>
             </div>
           </div>
 
           <!-- Stripe Integration -->
           <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-2" ref="integration2">
-            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
-              <q-icon name="payment" size="60px" color="purple-5" class="q-mb-md" />
-              <h4 class="text-h6 text-weight-bold q-mb-sm">Stripe</h4>
-              <p class="text-caption text-grey-5">Secure payment processing with automated invoicing and reconciliation</p>
+            <div class="card-light q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="payment" size="60px" color="purple" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-sm">Stripe</h4>
+              <p class="text-caption text-academic-medium">Secure payment processing with automated invoicing and reconciliation</p>
             </div>
           </div>
 
           <!-- Google Calendar Integration -->
           <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-3" ref="integration3">
-            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
-              <q-icon name="event" size="60px" color="amber-5" class="q-mb-md" />
-              <h4 class="text-h6 text-weight-bold q-mb-sm">Google Calendar</h4>
-              <p class="text-caption text-grey-5">Sync schedules and send automatic reminders to students and staff</p>
+            <div class="card-light q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="event" size="60px" color="amber" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-sm">Google Calendar</h4>
+              <p class="text-caption text-academic-medium">Sync schedules and send automatic reminders to students and staff</p>
             </div>
           </div>
 
           <!-- AWS S3 Integration -->
           <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-4" ref="integration4">
-            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
-              <q-icon name="cloud" size="60px" color="orange-5" class="q-mb-md" />
-              <h4 class="text-h6 text-weight-bold q-mb-sm">AWS S3</h4>
-              <p class="text-caption text-grey-5">Secure cloud storage for documents, recordings, and student files</p>
+            <div class="card-light q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="cloud" size="60px" color="orange" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-sm">AWS S3</h4>
+              <p class="text-caption text-academic-medium">Secure cloud storage for documents, recordings, and student files</p>
             </div>
           </div>
 
           <!-- SendGrid Integration -->
           <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-5" ref="integration5">
-            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
-              <q-icon name="email" size="60px" color="cyan-5" class="q-mb-md" />
-              <h4 class="text-h6 text-weight-bold q-mb-sm">SendGrid</h4>
-              <p class="text-caption text-grey-5">Automated email notifications and communication workflows</p>
+            <div class="card-light q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="email" size="60px" color="cyan" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-sm">SendGrid</h4>
+              <p class="text-caption text-academic-medium">Automated email notifications and communication workflows</p>
             </div>
           </div>
 
           <!-- API Access -->
           <div class="col-12 col-sm-6 col-md-4 scroll-reveal delay-6" ref="integration6">
-            <div class="glass-card-premium q-pa-lg rounded-xl text-center h-100 integration-card">
-              <q-icon name="api" size="60px" color="green-5" class="q-mb-md" />
-              <h4 class="text-h6 text-weight-bold q-mb-sm">Custom API</h4>
-              <p class="text-caption text-grey-5">Build your own integrations with our comprehensive REST API</p>
+            <div class="card-light q-pa-lg rounded-xl text-center h-100 integration-card">
+              <q-icon name="api" size="60px" color="green" class="q-mb-md" />
+              <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-sm">Custom API</h4>
+              <p class="text-caption text-academic-medium">Build your own integrations with our comprehensive REST API</p>
             </div>
           </div>
 
@@ -355,28 +353,28 @@
 
         <!-- Integration CTA -->
         <div class="text-center q-mt-xl scroll-reveal delay-7" ref="integrationCta">
-          <p class="text-grey-5 q-mb-md">Need a specific integration? We're always expanding our ecosystem.</p>
-          <q-btn outline rounded color="white" label="View All Integrations" no-caps class="q-px-lg" />
+          <p class="text-academic-medium q-mb-md">Need a specific integration? We're always expanding our ecosystem.</p>
+          <q-btn unelevated rounded color="primary" label="View All Integrations" no-caps class="q-px-lg" />
         </div>
 
       </div>
     </div>
 
     <!-- Free Platform / Community Section -->
-    <div class="q-py-xl q-px-md bg-dark">
+    <div class="q-py-xl q-px-md bg-academic-light">
       <div class="text-center q-mb-xl scroll-reveal" ref="communityTitle">
-        <h2 class="text-h3 text-weight-bold text-gradient-academic">Free & Open for All Institutions</h2>
-        <p class="text-grey-5">No hidden costs. No subscriptions. Just powerful tools for education.</p>
+        <h2 class="text-h3 text-weight-bold text-gradient-academic-light">Free & Open for All Institutions</h2>
+        <p class="text-academic-medium">No hidden costs. No subscriptions. Just powerful tools for education.</p>
       </div>
 
       <div class="row q-col-gutter-lg container q-mx-auto" style="max-width: 1200px">
         
         <!-- Free Forever -->
         <div class="col-12 col-md-4 scroll-reveal delay-1" ref="community1">
-          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100 glow-blue" style="border: 2px solid rgba(59, 130, 246, 0.3)">
-            <q-icon name="favorite" size="60px" color="red-5" class="q-mb-md" />
-            <h3 class="text-h5 text-weight-bold q-mb-sm">100% Free</h3>
-            <p class="text-grey-5">
+          <div class="card-light-blue q-pa-xl rounded-xl text-center h-100" style="border: 2px solid #DBEAFE">
+            <q-icon name="favorite" size="60px" color="negative" class="q-mb-md" />
+            <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">100% Free</h3>
+            <p class="text-academic-medium">
               No pricing tiers, no premium features locked behind paywalls. Every feature is available to every institution, completely free.
             </p>
           </div>
@@ -384,10 +382,10 @@
 
         <!-- Open Source -->
         <div class="col-12 col-md-4 scroll-reveal delay-2" ref="community2">
-          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100">
-            <q-icon name="code" size="60px" color="green-5" class="q-mb-md" />
-            <h3 class="text-h5 text-weight-bold q-mb-sm">Open Source</h3>
-            <p class="text-grey-5">
+          <div class="card-light q-pa-xl rounded-xl text-center h-100">
+            <q-icon name="code" size="60px" color="positive" class="q-mb-md" />
+            <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">Open Source</h3>
+            <p class="text-academic-medium">
               Built with transparency in mind. Customize, extend, and adapt the platform to your institution's unique needs.
             </p>
           </div>
@@ -395,10 +393,10 @@
 
         <!-- Community Driven -->
         <div class="col-12 col-md-4 scroll-reveal delay-3" ref="community3">
-          <div class="glass-card-premium q-pa-xl rounded-xl text-center h-100">
-            <q-icon name="groups" size="60px" color="amber-5" class="q-mb-md" />
-            <h3 class="text-h5 text-weight-bold q-mb-sm">Community Driven</h3>
-            <p class="text-grey-5">
+          <div class="card-light q-pa-xl rounded-xl text-center h-100">
+            <q-icon name="groups" size="60px" color="warning" class="q-mb-md" />
+            <h3 class="text-h5 text-weight-bold text-academic-dark q-mb-sm">Community Driven</h3>
+            <p class="text-academic-medium">
               Join a growing community of educators and developers working together to improve educational technology.
             </p>
           </div>
@@ -409,8 +407,8 @@
       <!-- What You Get -->
       <div class="text-center q-mt-xl scroll-reveal delay-4" ref="features">
         <div class="container q-mx-auto" style="max-width: 900px">
-          <div class="glass-card-premium q-pa-xl rounded-xl">
-            <h4 class="text-h6 text-weight-bold q-mb-lg">Everything Included</h4>
+          <div class="card-light q-pa-xl rounded-xl">
+            <h4 class="text-h6 text-weight-bold text-academic-dark q-mb-lg">Everything Included</h4>
             <div class="row q-col-gutter-md text-left">
               <div class="col-12 col-sm-6">
                 <div class="q-mb-sm"><q-icon name="check_circle" color="green" /> Unlimited Students & Departments</div>
@@ -431,24 +429,23 @@
     </div>
 
     <!-- FAQ Section -->
-    <div class="q-py-xl q-px-md bg-black">
+    <div class="q-py-xl q-px-md bg-white">
       <div class="text-center q-mb-xl scroll-reveal" ref="faqTitle">
-        <h2 class="text-h3 text-weight-bold text-gradient-academic">Frequently Asked Questions</h2>
-        <p class="text-grey-5">Everything you need to know</p>
+        <h2 class="text-h3 text-weight-bold text-gradient-academic-light">Frequently Asked Questions</h2>
+        <p class="text-academic-medium">Everything you need to know</p>
       </div>
 
       <div class="container q-mx-auto scroll-reveal delay-1" style="max-width: 800px" ref="faqList">
-        <q-list dark class="glass-card-premium rounded-xl">
+        <q-list class="card-light rounded-xl">
           <q-expansion-item
-            dark
             v-for="(faq, index) in faqs"
             :key="index"
             :label="faq.question"
-            header-class="text-weight-bold"
+            header-class="text-weight-bold text-academic-dark"
             expand-icon-class="text-primary"
           >
-            <q-card dark class="bg-transparent">
-              <q-card-section class="text-grey-5">
+            <q-card class="bg-transparent">
+              <q-card-section class="text-academic-medium">
                 {{ faq.answer }}
               </q-card-section>
             </q-card>
@@ -458,29 +455,27 @@
     </div>
 
     <!-- Footer / CTA -->
-    <div class="q-py-xl bg-black text-center border-top-white-10">
-      <h2 class="text-h4 text-weight-bold q-mb-lg text-gradient-academic">Ready to Transform Your Institution?</h2>
-      <p class="text-grey-5 q-mb-lg">Get started today - no credit card required, no setup fees</p>
+    <div class="q-py-xl bg-academic-blue-dark text-center">
+      <h2 class="text-h4 text-weight-bold q-mb-lg text-white">Ready to Transform Your Institution?</h2>
+      <p class="text-white opacity-80 q-mb-lg">Get started today - no credit card required, no setup fees</p>
       
       <div class="row justify-center q-gutter-md q-mb-xl">
         <q-btn 
           unelevated
           rounded
-          color="primary" 
+          class="q-px-xl btn-academic-primary"
           label="Get Started Free" 
           size="lg" 
           no-caps 
-          class="q-px-xl glow-blue"
           to="/register"
         />
         <q-btn 
-          outline
+          unelevated
           rounded
-          color="white" 
+          class="q-px-xl btn-academic-secondary"
           label="View Documentation" 
           size="lg" 
           no-caps 
-          class="q-px-xl"
           icon="menu_book"
         />
       </div>
@@ -561,8 +556,8 @@ onUnmounted(() => {
 .letter-spacing-2 {
   letter-spacing: 2px;
 }
-.border-top-white-10 {
-  border-top: 1px solid rgba(255,255,255,0.1);
+.opacity-80 {
+  opacity: 0.8;
 }
 .h-100 {
   height: 100%;
