@@ -1,69 +1,172 @@
 <template>
-  <q-page class="bg-white text-dark overflow-hidden font-outfit">
-    
-    <!-- Floating Navigation Bar -->
-    <div class="nav-container">
-      <nav class="floating-nav" :class="{ 'scrolled': isScrolled }">
-        <div class="nav-inner">
-          <!-- Logo -->
-          <div class="nav-logo cursor-pointer" @click="scrollTo('home')">
-            <span class="text-weight-bolder text-h6 text-dark">SYZYGY<span class="text-primary">.</span></span>
-          </div>
-          
-          <!-- Desktop Navigation Links -->
-          <div class="nav-links gt-sm">
-            <a 
-              v-for="link in navLinks" 
-              :key="link.id"
-              @click="scrollTo(link.id)"
-              class="nav-link"
-              :class="{ 'active': activeSection === link.id }"
-            >
-              {{ link.label }}
-              <div class="nav-link-indicator"></div>
-            </a>
-            
-            <!-- Classes with Mega Menu -->
-            <div class="nav-link-wrapper" @mouseenter="showMegaMenu = true" @mouseleave="showMegaMenu = false">
-              <a class="nav-link" :class="{ 'active': activeSection === 'classes' }">
-                Classes
-                <q-icon name="expand_more" size="18px" class="q-ml-xs" />
-                <div class="nav-link-indicator"></div>
-              </a>
+  <q-layout view="lHh Lpr lFf">
+    <q-page-container>
+      <q-page class="bg-white text-dark overflow-hidden font-outfit">
+        
+        <!-- Floating Navigation Bar -->
+        <div class="nav-container">
+          <nav class="floating-nav" :class="{ 'scrolled': isScrolled }">
+            <div class="nav-inner">
+              <!-- Logo -->
+              <div class="nav-logo cursor-pointer" @click="scrollTo('home')">
+                <span class="text-weight-bolder text-h6 text-dark">SYZYGY<span class="text-primary">.</span></span>
+              </div>
               
-              <!-- Mega Menu -->
-              <transition name="fade-slide">
-                <div v-show="showMegaMenu" class="mega-menu">
-                  <div class="mega-menu-grid">
-                    <div 
-                      v-for="classLevel in classLevels" 
-                      :key="classLevel.id"
-                      class="mega-menu-item"
-                      @click="scrollTo('classes'); showMegaMenu = false"
-                    >
-                      <q-icon :name="classLevel.icon" :color="classLevel.color" size="32px" class="q-mb-sm" />
-                      <div class="text-weight-bold text-dark">{{ classLevel.title }}</div>
-                      <div class="text-caption text-grey-7">{{ classLevel.grades }}</div>
+              <!-- Desktop Navigation Links -->
+              <div class="nav-links gt-sm">
+                <a 
+                  v-for="link in navLinks" 
+                  :key="link.id"
+                  @click="scrollTo(link.id)"
+                  class="nav-link"
+                  :class="{ 'active': activeSection === link.id }"
+                >
+                  {{ link.label }}
+                  <div class="nav-link-indicator"></div>
+                </a>
+                
+                <!-- Classes with Mega Menu -->
+                <div class="nav-link-wrapper" @mouseenter="showMegaMenu = true" @mouseleave="showMegaMenu = false">
+                  <a class="nav-link" :class="{ 'active': activeSection === 'classes' }">
+                    Classes
+                    <q-icon name="expand_more" size="18px" class="q-ml-xs" />
+                    <div class="nav-link-indicator"></div>
+                  </a>
+                  
+                  <!-- Mega Menu -->
+                  <transition name="fade-slide">
+                    <div v-show="showMegaMenu" class="mega-menu">
+                      <div class="mega-menu-grid">
+                        <div 
+                          v-for="classLevel in classLevels" 
+                          :key="classLevel.id"
+                          class="mega-menu-item"
+                          @click="scrollTo('classes'); showMegaMenu = false"
+                        >
+                          <q-icon :name="classLevel.icon" :color="classLevel.color" size="32px" class="q-mb-sm" />
+                          <div class="text-weight-bold text-dark">{{ classLevel.title }}</div>
+                          <div class="text-caption text-grey-7">{{ classLevel.grades }}</div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </transition>
                 </div>
-              </transition>
+              </div>
+              
+              <!-- Auth Buttons (Desktop) -->
+              <div class="nav-auth gt-sm">
+                <q-btn flat rounded no-caps label="Login" to="/login" class="text-dark" />
+                <q-btn unelevated rounded no-caps label="Sign Up" to="/register" color="dark" class="text-white" />
+              </div>
+              
+              <!-- Mobile Menu Button -->
+              <q-btn flat round dense icon="menu" class="lt-md" @click="mobileMenuOpen = true" />
+            </div>
+          </nav>
+        </div>
+
+        <!-- Hero Section -->
+        <div id="home" class="hero-section relative-position window-height flex flex-center overflow-hidden bg-white">
+          <!-- Abstract Background Shapes -->
+          <div class="absolute-full overflow-hidden">
+            <div class="blob-1 absolute-top-right"></div>
+            <div class="blob-2 absolute-bottom-left"></div>
+            <div class="glow-center absolute-center"></div>
+            <div class="bg-grid absolute-full opacity-10"></div>
+          </div>
+
+          <div class="container q-mx-auto q-px-md relative-position z-top text-center" style="max-width: 1200px">
+            <div class="fade-in-up">
+              <div class="badge-premium q-mb-lg inline-block text-uppercase letter-spacing-2 text-weight-bold text-primary bg-blue-1 q-px-md q-py-sm rounded-borders">
+                Establishment of Excellence
+              </div>
+              
+              <h1 class="text-h1 text-weight-bolder q-mb-md text-dark line-height-tight" style="font-size: clamp(3rem, 6vw, 5.5rem); letter-spacing: -0.02em;">
+                SYZYGY<span class="text-primary">.</span>
+              </h1>
+              
+              <p class="text-h4 text-weight-light text-grey-8 q-mb-xl" style="letter-spacing: 1px;">
+                Aligning Potential with <span class="text-weight-bold" style="color: #f59e0b;">Greatness</span>
+              </p>
+
+              <div class="row justify-center q-gutter-md">
+                <q-btn 
+                  unelevated
+                  rounded
+                  class="q-px-xl q-py-md text-weight-bold btn-primary-shadow text-white bg-primary"
+                  label="Student Portal" 
+                  size="lg" 
+                  no-caps
+                  to="/login"
+                  icon-right="arrow_forward"
+                />
+                <q-btn 
+                  outline
+                  rounded
+                  class="q-px-xl q-py-md text-weight-bold text-dark border-grey-4 bg-white"
+                  label="Explore Facilities" 
+                  size="lg" 
+                  no-caps
+                  @click="scrollTo('facilities')"
+                />
+              </div>
             </div>
           </div>
           
-          <!-- Auth Buttons (Desktop) -->
-          <div class="nav-auth gt-sm">
-            <q-btn flat rounded no-caps label="Login" to="/login" class="text-dark" />
-            <q-btn unelevated rounded no-caps label="Sign Up" to="/register" color="dark" class="text-white" />
+          <!-- Scroll Indicator -->
+          <div class="absolute-bottom text-center q-pb-lg animate-bounce cursor-pointer" @click="scrollTo('about')">
+            <span class="text-caption text-uppercase letter-spacing-2 text-grey-6">Explore The Institute</span>
+            <br>
+            <q-icon name="keyboard_arrow_down" color="grey-6" size="32px" />
           </div>
-          
-          <!-- Mobile Menu Button -->
-          <q-btn flat round dense icon="menu" class="lt-md" @click="mobileMenuOpen = true" />
         </div>
-      </nav>
-    </div>
 
-    <!-- Mobile Menu Drawer -->
+        <!-- About Section -->
+        <div id="about" class="q-py-xl q-px-md bg-grey-1 relative-position">
+          <div class="container q-mx-auto" style="max-width: 1200px">
+            <div class="row q-col-gutter-xl items-center">
+              <div class="col-12 col-md-6 scroll-reveal">
+                <h2 class="text-h3 text-weight-bold q-mb-md text-dark">Beyond Traditional <br><span class="text-primary">Education</span></h2>
+                <p class="text-h6 text-grey-7 text-weight-regular" style="line-height: 1.6">
+                  SYZYGY isn't just a tuition class; it's a center of academic alignment. We bring together the finest educators, state-of-the-art facilities, and a rigorous curriculum to ensure every student from Grade 1 to 12 finds their path to excellence.
+                </p>
+                <div class="row q-gutter-md q-mt-lg">
+                  <div class="col-auto">
+                    <div class="text-h3 text-weight-bold text-dark">12+</div>
+                    <div class="text-caption text-uppercase text-grey-6 text-weight-bold">Years of Excellence</div>
+                  </div>
+                  <div class="q-separator vertical bg-grey-4"></div>
+                  <div class="col-auto">
+                    <div class="text-h3 text-weight-bold text-dark">50+</div>
+                    <div class="text-caption text-uppercase text-grey-6 text-weight-bold">Expert Faculty</div>
+                  </div>
+                  <div class="q-separator vertical bg-grey-4"></div>
+                  <div class="col-auto">
+                    <div class="text-h3 text-weight-bold text-dark">100%</div>
+                    <div class="text-caption text-uppercase text-grey-6 text-weight-bold">University Selection</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 scroll-reveal delay-2">
+                <div class="relative-position">
+                  <div class="abs-shape-square bg-blue-1"></div>
+                  <q-img 
+                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+                    class="rounded-xl shadow-xl border-white"
+                    style="height: 400px; border: 8px solid white;"
+                  >
+                  </q-img>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rest of the sections... -->
+      </q-page>
+    </q-page-container>
+
+    <!-- Mobile Menu Drawer (Now a child of q-layout) -->
     <q-drawer v-model="mobileMenuOpen" side="right" overlay behavior="mobile" class="mobile-menu">
       <div class="q-pa-lg">
         <div class="row justify-between items-center q-mb-xl">
@@ -103,103 +206,8 @@
         </div>
       </div>
     </q-drawer>
-    
-    <!-- Hero Section -->
-    <div id="home" class="hero-section relative-position window-height flex flex-center overflow-hidden bg-white">
-      <!-- Abstract Background Shapes -->
-      <div class="absolute-full overflow-hidden">
-        <div class="blob-1 absolute-top-right"></div>
-        <div class="blob-2 absolute-bottom-left"></div>
-        <div class="glow-center absolute-center"></div>
-        <div class="bg-grid absolute-full opacity-10"></div>
-      </div>
-
-      <div class="container q-mx-auto q-px-md relative-position z-top text-center" style="max-width: 1200px">
-        <div class="fade-in-up">
-          <div class="badge-premium q-mb-lg inline-block text-uppercase letter-spacing-2 text-weight-bold text-primary bg-blue-1 q-px-md q-py-sm rounded-borders">
-            Establishment of Excellence
-          </div>
-          
-          <h1 class="text-h1 text-weight-bolder q-mb-md text-dark line-height-tight" style="font-size: clamp(3rem, 6vw, 5.5rem); letter-spacing: -0.02em;">
-            SYZYGY<span class="text-primary">.</span>
-          </h1>
-          
-          <p class="text-h4 text-weight-light text-grey-8 q-mb-xl" style="letter-spacing: 1px;">
-            Aligning Potential with <span class="text-weight-bold" style="color: #f59e0b;">Greatness</span>
-          </p>
-
-          <div class="row justify-center q-gutter-md">
-            <q-btn 
-              unelevated
-              rounded
-              class="q-px-xl q-py-md text-weight-bold btn-primary-shadow text-white bg-primary"
-              label="Student Portal" 
-              size="lg" 
-              no-caps
-              to="/login"
-              icon-right="arrow_forward"
-            />
-            <q-btn 
-              outline
-              rounded
-              class="q-px-xl q-py-md text-weight-bold text-dark border-grey-4 bg-white"
-              label="Explore Facilities" 
-              size="lg" 
-              no-caps
-              @click="scrollTo('facilities')"
-            />
-          </div>
-        </div>
-      </div>
-      
-      <!-- Scroll Indicator -->
-      <div class="absolute-bottom text-center q-pb-lg animate-bounce cursor-pointer" @click="scrollTo('about')">
-        <span class="text-caption text-uppercase letter-spacing-2 text-grey-6">Explore The Institute</span>
-        <br>
-        <q-icon name="keyboard_arrow_down" color="grey-6" size="32px" />
-      </div>
-    </div>
-
-    <!-- About Section -->
-    <div id="about" class="q-py-xl q-px-md bg-grey-1 relative-position">
-      <div class="container q-mx-auto" style="max-width: 1200px">
-        <div class="row q-col-gutter-xl items-center">
-          <div class="col-12 col-md-6 scroll-reveal">
-            <h2 class="text-h3 text-weight-bold q-mb-md text-dark">Beyond Traditional <br><span class="text-primary">Education</span></h2>
-            <p class="text-h6 text-grey-7 text-weight-regular" style="line-height: 1.6">
-              SYZYGY isn't just a tuition class; it's a center of academic alignment. We bring together the finest educators, state-of-the-art facilities, and a rigorous curriculum to ensure every student from Grade 1 to 12 finds their path to excellence.
-            </p>
-            <div class="row q-gutter-md q-mt-lg">
-              <div class="col-auto">
-                <div class="text-h3 text-weight-bold text-dark">12+</div>
-                <div class="text-caption text-uppercase text-grey-6 text-weight-bold">Years of Excellence</div>
-              </div>
-              <div class="q-separator vertical bg-grey-4"></div>
-              <div class="col-auto">
-                <div class="text-h3 text-weight-bold text-dark">50+</div>
-                <div class="text-caption text-uppercase text-grey-6 text-weight-bold">Expert Faculty</div>
-              </div>
-              <div class="q-separator vertical bg-grey-4"></div>
-              <div class="col-auto">
-                <div class="text-h3 text-weight-bold text-dark">100%</div>
-                <div class="text-caption text-uppercase text-grey-6 text-weight-bold">University Selection</div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-6 scroll-reveal delay-2">
-            <div class="relative-position">
-              <div class="abs-shape-square bg-blue-1"></div>
-              <q-img 
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                class="rounded-xl shadow-xl border-white"
-                style="height: 400px; border: 8px solid white;"
-              >
-              </q-img>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  </q-layout>
+</template>
 
     <!-- Academic Pathways (Classes) -->
     <div id="classes" class="q-py-xl q-px-md bg-white relative-position">
@@ -387,7 +395,50 @@
       </div>
     </div>
 
-  </q-page>
+      </q-page>
+    </q-page-container>
+
+    <!-- Mobile Menu Drawer (Now a child of q-layout) -->
+    <q-drawer v-model="mobileMenuOpen" side="right" overlay behavior="mobile" class="mobile-menu">
+      <div class="q-pa-lg">
+        <div class="row justify-between items-center q-mb-xl">
+          <span class="text-h6 text-weight-bold">Menu</span>
+          <q-btn flat round dense icon="close" @click="mobileMenuOpen = false" />
+        </div>
+        
+        <div class="column q-gutter-md">
+          <a 
+            v-for="link in navLinks" 
+            :key="link.id"
+            @click="scrollTo(link.id); mobileMenuOpen = false"
+            class="mobile-nav-link text-h6"
+          >
+            {{ link.label }}
+          </a>
+          
+          <!-- Classes Accordion -->
+          <q-expansion-item label="Classes" class="mobile-nav-link text-h6">
+            <div class="q-pa-md q-gutter-sm">
+              <div 
+                v-for="classLevel in classLevels" 
+                :key="classLevel.id"
+                @click="scrollTo('classes'); mobileMenuOpen = false"
+                class="mobile-class-item q-pa-sm"
+              >
+                <div class="text-weight-medium">{{ classLevel.title }}</div>
+                <div class="text-caption text-grey-7">{{ classLevel.grades }}</div>
+              </div>
+            </div>
+          </q-expansion-item>
+          
+          <div class="q-mt-lg column q-gutter-sm">
+            <q-btn unelevated rounded no-caps label="Login" to="/login" class="q-py-md" />
+            <q-btn unelevated rounded no-caps label="Sign Up" to="/register" color="dark" class="q-py-md" />
+          </div>
+        </div>
+      </div>
+    </q-drawer>
+  </q-layout>
 </template>
 
 <script setup>
