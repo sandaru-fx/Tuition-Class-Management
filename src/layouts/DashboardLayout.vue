@@ -203,6 +203,7 @@ const groupedMenuItems = [
     icon: 'menu_book',
     items: [
       { label: 'Classes', icon: 'calendar_month', path: '/dashboard/classes', badge: 'activeClasses', badgeColor: 'green' },
+      { label: 'Subjects', icon: 'library_books', path: '/dashboard/subjects' },
       { label: 'Exams', icon: 'assignment_turned_in', path: '/dashboard/exams', badge: 'upcomingExams', badgeColor: 'red' },
       { label: 'Communication', icon: 'campaign', path: '/dashboard/communication' }
     ]
