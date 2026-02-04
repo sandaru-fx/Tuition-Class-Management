@@ -17,12 +17,12 @@
             Establishment of Excellence
           </div>
           
-          <h1 class="text-h1 text-weight-bolder q-mb-md text-dark line-height-tight" style="font-size: clamp(3rem, 6vw, 5.5rem);">
+          <h1 class="text-h1 text-weight-bolder q-mb-md text-dark line-height-tight" style="font-size: clamp(3rem, 6vw, 5.5rem); letter-spacing: -0.02em;">
             SYZYGY<span class="text-primary">.</span>
           </h1>
           
           <p class="text-h4 text-weight-light text-grey-8 q-mb-xl" style="letter-spacing: 1px;">
-            Aligning Potential with <span class="text-primary text-weight-bold">Greatness</span>
+            Aligning Potential with <span class="text-weight-bold" style="color: #f59e0b;">Greatness</span>
           </p>
 
           <div class="row justify-center q-gutter-md">
