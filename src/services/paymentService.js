@@ -1,3 +1,4 @@
+/* global payhere */
 import { supabase } from 'boot/supabase'
 
 export const paymentService = {
