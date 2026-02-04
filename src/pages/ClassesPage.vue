@@ -64,7 +64,7 @@
                 </td>
               </tr>
               <tr v-for="cls in filteredClasses" :key="cls.id" class="hover-bg-grey-1 transition-all">
-                <td class="q-pl-lg text-weight-bold">{{ cls.subject }}</td>
+                <td class="q-pl-lg text-weight-bold">{{ cls.subject?.name || 'Unknown' }}</td>
                 <td>
                   <q-badge color="blue-1" text-color="blue-9" class="q-px-sm text-weight-bold">
                     {{ cls.grade }}
@@ -106,7 +106,7 @@
                           <div v-for="cls in getClassesForDay(day)" :key="cls.id">
                               <q-card class="my-card shadow-1 cursor-pointer hover-lift" @click="openEditDialog(cls)">
                                   <q-card-section class="q-pa-sm">
-                                      <div class="text-subtitle2 text-weight-bold">{{ cls.subject }}</div>
+                                      <div class="text-subtitle2 text-weight-bold">{{ cls.subject?.name || 'Unknown' }}</div>
                                       <div class="text-caption text-grey-8">{{ cls.grade }} • {{ cls.teacher_name }}</div>
                                       <div class="row items-center q-mt-xs">
                                           <q-icon name="schedule" size="12px" class="q-mr-xs text-primary"/>
@@ -140,10 +140,28 @@
         <q-form @submit="saveClass" class="q-gutter-md">
             <div class="row q-col-gutter-sm">
                 <div class="col-6">
-                    <q-input outlined v-model="form.subject" label="Subject *" dense :rules="[val => !!val || 'Required']" />
+                    <q-select 
+                        outlined 
+                        v-model="form.grade" 
+                        :options="gradeOptions" 
+                        label="Grade *" 
+                        dense 
+                        :rules="[val => !!val || 'Required']" 
+                    />
                 </div>
                 <div class="col-6">
-                     <q-input outlined v-model="form.grade" label="Grade *" dense :rules="[val => !!val || 'Required']" />
+                     <q-select 
+                        outlined 
+                        v-model="form.subject_id" 
+                        :options="filteredSubjectOptions"
+                        label="Subject *" 
+                        dense 
+                        map-options
+                        emit-value
+                        :disable="!form.grade"
+                        :hint="!form.grade ? 'Select grade first' : ''"
+                        :rules="[val => !!val || 'Required']" 
+                    />
                 </div>
             </div>
 
@@ -185,7 +203,7 @@
           <span class="q-ml-md text-h6 font-outfit">Confirm Delete</span>
         </q-card-section>
         <q-card-section class="q-pt-none text-grey-8">
-          Delete <strong>{{ classToDelete?.subject }}</strong> ({{ classToDelete?.grade }})?
+          Delete <strong>{{ classToDelete?.subject?.name }}</strong> ({{ classToDelete?.grade }})?
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="grey-7" v-close-popup no-caps />
