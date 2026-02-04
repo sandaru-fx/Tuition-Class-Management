@@ -1,6 +1,109 @@
 <template>
   <q-page class="bg-white text-dark overflow-hidden font-outfit">
     
+    <!-- Floating Navigation Bar -->
+    <div class="nav-container">
+      <nav class="floating-nav" :class="{ 'scrolled': isScrolled }">
+        <div class="nav-inner">
+          <!-- Logo -->
+          <div class="nav-logo cursor-pointer" @click="scrollTo('home')">
+            <span class="text-weight-bolder text-h6 text-dark">SYZYGY<span class="text-primary">.</span></span>
+          </div>
+          
+          <!-- Desktop Navigation Links -->
+          <div class="nav-links gt-sm">
+            <a 
+              v-for="link in navLinks" 
+              :key="link.id"
+              @click="scrollTo(link.id)"
+              class="nav-link"
+              :class="{ 'active': activeSection === link.id }"
+            >
+              {{ link.label }}
+              <div class="nav-link-indicator"></div>
+            </a>
+            
+            <!-- Classes with Mega Menu -->
+            <div class="nav-link-wrapper" @mouseenter="showMegaMenu = true" @mouseleave="showMegaMenu = false">
+              <a class="nav-link" :class="{ 'active': activeSection === 'classes' }">
+                Classes
+                <q-icon name="expand_more" size="18px" class="q-ml-xs" />
+                <div class="nav-link-indicator"></div>
+              </a>
+              
+              <!-- Mega Menu -->
+              <transition name="fade-slide">
+                <div v-show="showMegaMenu" class="mega-menu">
+                  <div class="mega-menu-grid">
+                    <div 
+                      v-for="classLevel in classLevels" 
+                      :key="classLevel.id"
+                      class="mega-menu-item"
+                      @click="scrollTo('classes'); showMegaMenu = false"
+                    >
+                      <q-icon :name="classLevel.icon" :color="classLevel.color" size="32px" class="q-mb-sm" />
+                      <div class="text-weight-bold text-dark">{{ classLevel.title }}</div>
+                      <div class="text-caption text-grey-7">{{ classLevel.grades }}</div>
+                    </div>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
+          
+          <!-- Auth Buttons (Desktop) -->
+          <div class="nav-auth gt-sm">
+            <q-btn flat rounded no-caps label="Login" to="/login" class="text-dark" />
+            <q-btn unelevated rounded no-caps label="Sign Up" to="/register" color="dark" class="text-white" />
+          </div>
+          
+          <!-- Mobile Menu Button -->
+          <q-btn flat round dense icon="menu" class="lt-md" @click="mobileMenuOpen = true" />
+        </div>
+      </nav>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <q-drawer v-model="mobileMenuOpen" side="right" overlay behavior="mobile" class="mobile-menu">
+      <div class="q-pa-lg">
+        <div class="row justify-between items-center q-mb-xl">
+          <span class="text-h6 text-weight-bold">Menu</span>
+          <q-btn flat round dense icon="close" @click="mobileMenuOpen = false" />
+        </div>
+        
+        <div class="column q-gutter-md">
+          <a 
+            v-for="link in navLinks" 
+            :key="link.id"
+            @click="scrollTo(link.id); mobileMenuOpen = false"
+            class="mobile-nav-link text-h6"
+          >
+            {{ link.label }}
+          </a>
+          
+          <!-- Classes Accordion -->
+          <q-expansion-item label="Classes" class="mobile-nav-link text-h6">
+            <div class="q-pa-md q-gutter-sm">
+              <div 
+                v-for="classLevel in classLevels" 
+                :key="classLevel.id"
+                @click="scrollTo('classes'); mobileMenuOpen = false"
+                class="mobile-class-item q-pa-sm"
+              >
+                <div class="text-weight-medium">{{ classLevel.title }}</div>
+                <div class="text-caption text-grey-7">{{ classLevel.grades }}</div>
+              </div>
+            </div>
+          </q-expansion-item>
+          
+          <div class="q-mt-lg column q-gutter-sm">
+            <q-btn unelevated rounded no-caps label="Login" to="/login" class="q-py-md" />
+            <q-btn unelevated rounded no-caps label="Sign Up" to="/register" color="dark" class="q-py-md" />
+          </div>
+        </div>
+      </div>
+    </q-drawer>
+    
     <!-- Hero Section -->
     <div id="home" class="hero-section relative-position window-height flex flex-center overflow-hidden bg-white">
       <!-- Abstract Background Shapes -->
@@ -288,17 +391,71 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// Navigation state
+const isScrolled = ref(false)
+const activeSection = ref('home')
+const showMegaMenu = ref(false)
+const mobileMenuOpen = ref(false)
+
+// Navigation links
+const navLinks = [
+  { id: 'home', label: 'Home' },
+  { id: 'about', label: 'About' },
+  { id: 'facilities', label: 'Facilities' },
+  { id: 'contact', label: 'Contact' }
+]
+
+// Class levels for mega menu
+const classLevels = [
+  { id: 'primary', title: 'Primary', grades: 'Grades 1-5', icon: 'school', color: 'green' },
+  { id: 'junior', title: 'Junior', grades: 'Grades 6-9', icon: 'menu_book', color: 'cyan' },
+  { id: 'ol', title: 'O/L Ordinary Level', grades: 'Grades 10-11', icon: 'star', color: 'orange' },
+  { id: 'al', title: 'A/L Advanced Level', grades: 'Grades 12-13', icon: 'workspace_premium', color: 'secondary' }
+]
 
 function scrollTo(id) {
   const el = document.getElementById(id)
-  if (el) el.scrollIntoView({ behavior: 'smooth' })
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+    // Close mobile menu if open
+    mobileMenuOpen.value = false
+  }
+}
+
+// Scroll spy logic
+function handleScroll() {
+  // Update scrolled state for nav bar
+  isScrolled.value = window.scrollY > 50
+  
+  // Detect active section
+  const sections = ['home', 'about', 'classes', 'facilities', 'contact']
+  const scrollPosition = window.scrollY + 200
+  
+  for (const sectionId of sections) {
+    const section = document.getElementById(sectionId)
+    if (section) {
+      const sectionTop = section.offsetTop
+      const sectionBottom = sectionTop + section.offsetHeight
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+        activeSection.value = sectionId
+        break
+      }
+    }
+  }
 }
 
 // Scroll reveal logic
 let observer = null
 
 onMounted(() => {
+  // Add scroll listener
+  window.addEventListener('scroll', handleScroll)
+  handleScroll() // Initial call
+  
+  // Scroll reveal observer
   observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -315,6 +472,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
   if (observer) {
     observer.disconnect()
   }
@@ -328,6 +486,222 @@ onUnmounted(() => {
 .font-outfit {
   font-family: 'Outfit', sans-serif;
 }
+
+/* ========================================
+   FLOATING NAVIGATION STYLES
+======================================== */
+
+/* Nav Container */
+.nav-container {
+  position: sticky;
+  top: 20px;
+  z-index: 1000;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+/* Floating Nav Bar */
+.floating-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 12px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  pointer-events: all;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.floating-nav.scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Nav Inner Container */
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+/* Logo */
+.nav-logo {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.nav-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Nav Links Container */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Individual Nav Links */
+.nav-link {
+  position: relative;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #4B5563;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link:hover {
+  color: #1F2937;
+}
+
+/* Active Link Indicator */
+.nav-link-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 24px;
+  height: 2px;
+  background: #2563EB;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+}
+
+.nav-link.active .nav-link-indicator {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.nav-link.active {
+  color: #2563EB;
+}
+
+/* Nav Link Wrapper (for mega menu) */
+.nav-link-wrapper {
+  position: relative;
+}
+
+/* Mega Menu */
+.mega-menu {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  min-width: 500px;
+}
+
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.mega-menu-item {
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.mega-menu-item:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Mega Menu Animations */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+/* Auth Buttons */
+.nav-auth {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Mobile Menu Drawer */
+.mobile-menu {
+  background: white;
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 12px 0;
+  color: #1F2937;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.mobile-nav-link:hover {
+  color: #2563EB;
+}
+
+.mobile-class-item {
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mobile-class-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 1023px) {
+  .nav-container {
+    top: 10px;
+    padding: 0 12px;
+  }
+  
+  .floating-nav {
+    border-radius: 40px;
+    padding: 10px 16px;
+  }
+  
+  .nav-inner {
+    gap: 16px;
+  }
+}
+
+/* ========================================
+   EXISTING STYLES (Background, etc.)
+======================================== */
 
 /* Backgrounds & Text */
 .text-dark { color: #0F172A !important; }
