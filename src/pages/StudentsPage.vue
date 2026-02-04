@@ -65,7 +65,8 @@
             </td>
             <td>
               <q-badge color="purple-1" text-color="purple-9" class="q-px-sm text-weight-bold">
-                {{ student.grade || 'N/A' }}
+                Grade {{ student.grade || 'N/A' }}
+                <span v-if="student.stream" class="q-ml-xs text-weight-medium">({{ student.stream }})</span>
               </q-badge>
             </td>
             <td class="text-grey-8">{{ student.school || '-' }}</td>
@@ -122,9 +123,32 @@
 
              <div class="row q-col-gutter-sm">
                 <div class="col-6">
-                     <q-input outlined v-model="form.grade" label="Grade/Year *" dense :rules="[val => !!val || 'Required']" />
+                     <q-select 
+                        outlined 
+                        v-model="form.grade" 
+                        :options="gradeOptions" 
+                        label="Grade/Year *" 
+                        dense 
+                        :rules="[val => !!val || 'Required']" 
+                    />
                 </div>
                  <div class="col-6">
+                      <q-select 
+                        v-if="['12', '13'].includes(form.grade)"
+                        outlined 
+                        v-model="form.stream" 
+                        :options="streamOptions" 
+                        label="Stream *" 
+                        dense 
+                        :rules="[val => !!val || 'Required']"
+                        class="animate-fade"
+                      />
+                      <q-select v-else outlined v-model="form.gender" :options="['Male', 'Female']" label="Gender" dense />
+                 </div>
+            </div>
+
+            <div v-if="['12', '13'].includes(form.grade)" class="row q-col-gutter-sm">
+                 <div class="col-12">
                       <q-select outlined v-model="form.gender" :options="['Male', 'Female']" label="Gender" dense />
                  </div>
             </div>
@@ -203,6 +227,14 @@ const showDeleteDialog = ref(false)
 const isEditing = ref(false)
 const studentToDelete = ref(null)
 
+const gradeOptions = [
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'
+]
+
+const streamOptions = [
+  'Science', 'Commerce', 'Arts', 'Technology'
+]
+
 const form = ref({
   id: null,
   first_name: '',
@@ -211,6 +243,7 @@ const form = ref({
   parent_phone: '',
   school: '',
   grade: '',
+  stream: '', // Added stream field
   address: '',
   gender: '',
   is_active: true,
