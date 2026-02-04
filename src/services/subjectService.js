@@ -1,40 +1,43 @@
 import { supabase } from 'boot/supabase'
 
-export const classService = {
+export const subjectService = {
   async getAll() {
     const { data, error } = await supabase
-      .from('classes')
-      .select('*, teacher:profiles(full_name), subject:subjects(name, code)')
-      .order('created_at', { ascending: false })
-    if (error) throw error
-    return data
-  },
-
-  async getOptions() {
-    const { data, error } = await supabase
-      .from('classes')
-      .select('id, grade, subject:subjects(name)')
-    if (error) throw error
-    return data.map(c => ({
-      label: `${c.subject?.name || 'Unknown'} - ${c.grade}`,
-      value: c.id
-    }))
-  },
-
-  async getById(id) {
-    const { data, error } = await supabase
-      .from('classes')
+      .from('subjects')
       .select('*')
-      .eq('id', id)
-      .single()
+      .order('name')
     if (error) throw error
     return data
   },
 
-  async create(classData) {
+  async getByGrade(gradeCategory) {
+    // gradeCategory: 'primary', 'junior', 'ol', 'al'
     const { data, error } = await supabase
-      .from('classes')
-      .insert([classData])
+      .from('subjects')
+      .select('*')
+      .eq('grade_category', gradeCategory)
+      .order('name')
+    if (error) throw error
+    return data
+  },
+
+  async getByStream(stream) {
+    // stream: 'science', 'commerce', 'arts', 'tech'
+    // Also include common subjects for AL if any
+    const { data, error } = await supabase
+      .from('subjects')
+      .select('*')
+      .eq('grade_category', 'al')
+      .or(`stream.eq.${stream},stream.is.null`)
+      .order('name')
+    if (error) throw error
+    return data
+  },
+
+  async create(subjectData) {
+    const { data, error } = await supabase
+      .from('subjects')
+      .insert([subjectData])
       .select()
       .single()
     if (error) throw error
@@ -43,7 +46,7 @@ export const classService = {
 
   async update(id, updates) {
     const { data, error } = await supabase
-      .from('classes')
+      .from('subjects')
       .update(updates)
       .eq('id', id)
       .select()
@@ -54,7 +57,7 @@ export const classService = {
 
   async delete(id) {
     const { error } = await supabase
-      .from('classes')
+      .from('subjects')
       .delete()
       .eq('id', id)
     if (error) throw error
