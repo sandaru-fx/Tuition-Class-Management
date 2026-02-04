@@ -162,52 +162,6 @@
           </div>
         </div>
 
-        <!-- Rest of the sections... -->
-      </q-page>
-    </q-page-container>
-
-    <!-- Mobile Menu Drawer (Now a child of q-layout) -->
-    <q-drawer v-model="mobileMenuOpen" side="right" overlay behavior="mobile" class="mobile-menu">
-      <div class="q-pa-lg">
-        <div class="row justify-between items-center q-mb-xl">
-          <span class="text-h6 text-weight-bold">Menu</span>
-          <q-btn flat round dense icon="close" @click="mobileMenuOpen = false" />
-        </div>
-        
-        <div class="column q-gutter-md">
-          <a 
-            v-for="link in navLinks" 
-            :key="link.id"
-            @click="scrollTo(link.id); mobileMenuOpen = false"
-            class="mobile-nav-link text-h6"
-          >
-            {{ link.label }}
-          </a>
-          
-          <!-- Classes Accordion -->
-          <q-expansion-item label="Classes" class="mobile-nav-link text-h6">
-            <div class="q-pa-md q-gutter-sm">
-              <div 
-                v-for="classLevel in classLevels" 
-                :key="classLevel.id"
-                @click="scrollTo('classes'); mobileMenuOpen = false"
-                class="mobile-class-item q-pa-sm"
-              >
-                <div class="text-weight-medium">{{ classLevel.title }}</div>
-                <div class="text-caption text-grey-7">{{ classLevel.grades }}</div>
-              </div>
-            </div>
-          </q-expansion-item>
-          
-          <div class="q-mt-lg column q-gutter-sm">
-            <q-btn unelevated rounded no-caps label="Login" to="/login" class="q-py-md" />
-            <q-btn unelevated rounded no-caps label="Sign Up" to="/register" color="dark" class="q-py-md" />
-          </div>
-        </div>
-      </div>
-    </q-drawer>
-  </q-layout>
-</template>
 
     <!-- Academic Pathways (Classes) -->
     <div id="classes" class="q-py-xl q-px-md bg-white relative-position">
