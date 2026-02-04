@@ -205,6 +205,7 @@ const groupedMenuItems = [
       { label: 'Classes', icon: 'calendar_month', path: '/dashboard/classes', badge: 'activeClasses', badgeColor: 'green' },
       { label: 'Subjects', icon: 'library_books', path: '/dashboard/subjects' },
       { label: 'Exams', icon: 'assignment_turned_in', path: '/dashboard/exams', badge: 'upcomingExams', badgeColor: 'red' },
+      { label: 'Assignments', icon: 'assignment', path: '/dashboard/assignments' },
       { label: 'Communication', icon: 'campaign', path: '/dashboard/communication' }
     ]
   },
