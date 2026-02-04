@@ -124,6 +124,13 @@
                 </q-item-section>
                 <q-item-section class="text-weight-bold">Calendar</q-item-section>
             </q-item>
+
+            <q-item clickable v-ripple to="/student/payments" class="nav-item" active-class="nav-item--active">
+                <q-item-section avatar>
+                    <q-icon name="payments" />
+                </q-item-section>
+                <q-item-section class="text-weight-bold">Payments</q-item-section>
+            </q-item>
         </q-list>
 
         <q-space />

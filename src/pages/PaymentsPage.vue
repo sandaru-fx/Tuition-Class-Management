@@ -1,184 +1,145 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="row items-center q-mb-xl no-print">
+    <!-- Header -->
+    <div class="row items-center q-mb-xl">
       <div>
-        <h1 class="text-h4 text-weight-bold text-dark q-mb-xs font-outfit">Fees & Payments</h1>
-        <p class="text-grey-7 q-mb-none text-subtitle1">Collect fees, print receipts, and track revenue.</p>
+        <h1 class="text-h4 text-weight-bold text-dark q-mb-xs font-outfit">Payment Management</h1>
+        <p class="text-grey-7 q-mb-none text-subtitle1">Verify bank slips and track payment history.</p>
       </div>
+      <q-space />
+       <!-- Future: Export Button -->
     </div>
 
+    <!-- Stats Cards (Summary) -->
+    <div class="row q-col-gutter-md q-mb-lg">
+        <div class="col-12 col-md-4">
+            <q-card class="bg-blue-1 text-blue-9 shadow-0 rounded-borders-lg">
+                <q-card-section class="row items-center">
+                    <div class="col">
+                        <div class="text-subtitle2 text-weight-bold opacity-60">PENDING VERIFICATION</div>
+                        <div class="text-h4 text-weight-bolder font-outfit">{{ pendingCount }}</div>
+                    </div>
+                    <q-icon name="pending_actions" size="3rem" class="opacity-40" />
+                </q-card-section>
+            </q-card>
+        </div>
+        <!-- More cards can be added -->
+    </div>
+
+    <!-- Tabs -->
     <q-tabs
       v-model="tab"
       dense
-      class="text-grey no-print"
+      class="text-grey"
       active-color="primary"
       indicator-color="primary"
       align="left"
       narrow-indicator
     >
-      <q-tab name="collect" label="Collect Fees" icon="payments" no-caps />
-      <q-tab name="history" label="Payment History" icon="history" no-caps />
-      <q-tab name="due" label="Due Reports" icon="assignment_late" no-caps />
+      <q-tab name="pending" label="Pending Verification" icon="verified_user" no-caps>
+        <q-badge color="red" floating v-if="pendingCount > 0">{{ pendingCount }}</q-badge>
+      </q-tab>
+      <q-tab name="history" label="Transaction History" icon="history" no-caps />
     </q-tabs>
 
-    <q-separator class="q-mb-md no-print" />
+    <q-separator class="q-mb-md" />
 
-    <q-tab-panels v-model="tab" animated class="bg-transparent no-print">
+    <q-tab-panels v-model="tab" animated class="bg-transparent">
       
-      <!-- Collect Fees -->
-      <q-tab-panel name="collect" class="q-pa-none">
-          <div class="row q-col-gutter-lg">
-              <div class="col-12 col-md-5">
-                  <q-card class="my-card shadow-1">
+      <!-- Pending Tab -->
+      <q-tab-panel name="pending" class="q-pa-none">
+          <div v-if="loading" class="text-center q-pa-lg">
+              <q-spinner color="primary" size="3em" />
+              <div class="text-grey q-mt-sm">Loading pending payments...</div>
+          </div>
+
+          <div v-else-if="pendingTransactions.length === 0" class="text-center q-pa-xl text-grey-6 bg-white rounded-borders shadow-1">
+              <q-icon name="check_circle" size="4rem" class="text-green-2 q-mb-md" />
+              <div class="text-h6">All Caught Up!</div>
+              <div class="text-subtitle2">No pending manual payments to verify.</div>
+          </div>
+
+          <div v-else class="row q-col-gutter-md">
+              <div class="col-12 col-md-6 col-lg-4" v-for="txn in pendingTransactions" :key="txn.id">
+                  <q-card class="shadow-1 rounded-borders-lg hover-lift">
+                      <!-- Slip Preview Header -->
+                      <q-img 
+                        :src="txn.slip_url" 
+                        :ratio="16/9"
+                        class="cursor-pointer bg-grey-2"
+                        @click="openImagePreview(txn.slip_url)"
+                      >
+                         <div class="absolute-bottom text-subtitle2 text-center bg-transparent-gradient">
+                             Click to Expand Slip
+                         </div>
+                         <template v-slot:error>
+                             <div class="absolute-full flex flex-center bg-grey-3 text-grey-7">
+                                 <q-icon name="broken_image" size="md" /> No Image
+                             </div>
+                         </template>
+                      </q-img>
+
                       <q-card-section>
-                          <div class="text-h6 font-outfit q-mb-md">New Transaction</div>
-                          <q-form @submit="processPayment" class="q-gutter-md">
-                              
-                               <!-- Search Student -->
-                               <q-select
-                                    outlined
-                                    v-model="selectedStudent"
-                                    use-input
-                                    input-debounce="300"
-                                    label="Search Student"
-                                    :options="studentOptions"
-                                    @filter="filterStudents"
-                                    dense
-                                    option-label="label"
-                                    option-value="id"
-                                    hint="Type name or phone number"
-                                    :rules="[val => !!val || 'Required']"
-                              >
-                                <template v-slot:no-option>
-                                    <q-item>
-                                        <q-item-section class="text-grey">No results</q-item-section>
-                                    </q-item>
-                                </template>
-                              </q-select>
-                              
-                              <q-select 
-                                outlined 
-                                v-model="form.payment_type" 
-                                :options="['Monthly Fee', 'Admission Fee', 'Paper Fee']" 
-                                label="Payment Type" 
-                                dense 
-                                :rules="[val => !!val || 'Required']"
-                              />
-                              
-                              <div v-if="form.payment_type === 'Monthly Fee'">
-                                  <q-select 
-                                    outlined 
-                                    v-model="form.class_id" 
-                                    :options="classOptions" 
-                                    label="Select Class" 
-                                    dense 
-                                    emit-value
-                                    map-options
-                                    :rules="[val => !!val || 'Required']"
-                                  />
-                                   <q-input outlined v-model="form.month" label="Month (e.g. Jan 2026)" dense :rules="[val => !!val || 'Required']" />
-                              </div>
-
-                              <q-input 
-                                outlined 
-                                v-model="form.amount" 
-                                label="Amount (LKR)" 
-                                type="number" 
-                                dense 
-                                class="text-weight-bold"
-                                prefix="Rs."
-                                :rules="[val => !!val || 'Required']"
-                              />
-
-                              <q-btn unelevated color="green-7" size="lg" class="full-width q-mt-md" type="submit" :loading="submitting" no-caps>
-                                  <div class="row items-center no-wrap">
-                                      <q-icon left name="print" />
-                                      <div>Pay & Print Receipt</div>
+                          <div class="row items-center no-wrap">
+                              <div class="col">
+                                  <div class="text-subtitle1 text-weight-bold">{{ txn.student?.full_name || 'Unknown Student' }}</div>
+                                  <div class="text-caption text-grey-7">
+                                      {{ txn.student?.grade ? `Grade ${txn.student.grade}` : '' }} • {{ txn.student?.whatsapp_number }}
                                   </div>
-                              </q-btn>
-                          </q-form>
+                              </div>
+                              <div class="col-auto">
+                                  <q-chip dense color="blue-1" text-color="blue-9" class="text-weight-bold">
+                                      {{ txn.currency }} {{ txn.amount }}
+                                  </q-chip>
+                              </div>
+                          </div>
                       </q-card-section>
+
+                      <q-separator />
+
+                      <q-card-section class="q-py-sm bg-grey-1">
+                          <div class="text-caption text-grey-8 row items-center">
+                              <q-icon name="class" size="xs" class="q-mr-xs" />
+                              Paying for: <span class="text-weight-medium q-ml-xs">{{ txn.class?.subject?.name }} (Grade {{ txn.class?.grade }})</span>
+                          </div>
+                          <div class="text-caption text-grey-6 q-mt-xs">
+                              Submitted: {{ new Date(txn.created_at).toLocaleString() }}
+                          </div>
+                      </q-card-section>
+
+                      <q-card-actions align="right" class="q-pa-md">
+                          <q-btn flat color="red-7" label="Reject" no-caps @click="verifyPayment(txn, 'rejected')" :loading="txn.processing" />
+                          <q-btn unelevated color="green-6" label="Verify & Approve" icon="check" no-caps @click="verifyPayment(txn, 'verified')" :loading="txn.processing" />
+                      </q-card-actions>
                   </q-card>
               </div>
           </div>
       </q-tab-panel>
 
-      <!-- History -->
-      <q-tab-panel name="history" class="q-pa-none">
-          <q-card class="my-card shadow-1">
-               <q-markup-table flat>
-                  <thead>
-                    <tr class="bg-grey-1">
-                      <th class="text-left">Date</th>
-                      <th class="text-left">Student</th>
-                      <th class="text-left">Type</th>
-                      <th class="text-right">Amount</th>
-                      <th class="text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="pay in payments" :key="pay.id">
-                        <td>{{ formatDate(pay.created_at) }}</td>
-                        <td>{{ pay.students?.first_name }} {{ pay.students?.last_name }}</td>
-                        <td>
-                            <div>{{ pay.payment_type }}</div>
-                            <div class="text-caption text-grey" v-if="pay.month">{{ pay.month }}</div>
-                        </td>
-                        <td class="text-right text-weight-bold">Rs. {{ pay.amount }}</td>
-                        <td class="text-right">
-                            <q-btn flat round dense icon="print" size="sm" color="grey-7" @click="reprint(pay)" />
-                        </td>
-                    </tr>
-                  </tbody>
-               </q-markup-table>
-          </q-card>
+      <!-- History Tab -->
+      <q-tab-panel name="history">
+          <div class="text-center text-grey-5 q-pa-xl">
+              <q-icon name="history" size="4rem" />
+              <div class="q-mt-sm">Detailed transaction history coming soon...</div>
+          </div>
       </q-tab-panel>
 
-      <!-- Due Reports -->
-      <q-tab-panel name="due" class="q-pa-none">
-           <q-card class="my-card q-pa-lg text-center text-grey-6">
-               <q-icon name="build" size="48px" class="q-mb-md" />
-               <div class="text-h6">Due Report Generator</div>
-               <p>Select a class and month to generate a list of students who haven't paid yet.</p>
-               <q-btn outline color="primary" label="Coming Soon in Phase 2" no-caps />
-           </q-card>
-      </q-tab-panel>
     </q-tab-panels>
 
-    <!-- Hidden Receipt for Printing -->
-    <div id="receipt-print" class="print-only">
-        <div class="receipt-container" v-if="lastPayment">
-            <div class="header">
-                <h2>CLASS MASTER</h2>
-                <p>No. 123, Main Street, Colombo</p>
-                <p>Tel: 077-1234567</p>
-            </div>
-            <hr class="dashed">
-            <div class="details">
-                <div class="row"><span>Date:</span> <span>{{ formatDate(lastPayment.created_at) }}</span></div>
-                <div class="row"><span>Rcpt No:</span> <span>#{{ lastPayment.id.slice(0, 8) }}</span></div>
-                <div class="row"><span>Student:</span> <span>{{ lastPayment.studentName }}</span></div>
-            </div>
-            <hr class="dashed">
-            <div class="item-list">
-                <div class="item">
-                    <span>{{ lastPayment.payment_type }}</span>
-                </div>
-                <div class="item-sub" v-if="lastPayment.class_name">
-                   {{ lastPayment.class_name }} - {{ lastPayment.month }}
-                </div>
-                <div class="total">
-                    <span>TOTAL</span>
-                    <span>Rs. {{ lastPayment.amount }}/=</span>
-                </div>
-            </div>
-            <hr class="solid">
-            <div class="footer">
-                <p>Thank you!</p>
-                <p>System by ClassMaster</p>
-            </div>
-        </div>
-    </div>
+    <!-- Image Preview Dialog -->
+    <q-dialog v-model="showImageDialog" maximized>
+        <q-card class="bg-black text-white">
+            <q-bar class="bg-black">
+                <q-space />
+                <q-btn dense flat icon="close" v-close-popup>
+                    <q-tooltip>Close</q-tooltip>
+                </q-btn>
+            </q-bar>
+            <q-card-section class="flex flex-center scroll" style="height: calc(100vh - 50px)">
+                <img :src="previewImageUrl" style="max-width: 100%; max-height: 100vh; object-fit: contain;" />
+            </q-card-section>
+        </q-card>
+    </q-dialog>
 
   </q-page>
 </template>
@@ -187,194 +148,71 @@
 import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { paymentService } from 'src/services/paymentService'
-import { studentService } from 'src/services/studentService'
-
-import { useAppStore } from 'src/stores/app'
 
 const $q = useQuasar()
-const appStore = useAppStore()
-const tab = ref('collect')
-const submitting = ref(false)
-const payments = ref([])
+const tab = ref('pending')
+const loading = ref(false)
+const pendingTransactions = ref([])
+const showImageDialog = ref(false)
+const previewImageUrl = ref('')
 
-// Computed Options from Store
-const classOptions = computed(() => appStore.classes)
+const pendingCount = computed(() => pendingTransactions.value.length)
 
-// Search state
-const selectedStudent = ref(null)
-const studentOptions = ref([])
-const allStudents = ref([]) // Cache for filtering
-
-const form = ref({
-    payment_type: 'Monthly Fee',
-    class_id: null,
-    amount: '',
-    month: 'Jan 2026'
-})
-
-const lastPayment = ref(null)
-
-async function fetchInitialData() {
+async function fetchPending() {
+    loading.value = true
     try {
-        // Fetch Payments
-        await fetchPayments()
-
-        // Fetch Students Cache
-        const students = await studentService.getAll()
-        allStudents.value = students.map(s => ({
-            label: `${s.first_name} ${s.last_name} (${s.whatsapp_number})`,
-            value: s.id,
-            ...s
-        }))
+        const data = await paymentService.getPendingTransactions()
+        pendingTransactions.value = data.map(txn => ({ ...txn, processing: false }))
     } catch (error) {
         console.error(error)
-    }
-}
-
-async function fetchPayments() {
-    try {
-        payments.value = await paymentService.getRecentPayments()
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-function filterStudents (val, update) {
-  if (val === '') {
-    update(() => {
-      studentOptions.value = allStudents.value
-    })
-    return
-  }
-
-  update(() => {
-    const needle = val.toLowerCase()
-    studentOptions.value = allStudents.value.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
-  })
-}
-
-async function processPayment() {
-    submitting.value = true
-    try {
-        const payload = {
-            student_id: selectedStudent.value.value,
-            payment_type: form.value.payment_type,
-            amount: form.value.amount,
-            class_id: form.value.class_id,
-            month: form.value.month,
-            is_printed: true
-        }
-
-        const data = await paymentService.processPayment(payload)
-        $q.notify({ type: 'positive', message: 'Payment recorded!' })
-        
-        // Prepare Receipt Data
-        const cls = classOptions.value.find(c => c.value === payload.class_id)
-        lastPayment.value = {
-            ...data,
-            studentName: selectedStudent.value.label.split('(')[0].trim(),
-            class_name: cls ? cls.label : ''
-        }
-        
-        // Trigger Print
-        setTimeout(() => {
-            window.print()
-        }, 500)
-
-        // Reset
-        form.value.amount = ''
-        fetchPayments()
-
-    } catch (e) {
-        console.error(e)
-        $q.notify({ type: 'negative', message: 'Payment failed' })
+        $q.notify({ type: 'negative', message: 'Failed to load payments' })
     } finally {
-        submitting.value = false
+        loading.value = false
     }
 }
 
-function reprint(pay) {
-    lastPayment.value = {
-        ...pay,
-        studentName: pay.students ? `${pay.students.first_name} ${pay.students.last_name}` : 'Unknown',
-        class_name: '', // Ideally fetch class name too, but simplify for reprint
-        class_id: pay.class_id
-    }
-    setTimeout(() => {
-        window.print()
-    }, 500)
+function openImagePreview(url) {
+    if (!url) return
+    previewImageUrl.value = url
+    showImageDialog.value = true
 }
 
-function formatDate(dateStr) {
-    if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+async function verifyPayment(txn, status) {
+    txn.processing = true
+    try {
+        await paymentService.verifyTransaction(txn.id, status)
+        
+        $q.notify({ 
+            type: status === 'verified' ? 'positive' : 'warning', 
+            message: status === 'verified' ? 'Payment Approved!' : 'Payment Rejected' 
+        })
+        
+        // Remove from list
+        pendingTransactions.value = pendingTransactions.value.filter(t => t.id !== txn.id)
+        
+    } catch (error) {
+        console.error(error)
+        $q.notify({ type: 'negative', message: 'Action failed' })
+    } finally {
+        txn.processing = false
+    }
 }
 
 onMounted(() => {
-    fetchInitialData()
+    fetchPending()
 })
 </script>
 
 <style scoped>
-.font-outfit {
-  font-family: 'Outfit', sans-serif;
+.font-outfit { font-family: 'Outfit', sans-serif; }
+.rounded-borders-lg { border-radius: 12px; }
+.opacity-60 { opacity: 0.6; }
+.opacity-40 { opacity: 0.4; }
+.bg-transparent-gradient {
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: white;
+    padding: 10px;
 }
-.my-card {
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-}
-
-/* Print Styles */
-.print-only {
-    display: none;
-}
-
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    .no-print {
-        display: none !important;
-    }
-    #receipt-print, #receipt-print * {
-        visibility: visible;
-    }
-    #receipt-print {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 80mm; /* Thermal paper width */
-        display: block;
-    }
-    
-    .receipt-container {
-        width: 100%;
-        padding: 10px;
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 12px;
-        text-align: center;
-    }
-    .header h2 { font-size: 16px; margin: 0; font-weight: bold; }
-    .header p { margin: 2px 0; font-size: 10px; }
-    
-    .dashed { border-top: 1px dashed #000; margin: 10px 0; }
-    .solid { border-top: 1px solid #000; margin: 10px 0; }
-    
-    .details { text-align: left; margin-bottom: 10px; }
-    .details .row { display: flex; justify-content: space-between; }
-    
-    .item-list { text-align: left; }
-    .item { font-weight: bold; margin-top: 5px; }
-    .item-sub { font-size: 10px; margin-left: 10px; }
-    
-    .total { 
-        display: flex; 
-        justify-content: space-between; 
-        font-size: 14px; 
-        font-weight: bold; 
-        margin-top: 15px;
-    }
-    
-    .footer { margin-top: 20px; font-size: 10px; }
-}
+.hover-lift { transition: transform 0.2s; }
+.hover-lift:hover { transform: translateY(-4px); }
 </style>
