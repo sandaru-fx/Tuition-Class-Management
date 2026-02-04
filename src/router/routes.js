@@ -22,6 +22,7 @@ const routes = [
       { path: 'roles', component: () => import('pages/RolesPage.vue') },
       { path: 'students', component: () => import('pages/StudentsPage.vue') },
       { path: 'classes', component: () => import('pages/ClassesPage.vue') },
+      { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },
       { path: 'exams', component: () => import('pages/ExamsPage.vue') },
       { path: 'communication', component: () => import('pages/CommunicationPage.vue') },
       { path: 'attendance', component: () => import('pages/AttendancePage.vue') },
