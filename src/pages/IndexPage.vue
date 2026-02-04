@@ -7,6 +7,7 @@
       <div class="absolute-full overflow-hidden">
         <div class="blob-1 absolute-top-right"></div>
         <div class="blob-2 absolute-bottom-left"></div>
+        <div class="glow-center absolute-center"></div>
         <div class="bg-grid absolute-full opacity-10"></div>
       </div>
 
@@ -339,16 +340,22 @@ onUnmounted(() => {
 }
 
 .blob-1 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, rgba(255,255,255,0) 70%);
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, rgba(255,255,255,0) 80%);
   border-radius: 50%;
-  transform: translate(20%, -20%);
+  transform: translate(30%, -30%);
 }
 .blob-2 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(234,179,8,0.1) 0%, rgba(255,255,255,0) 70%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(234,179,8,0.06) 0%, rgba(255,255,255,0) 80%);
   border-radius: 50%;
-  transform: translate(-20%, 20%);
+  transform: translate(-30%, 30%);
+}
+.glow-center {
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, rgba(255,255,255,0) 80%);
+  border-radius: 50%;
+  filter: blur(80px);
 }
 
 .bg-grid {
@@ -358,7 +365,7 @@ onUnmounted(() => {
   background-size: 40px 40px;
 }
 
-.opacity-10 { opacity: 0.4; }
+.opacity-10 { opacity: 0.08; }
 
 /* Contact Decorative Circles */
 .circle-1 {
