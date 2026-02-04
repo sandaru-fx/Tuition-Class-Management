@@ -53,92 +53,125 @@
       :width="260"
     >
       <q-scroll-area class="fit">
-        <div class="q-pa-md q-mb-md">
-           <div class="text-overline text-grey-6 q-mb-sm q-pl-sm">MENU</div>
-           
-           <q-list padding class="menu-list">
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard'" to="/dashboard" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="dashboard" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Overview</q-item-section>
-             </q-item>
+        <!-- Grade Filter -->
+        <GradeFilter />
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/students'" to="/dashboard/students" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="school" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Students</q-item-section>
-             </q-item>
+        <div class="q-pa-md">
+          <!-- Overview Section -->
+          <SidebarSection title="OVERVIEW" icon="dashboard">
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard'" to="/dashboard" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="dashboard" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Dashboard</q-item-section>
+              <q-item-section side v-if="stats.newStudents > 0">
+                <q-badge color="blue" :label="stats.newStudents" rounded />
+              </q-item-section>
+            </q-item>
+          </SidebarSection>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/classes'" to="/dashboard/classes" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="calendar_month" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Classes</q-item-section>
-             </q-item>
+          <!-- Student Management Section -->
+          <SidebarSection title="STUDENT MANAGEMENT" icon="groups">
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/students'" to="/dashboard/students" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="school" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Students</q-item-section>
+              <q-item-section side v-if="stats.totalStudents > 0">
+                <q-badge color="blue-grey" :label="stats.totalStudents" rounded />
+              </q-item-section>
+            </q-item>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/exams'" to="/dashboard/exams" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="assignment_turned_in" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Exams</q-item-section>
-             </q-item>
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/attendance'" to="/dashboard/attendance" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="fact_check" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Attendance</q-item-section>
+              <q-item-section side v-if="stats.pendingAttendance > 0">
+                <q-badge color="orange" :label="stats.pendingAttendance" rounded />
+              </q-item-section>
+            </q-item>
+          </SidebarSection>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/communication'" to="/dashboard/communication" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="campaign" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Communication</q-item-section>
-             </q-item>
+          <!-- Academics Section -->
+          <SidebarSection title="ACADEMICS" icon="menu_book">
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/classes'" to="/dashboard/classes" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="calendar_month" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Classes</q-item-section>
+              <q-item-section side v-if="stats.activeClasses > 0">
+                <q-badge color="green" :label="stats.activeClasses" rounded />
+              </q-item-section>
+            </q-item>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/payments'" to="/dashboard/payments" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="payments" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Payments</q-item-section>
-             </q-item>
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/exams'" to="/dashboard/exams" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="assignment_turned_in" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Exams</q-item-section>
+              <q-item-section side v-if="stats.upcomingExams > 0">
+                <q-badge color="red" :label="stats.upcomingExams" rounded />
+              </q-item-section>
+            </q-item>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/attendance'" to="/dashboard/attendance" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="fact_check" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Attendance</q-item-section>
-             </q-item>
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/communication'" to="/dashboard/communication" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="campaign" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Communication</q-item-section>
+            </q-item>
+          </SidebarSection>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/users'" to="/dashboard/users" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="group" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Users</q-item-section>
-             </q-item>
+          <!-- Financial Section -->
+          <SidebarSection title="FINANCIAL" icon="account_balance_wallet">
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/payments'" to="/dashboard/payments" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="payments" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Payments</q-item-section>
+              <q-item-section side v-if="stats.pendingPayments > 0">
+                <q-badge color="orange" :label="stats.pendingPayments" rounded />
+              </q-item-section>
+            </q-item>
+          </SidebarSection>
 
-             <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/roles'" to="/dashboard/roles" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="admin_panel_settings" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Roles</q-item-section>
-             </q-item>
-           </q-list>
+          <!-- Administration Section -->
+          <SidebarSection title="ADMINISTRATION" icon="admin_panel_settings">
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/users'" to="/dashboard/users" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="group" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Users</q-item-section>
+            </q-item>
 
-           <div class="text-overline text-grey-6 q-mt-xl q-mb-sm q-pl-sm">SETTINGS</div>
-           
-           <q-list padding class="menu-list">
-             <q-item clickable v-ripple to="/dashboard/profile" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="person" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Profile</q-item-section>
-             </q-item>
+            <q-item clickable v-ripple active-class="bg-grey-2 text-primary" :active="route.path === '/dashboard/roles'" to="/dashboard/roles" class="rounded-borders q-mb-xs">
+              <q-item-section avatar>
+                <q-icon name="admin_panel_settings" size="20px" />
+              </q-item-section>
+              <q-item-section class="text-weight-medium">Roles</q-item-section>
+            </q-item>
+          </SidebarSection>
 
-             <q-item clickable v-ripple @click="handleLogout" class="rounded-borders q-mb-xs text-red-7">
-               <q-item-section avatar>
-                 <q-icon name="logout" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Logout</q-item-section>
-             </q-item>
-           </q-list>
+          <!-- Settings Section -->
+          <div class="q-mt-xl">
+            <div class="text-overline text-grey-6 q-mb-sm q-pl-sm" style="font-size: 11px; letter-spacing: 0.5px;">SETTINGS</div>
+            <q-list padding class="menu-list">
+              <q-item clickable v-ripple to="/dashboard/profile" class="rounded-borders q-mb-xs">
+                <q-item-section avatar>
+                  <q-icon name="person" size="20px" />
+                </q-item-section>
+                <q-item-section class="text-weight-medium">Profile</q-item-section>
+              </q-item>
 
+              <q-item clickable v-ripple @click="handleLogout" class="rounded-borders q-mb-xs text-red-7">
+                <q-item-section avatar>
+                  <q-icon name="logout" size="20px" />
+                </q-item-section>
+                <q-item-section class="text-weight-medium">Logout</q-item-section>
+              </q-item>
+            </q-list>
+          </div>
         </div>
       </q-scroll-area>
     </q-drawer>
@@ -152,27 +185,71 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useAppStore } from 'src/stores/app'
+import { storeToRefs } from 'pinia'
+import GradeFilter from 'src/components/Sidebar/GradeFilter.vue'
+import SidebarSection from 'src/components/Sidebar/SidebarSection.vue'
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
+const { selectedGrade } = storeToRefs(appStore)
 
 const leftDrawerOpen = ref(false)
 const router = useRouter()
 const route = useRoute()
 const $q = useQuasar()
 
+// Mock stats for sidebar badges
+const stats = ref({
+  newStudents: 0,
+  totalStudents: 0,
+  activeClasses: 0,
+  upcomingExams: 0,
+  pendingAttendance: 0,
+  pendingPayments: 0
+})
+
+// Simulate fetching stats based on filter
+function fetchStats() {
+    // In production, this would be an API call passing 'selectedGrade'
+    // simulating different data for different grades
+    if (selectedGrade.value === 'all') {
+        stats.value = { newStudents: 15, totalStudents: 142, activeClasses: 12, upcomingExams: 3, pendingAttendance: 5, pendingPayments: 23 }
+    } else if (selectedGrade.value === 'primary') {
+        stats.value = { newStudents: 4, totalStudents: 45, activeClasses: 4, upcomingExams: 0, pendingAttendance: 1, pendingPayments: 5 }
+    } else if (['10', '11', 'ol'].includes(selectedGrade.value)) {
+        stats.value = { newStudents: 2, totalStudents: 62, activeClasses: 5, upcomingExams: 2, pendingAttendance: 3, pendingPayments: 12 }
+    } else {
+        // Random variations for specific grades
+        stats.value = { 
+            newStudents: Math.floor(Math.random() * 5), 
+            totalStudents: Math.floor(Math.random() * 30), 
+            activeClasses: Math.floor(Math.random() * 4), 
+            upcomingExams: Math.floor(Math.random() * 2), 
+            pendingAttendance: Math.floor(Math.random() * 2), 
+            pendingPayments: Math.floor(Math.random() * 8) 
+        }
+    }
+}
+
+watch(selectedGrade, () => {
+    fetchStats()
+})
+
+onMounted(() => {
+  appStore.initData()
+  fetchStats()
+})
+
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-onMounted(() => {
-  appStore.initData()
-})
+
 
 async function handleLogout() {
   try {

@@ -185,8 +185,13 @@ import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { studentService } from 'src/services/studentService'
 import { supabase } from 'boot/supabase' // Still needed for RPC account creation until moved to service
+import { useAppStore } from 'src/stores/app'
+import { storeToRefs } from 'pinia'
 
 const $q = useQuasar()
+const appStore = useAppStore()
+const { selectedGrade } = storeToRefs(appStore)
+
 const search = ref('')
 const users = ref([]) // Actually students
 const loading = ref(false)
@@ -215,14 +220,42 @@ const form = ref({
 })
 
 const filteredStudents = computed(() => {
-  const query = search.value.toLowerCase()
-  if (!query) return users.value
-  return users.value.filter(s => 
-    s.first_name?.toLowerCase().includes(query) || 
-    s.last_name?.toLowerCase().includes(query) || 
-    (s.full_name && s.full_name.toLowerCase().includes(query)) ||
-    s.whatsapp_number?.includes(query)
-  )
+  let result = users.value
+
+  // 1. Filter by Search
+  if (search.value) {
+    const query = search.value.toLowerCase()
+    result = result.filter(s => 
+      s.first_name?.toLowerCase().includes(query) || 
+      s.last_name?.toLowerCase().includes(query) || 
+      (s.full_name && s.full_name.toLowerCase().includes(query)) ||
+      s.whatsapp_number?.includes(query)
+    )
+  }
+
+  // 2. Filter by Grade
+  if (selectedGrade.value && selectedGrade.value !== 'all') {
+    const grade = selectedGrade.value
+    
+    // Check for ranges
+    if (grade === 'primary') { // 1-5
+      result = result.filter(s => ['1', '2', '3', '4', '5'].includes(s.grade))
+    } else if (grade === 'junior') { // 6-9
+      result = result.filter(s => ['6', '7', '8', '9'].includes(s.grade))
+    } else if (grade === 'ol') { // 10-11
+      result = result.filter(s => ['10', '11'].includes(s.grade))
+    } else if (grade === 'al') { // 12-13
+      result = result.filter(s => ['12', '13'].includes(s.grade))
+    } else if (grade.startsWith('al_')) { // specific A/L streams
+      // If we had stream data, we'd filter by it. For now, just show all A/L
+      result = result.filter(s => ['12', '13'].includes(s.grade))
+    } else {
+      // Specific Grade (e.g. '1', '10')
+      result = result.filter(s => s.grade === grade)
+    }
+  }
+
+  return result
 })
 
 async function fetchStudents() {

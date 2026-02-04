@@ -6,6 +6,7 @@ export const useAppStore = defineStore('app', () => {
   const classes = ref([])
   const isInitialized = ref(false)
   const loading = ref(false)
+  const selectedGrade = ref('all') // Grade filter state
 
   async function initData() {
     if (isInitialized.value) return
@@ -25,11 +26,17 @@ export const useAppStore = defineStore('app', () => {
     isInitialized.value = false
   }
 
+  function setSelectedGrade(grade) {
+    selectedGrade.value = grade
+  }
+
   return {
     classes,
     isInitialized,
     loading,
+    selectedGrade,
     initData,
-    clearCache
+    clearCache,
+    setSelectedGrade
   }
 })
