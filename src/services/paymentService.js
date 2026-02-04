@@ -132,5 +132,50 @@ export const paymentService = {
     })
 
     return stats
+  },
+
+  // 8. Initialize PayHere Payment (Online)
+  initPayHerePayment(paymentData) {
+    return new Promise((resolve, reject) => {
+      
+      const payment = {
+        "sandbox": true,
+        "merchant_id": "1211149", // Replace your Merchant ID
+        "return_url": "http://localhost:9000/return",
+        "cancel_url": "http://localhost:9000/cancel",
+        "notify_url": "http://localhost:9000/notify",
+        "order_id": `ORD-${Date.now()}`,
+        "items": paymentData.items,
+        "amount": paymentData.amount,
+        "currency": "LKR",
+        "hash": "45D770250085C0A04537D716C4D068C6", // Need backend to generate real hash later
+        "first_name": paymentData.first_name,
+        "last_name": paymentData.last_name,
+        "email": paymentData.email,
+        "phone": paymentData.phone,
+        "address": "Colombo 03",
+        "city": "Colombo",
+        "country": "Sri Lanka",
+      };
+
+      // PayHere Callback Functions
+      payhere.onCompleted = function onCompleted(orderId) {
+          console.log("Payment completed. OrderID:" + orderId);
+          resolve({ status: 'success', orderId: orderId });
+      };
+
+      payhere.onDismissed = function onDismissed() {
+          console.log("Payment dismissed");
+          reject({ status: 'dismissed' });
+      };
+
+      payhere.onError = function onError(error) {
+          console.log("Error:" + error);
+          reject({ status: 'error', message: error });
+      };
+
+      // Open Popup
+      payhere.startPayment(payment);
+    })
   }
 }

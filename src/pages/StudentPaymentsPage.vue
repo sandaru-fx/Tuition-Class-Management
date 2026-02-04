@@ -180,7 +180,6 @@
                             >
                                 <q-icon name="credit_card" size="sm" class="q-mb-xs" />
                                 <div class="text-weight-bold">Online Card</div>
-                                <q-badge color="orange" floating rounded transparent label="Soon" style="right: -4px; top: -4px" />
                             </q-btn>
                         </div>
                     </div>
@@ -314,28 +313,60 @@ async function submitPayment() {
         let slipUrl = null
         
         // 1. If Bank Slip, Upload Image First
-        if (paymentForm.value.method === 'bank_slip' && slipFile.value) {
-            slipUrl = await paymentService.uploadSlip(slipFile.value, authStore.profile.id)
-        }
+        if (paymentForm.value.method === 'bank_slip') {
+            if (slipFile.value) {
+                slipUrl = await paymentService.uploadSlip(slipFile.value, authStore.profile.id)
+            }
+            
+            // Create Pending Transaction
+            const txnData = {
+                student_id: authStore.profile.id,
+                class_id: paymentForm.value.class_id,
+                amount: paymentForm.value.amount,
+                payment_method: 'bank_slip',
+                status: 'pending',
+                slip_url: slipUrl
+            }
+            await paymentService.createTransaction(txnData)
 
-        // 2. Create Transaction Record
-        const txnData = {
-            student_id: authStore.profile.id,
-            class_id: paymentForm.value.class_id,
-            amount: paymentForm.value.amount,
-            payment_method: paymentForm.value.method,
-            status: 'pending',
-            slip_url: slipUrl
-        }
+             $q.notify({
+                type: 'positive',
+                message: 'Slip submitted successfully!',
+                caption: 'Admin will verify it soon.',
+                position: 'top'
+            })
 
-        await paymentService.createTransaction(txnData)
-        
-        $q.notify({
-            type: 'positive',
-            message: 'Payment submitted successfully!',
-            caption: 'Admin will verify your slip soon.',
-            position: 'top'
-        })
+        } else if (paymentForm.value.method === 'online_card') {
+            // 2. Trigger PayHere
+            const paymentData = {
+                items: "Class Fees",
+                amount: paymentForm.value.amount,
+                first_name: authStore.profile.full_name?.split(' ')[0] || 'Student',
+                last_name: authStore.profile.full_name?.split(' ')[1] || '',
+                email: authStore.profile.email || 'student@example.com',
+                phone: authStore.profile.whatsapp_number || '0771234567'
+            }
+
+            const result = await paymentService.initPayHerePayment(paymentData)
+            
+            // If we get here, payment was successful in sandbox
+             const txnData = {
+                student_id: authStore.profile.id,
+                class_id: paymentForm.value.class_id,
+                amount: paymentForm.value.amount,
+                payment_method: 'online_card',
+                status: 'verified', // Auto-verified for online payments
+                reference_id: result.orderId
+            }
+             await paymentService.createTransaction(txnData)
+
+             $q.notify({
+                type: 'positive',
+                message: 'Payment Successful!',
+                caption: 'Your class access is now active.',
+                position: 'top'
+            })
+        }
 
         showPaymentDialog.value = false
         slipFile.value = null
@@ -343,8 +374,12 @@ async function submitPayment() {
         fetchHistory()
 
     } catch (e) {
-        console.error(e)
-        $q.notify({ type: 'negative', message: 'Payment failed to submit.' })
+        if (e.status === 'dismissed') {
+             $q.notify({ type: 'warning', message: 'Payment Cancelled' })
+        } else {
+             console.error(e)
+            $q.notify({ type: 'negative', message: 'Payment failed to submit.' })
+        }
     } finally {
         submitting.value = false
     }

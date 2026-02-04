@@ -40,12 +40,101 @@
         <q-badge color="red" floating v-if="pendingCount > 0">{{ pendingCount }}</q-badge>
       </q-tab>
       <q-tab name="history" label="Transaction History" icon="history" no-caps />
+      <q-tab name="analysis" label="Financial Analysis" icon="insights" no-caps />
     </q-tabs>
 
     <q-separator class="q-mb-md" />
 
     <q-tab-panels v-model="tab" animated class="bg-transparent">
       
+      <!-- Inside q-tab-panels -->
+      <q-tab-panel name="analysis" class="q-pa-none">
+          <div v-if="loadingStats" class="text-center q-pa-xl">
+              <q-spinner-grid color="primary" size="4em" />
+              <div class="q-mt-md text-grey">Analyzing financial data...</div>
+          </div>
+          <div v-else class="row q-col-gutter-md">
+              <!-- Revenue Summary Cards -->
+              <div class="col-12 col-md-4">
+                  <q-card class="rounded-borders-lg shadow-1 bg-white">
+                      <q-card-section>
+                          <div class="text-subtitle2 text-grey-7 uppercase font-outfit">Total Revenue (LKR)</div>
+                          <div class="text-h3 text-weight-bolder text-primary q-my-sm">{{ totalRevenue.toLocaleString() }}</div>
+                          <div class="row items-center text-green text-weight-bold">
+                              <q-icon name="trending_up" class="q-mr-xs" />
+                              <span>Verified Payments</span>
+                          </div>
+                      </q-card-section>
+                  </q-card>
+              </div>
+
+              <!-- Revenue by Grade (Bar Chart View) -->
+              <div class="col-12 col-md-8">
+                  <q-card class="rounded-borders-lg shadow-1 bg-white">
+                      <q-card-section>
+                          <div class="text-subtitle1 text-weight-bold q-mb-md">Revenue by Grade Category</div>
+                          <div v-for="(amount, grade) in analysisStats.byGrade" :key="grade" class="q-mb-sm">
+                              <div class="row justify-between text-caption text-weight-bold">
+                                  <span>Grade {{ grade }}</span>
+                                  <span>LKR {{ amount.toLocaleString() }}</span>
+                              </div>
+                              <q-linear-progress 
+                                  :value="totalRevenue > 0 ? amount / totalRevenue : 0" 
+                                  color="primary" 
+                                  size="10px" 
+                                  rounded 
+                                  class="q-mt-xs"
+                                  track-color="grey-2"
+                              />
+                          </div>
+                      </q-card-section>
+                  </q-card>
+              </div>
+
+              <!-- Revenue by Subject -->
+              <div class="col-12 col-md-6">
+                   <q-card class="rounded-borders-lg shadow-1 bg-white">
+                      <q-card-section>
+                          <div class="text-subtitle1 text-weight-bold q-mb-md">Top Performing Subjects</div>
+                          <q-list separator>
+                              <q-item v-for="(amount, subject) in sortedSubjects" :key="subject">
+                                  <q-item-section avatar>
+                                      <q-avatar color="blue-1" text-color="blue-7" icon="book" size="sm" />
+                                  </q-item-section>
+                                  <q-item-section>
+                                      <q-item-label class="text-weight-bold">{{ subject }}</q-item-label>
+                                      <q-item-label caption>Verified Collections</q-item-label>
+                                  </q-item-section>
+                                  <q-item-section side>
+                                      <div class="text-weight-bolder text-dark">LKR {{ amount.toLocaleString() }}</div>
+                                  </q-item-section>
+                              </q-item>
+                          </q-list>
+                      </q-card-section>
+                  </q-card>
+              </div>
+
+              <!-- Payment Method Split -->
+              <div class="col-12 col-md-6">
+                  <q-card class="rounded-borders-lg shadow-1 bg-white border-left-blue">
+                      <q-card-section>
+                          <div class="text-subtitle1 text-weight-bold q-mb-md">Payment Method Distribution</div>
+                          <div class="row q-col-gutter-sm text-center">
+                              <div v-for="(amount, method) in analysisStats.byMethod" :key="method" class="col-4">
+                                  <div class="q-pa-md bg-grey-1 rounded-borders full-height">
+                                      <div class="text-caption text-grey-6 uppercase">{{ method.replace('_', ' ') }}</div>
+                                      <div class="text-h6 text-weight-bold">{{ totalRevenue > 0 ? ((amount/totalRevenue)*100).toFixed(0) : 0 }}%</div>
+                                      <div class="text-caption">LKR {{ (amount/1000).toFixed(1) }}K</div>
+                                  </div>
+                              </div>
+                          </div>
+                      </q-card-section>
+                  </q-card>
+              </div>
+
+          </div>
+      </q-tab-panel>
+
       <!-- Pending Tab -->
       <q-tab-panel name="pending" class="q-pa-none">
           <div v-if="loading" class="text-center q-pa-lg">
@@ -145,18 +234,34 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { paymentService } from 'src/services/paymentService'
 
 const $q = useQuasar()
 const tab = ref('pending')
 const loading = ref(false)
+const loadingStats = ref(false)
 const pendingTransactions = ref([])
 const showImageDialog = ref(false)
 const previewImageUrl = ref('')
 
+const analysisStats = ref({
+    totalRevenue: 0,
+    byGrade: {},
+    byMethod: {},
+    bySubject: {}
+})
+
 const pendingCount = computed(() => pendingTransactions.value.length)
+const totalRevenue = computed(() => analysisStats.value.totalRevenue)
+
+// Sort subjects by revenue
+const sortedSubjects = computed(() => {
+    return Object.entries(analysisStats.value.bySubject)
+        .sort(([, a], [, b]) => b - a)
+        .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
+})
 
 async function fetchPending() {
     loading.value = true
@@ -168,6 +273,18 @@ async function fetchPending() {
         $q.notify({ type: 'negative', message: 'Failed to load payments' })
     } finally {
         loading.value = false
+    }
+}
+
+async function fetchStats() {
+    loadingStats.value = true
+    try {
+        analysisStats.value = await paymentService.getPaymentStats()
+    } catch (error) {
+        console.error(error)
+        $q.notify({ type: 'negative', message: 'Failed to load analytics' })
+    } finally {
+        loadingStats.value = false
     }
 }
 
@@ -190,6 +307,9 @@ async function verifyPayment(txn, status) {
         // Remove from list
         pendingTransactions.value = pendingTransactions.value.filter(t => t.id !== txn.id)
         
+        // Refresh stats if on analysis tab
+        if (tab.value === 'analysis') fetchStats()
+        
     } catch (error) {
         console.error(error)
         $q.notify({ type: 'negative', message: 'Action failed' })
@@ -197,6 +317,12 @@ async function verifyPayment(txn, status) {
         txn.processing = false
     }
 }
+
+// Watch tab changes to refresh data
+watch(tab, (newTab) => {
+    if (newTab === 'analysis') fetchStats()
+    if (newTab === 'pending') fetchPending()
+})
 
 onMounted(() => {
     fetchPending()
@@ -215,4 +341,6 @@ onMounted(() => {
 }
 .hover-lift { transition: transform 0.2s; }
 .hover-lift:hover { transform: translateY(-4px); }
+.border-left-blue { border-left: 5px solid var(--q-primary); }
 </style>
+
