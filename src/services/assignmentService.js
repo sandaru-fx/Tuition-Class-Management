@@ -141,7 +141,7 @@ export const assignmentService = {
   // --- File Upload Helper ---
   async uploadFile(file, folder = 'assignments') {
     const fileName = `${folder}/${uuidv4()}-${file.name}`
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
         .from('assignments') // Bucket name
         .upload(fileName, file)
 
