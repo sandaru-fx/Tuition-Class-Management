@@ -69,6 +69,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     }
 
     // 4. Redirect logged in users away from Login/Register
+    /* 
     if (authStore.user && (to.path === '/login' || to.path === '/register')) {
         const userRole = authStore.profile?.role
         if (userRole === 'student') next('/student')
@@ -76,6 +77,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         else next('/dashboard')
         return
     }
+    */
 
     next()
   })
