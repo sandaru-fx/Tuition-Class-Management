@@ -93,5 +93,44 @@ export const paymentService = {
     
     if (error) throw error
     return data.length > 0
+  },
+
+  // 7. Get Aggregated Stats for Admin Analysis
+  async getPaymentStats() {
+    const { data, error } = await supabase
+      .from('transactions')
+      .select(`
+        *,
+        class:classes(grade, subject:subjects(name))
+      `)
+      .eq('status', 'verified')
+
+    if (error) throw error
+
+    // Perform manual aggregation
+    const stats = {
+      totalRevenue: 0,
+      byGrade: {}, // { '10': 5000, '12': 15000 }
+      byMethod: { online_card: 0, bank_slip: 0, cash: 0 },
+      bySubject: {} // { 'Maths': 5000 }
+    }
+
+    data.forEach(txn => {
+      const amount = Number(txn.amount)
+      stats.totalRevenue += amount
+      
+      // By Grade
+      const grade = txn.class?.grade || 'Unknown'
+      stats.byGrade[grade] = (stats.byGrade[grade] || 0) + amount
+
+      // By Method
+      stats.byMethod[txn.payment_method] = (stats.byMethod[txn.payment_method] || 0) + amount
+
+      // By Subject
+      const subjectName = txn.class?.subject?.name || 'Unknown'
+      stats.bySubject[subjectName] = (stats.bySubject[subjectName] || 0) + amount
+    })
+
+    return stats
   }
 }

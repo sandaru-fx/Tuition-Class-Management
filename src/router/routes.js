@@ -38,7 +38,8 @@ const routes = [
         { path: 'assignments', component: () => import('pages/StudentAssignmentsPage.vue') },
         { path: 'grades', component: () => import('pages/StudentPerformancePage.vue') },
         { path: 'schedule', component: () => import('pages/StudentSchedulePage.vue') },
-        { path: 'settings', component: () => import('pages/StudentSettingsPage.vue') }
+        { path: 'settings', component: () => import('pages/StudentSettingsPage.vue') },
+        { path: 'payments', component: () => import('pages/StudentPaymentsPage.vue') }
     ]
   },
 
