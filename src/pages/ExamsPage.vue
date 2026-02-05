@@ -257,6 +257,63 @@ async function saveExam() {
     }
 }
 
+const csvInput = ref(null)
+
+function triggerFileUpload() {
+    csvInput.value.click()
+}
+
+function handleCSVUpload(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+        const text = e.target.result
+        const lines = text.split('\n')
+        
+        let matchCount = 0
+        let failCount = 0
+
+        // Skip header (assuming row 1 is header)
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim()
+            if (!line) continue
+
+            // Format: phone, marks, remarks
+            const [phone, marks, remarks] = line.split(',').map(s => s?.trim())
+            
+            if (phone && marks) {
+                // Find student by phone
+                const cleanPhone = phone.replace(/\D/g, '')
+
+                const student = studentsList.value.find(s => {
+                    const sPhone = (s.whatsapp_number || '').replace(/\D/g, '')
+                    return sPhone.includes(cleanPhone) || cleanPhone.includes(sPhone)
+                })
+
+                if (student) {
+                    marksMap.value[student.id].marks = Number(marks)
+                    if (remarks) marksMap.value[student.id].remarks = remarks
+                    matchCount++
+                } else {
+                    failCount++
+                }
+            }
+        }
+        
+        if (matchCount > 0) {
+             $q.notify({ type: 'positive', message: `Matched ${matchCount} students from CSV!` })
+        }
+        if (failCount > 0) {
+             $q.notify({ type: 'warning', message: `Could not match ${failCount} rows (Check Phone Numbers)` })
+        }
+        
+        event.target.value = ''
+    }
+    reader.readAsText(file)
+}
+
 async function openMarksDialog(exam) {
     selectedExam.value = exam
     showMarksDialog.value = true

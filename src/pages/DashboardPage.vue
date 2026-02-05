@@ -170,6 +170,52 @@
       </div>
     </div>
 
+      <!-- Grade-Specific Widgets (Section 12) -->
+      <div class="col-12 q-mb-md">
+          <h2 class="text-h6 text-grey-8 q-mb-sm font-outfit">Section Insights</h2>
+          <div class="row q-col-gutter-md">
+              <!-- Primary Section (1-5) -->
+              <div class="col-12 col-md-4">
+                  <q-card class="bg-orange-1 text-orange-9 shadow-0 border-orange q-pa-sm">
+                      <q-item>
+                          <q-item-section avatar><q-icon name="child_care" size="md" /></q-item-section>
+                          <q-item-section>
+                              <q-item-label class="text-weight-bold">Primary Section (1-5)</q-item-label>
+                              <q-item-label caption class="text-orange-8">Upcoming: Parents Meeting (Friday)</q-item-label>
+                          </q-item-section>
+                          <q-item-section side><q-btn flat dense icon="arrow_forward" color="orange-9" /></q-item-section>
+                      </q-item>
+                  </q-card>
+              </div>
+              <!-- O/L Section (10-11) -->
+              <div class="col-12 col-md-4">
+                  <q-card class="bg-blue-1 text-blue-9 shadow-0 border-blue q-pa-sm">
+                      <q-item>
+                          <q-item-section avatar><q-icon name="timer" size="md" /></q-item-section>
+                          <q-item-section>
+                              <q-item-label class="text-weight-bold">O/L Countdown</q-item-label>
+                              <q-item-label caption class="text-blue-8">145 Days to Exam</q-item-label>
+                          </q-item-section>
+                          <q-item-section side><q-btn flat dense icon="event" color="blue-9" /></q-item-section>
+                      </q-item>
+                  </q-card>
+              </div>
+              <!-- A/L Section (12-13) -->
+              <div class="col-12 col-md-4">
+                  <q-card class="bg-purple-1 text-purple-9 shadow-0 border-purple q-pa-sm">
+                      <q-item>
+                          <q-item-section avatar><q-icon name="school" size="md" /></q-item-section>
+                          <q-item-section>
+                              <q-item-label class="text-weight-bold">A/L Revisions</q-item-label>
+                              <q-item-label caption class="text-purple-8">Chemistry Seminar: Tomorrow @ 8am</q-item-label>
+                          </q-item-section>
+                          <q-item-section side><q-btn flat dense icon="menu_book" color="purple-9" /></q-item-section>
+                      </q-item>
+                  </q-card>
+              </div>
+          </div>
+      </div>
+
     <div class="row q-col-gutter-lg">
       <!-- Recent Enrollments (Actually Students) -->
       <div class="col-12 col-md-8">
