@@ -65,6 +65,7 @@ const routes = [
         { path: 'assignments/create', component: () => import('pages/teacher/TeacherCreateAssignmentPage.vue') },
         { path: 'assignments/edit/:id', component: () => import('pages/teacher/TeacherCreateAssignmentPage.vue') }, // Resuing for edit
         { path: 'assignments/grade/:id', component: () => import('pages/teacher/TeacherGradingPage.vue') },
+        { path: 'announcements', component: () => import('pages/teacher/TeacherAnnouncementsPage.vue') },
         { path: 'students', component: () => import('pages/teacher/TeacherStudentsPage.vue') },
         { path: 'reports', component: () => import('pages/teacher/TeacherReportsPage.vue') },
         { path: 'profile', component: () => import('pages/teacher/TeacherProfilePage.vue') }

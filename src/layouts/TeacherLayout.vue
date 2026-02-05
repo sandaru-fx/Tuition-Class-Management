@@ -84,6 +84,13 @@
                </q-item-section>
                <q-item-section class="text-weight-medium">My Students</q-item-section>
              </q-item>
+
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/announcements'" to="/teacher/announcements" class="rounded-borders q-mb-xs">
+               <q-item-section avatar>
+                 <q-icon name="campaign" />
+               </q-item-section>
+               <q-item-section class="text-weight-medium">Announcements</q-item-section>
+             </q-item>
              
              <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/reports'" to="/teacher/reports" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
