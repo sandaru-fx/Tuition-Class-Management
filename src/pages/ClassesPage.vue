@@ -178,7 +178,7 @@
             <q-select 
                 outlined 
                 v-model="form.teacher_id" 
-                :options="teachers"
+                :options="filteredTeachers"
                 option-label="full_name"
                 option-value="id"
                 emit-value
@@ -190,7 +190,16 @@
                     if(t) form.teacher_name = t.full_name;
                 }"
                 :rules="[val => !!val || 'Required']" 
-            />
+                :hint="filteredTeachers.length < teachers.length ? 'Showing only qualified teachers for Grade ' + form.grade : ''"
+            >
+                <template v-slot:no-option>
+                    <q-item>
+                        <q-item-section class="text-grey">
+                            No qualified teachers found for Grade {{ form.grade }}
+                        </q-item-section>
+                    </q-item>
+                </template>
+            </q-select>
 
              <div class="row q-col-gutter-sm">
                 <div class="col-4">
@@ -345,6 +354,18 @@ const filteredSubjectOptions = computed(() => {
     return subjects.value.map(s => ({ label: s.name, value: s.id }))
 })
 
+// Filter Teachers based on qualified grades for the selected class grade
+const filteredTeachers = computed(() => {
+    if (!form.value.grade) return teachers.value
+    
+    // Return teachers who have the selected grade in their qualified_grades array
+    // OR teachers who have NO qualified_grades set (assuming they are generalists or data is missing)
+    return teachers.value.filter(t => {
+        if (!t.qualified_grades || t.qualified_grades.length === 0) return true
+        return t.qualified_grades.includes(form.value.grade)
+    })
+})
+
 function getClassesForDay(day) {
     return filteredClasses.value
         .filter(c => c.day_of_week === day)
@@ -414,6 +435,7 @@ async function fetchClasses() {
     const { data: subData } = await subjectService.getAll()
     subjects.value = subData || []
 
+    // Fetch Teachers with their qualified grades
     const tData = await teacherService.getAll()
     teachers.value = tData || []
 

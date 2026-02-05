@@ -31,6 +31,14 @@
                                 {{ sub }}
                             </q-badge>
                         </div>
+                        <div class="q-mt-xs text-caption text-grey-8">
+                            <span v-if="teacher.qualified_grades && teacher.qualified_grades.length">
+                                <strong>Grades:</strong> {{ teacher.qualified_grades.join(', ') }}
+                            </span>
+                            <span v-if="teacher.max_students" class="q-ml-sm">
+                                • <strong>Capacity:</strong> {{ teacher.max_students }}
+                            </span>
+                        </div>
                     </div>
                 </q-card-section>
                 
@@ -81,6 +89,24 @@
                     new-value-mode="add-unique"
                     hint="Type and press Enter to add subjects"
                 />
+
+                <div class="row q-col-gutter-md">
+                    <div class="col-6">
+                        <q-select 
+                            outlined 
+                            v-model="form.qualified_grades" 
+                            :options="gradeOptions"
+                            label="Qualified Grades" 
+                            multiple
+                            use-chips
+                            stack-label
+                            hint="Grades this teacher can teach"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <q-input outlined v-model="form.max_students" label="Max Students (Capacity)" type="number" />
+                    </div>
+                </div>
                 
                 <q-input outlined v-model="form.bio" label="Bio / Notes" type="textarea" rows="2" />
             </q-card-section>
@@ -132,34 +158,34 @@ function openDialog(teacher = null) {
     if (teacher) {
         isEdit.value = true
         form.value = { ...teacher }
-         // Handle null array
-        if (!form.value.subject_specialization) form.value.subject_specialization = []
+         if (!form.value.subject_specialization) form.value.subject_specialization = []
+        if (!form.value.qualified_grades) form.value.qualified_grades = []
     } else {
         isEdit.value = false
-        form.value = { id: null, full_name: '', phone: '', email: '', subject_specialization: [], bio: '' }
+        form.value = { id: null, full_name: '', phone: '', email: '', subject_specialization: [], qualified_grades: [], max_students: null, bio: '' }
     }
     showDialog.value = true
 }
 
+const gradeOptions = ['1','2','3','4','5','6','7','8','9','10','11','12','13']
+
 async function saveTeacher() {
     submitting.value = true
     try {
+        const payload = {
+            full_name: form.value.full_name,
+            phone: form.value.phone,
+            email: form.value.email,
+            subject_specialization: form.value.subject_specialization,
+            qualified_grades: form.value.qualified_grades,
+            max_students: form.value.max_students,
+            bio: form.value.bio
+        }
+
         if (isEdit.value) {
-            await teacherService.update(form.value.id, {
-                full_name: form.value.full_name,
-                phone: form.value.phone,
-                email: form.value.email,
-                subject_specialization: form.value.subject_specialization,
-                bio: form.value.bio
-            })
+            await teacherService.update(form.value.id, payload)
         } else {
-            await teacherService.create({
-                full_name: form.value.full_name,
-                phone: form.value.phone,
-                email: form.value.email,
-                subject_specialization: form.value.subject_specialization,
-                bio: form.value.bio
-            })
+            await teacherService.create(payload)
         }
         $q.notify({ type: 'positive', message: 'Teacher saved successfully' })
         showDialog.value = false
