@@ -14,6 +14,9 @@
 
         <q-space />
 
+        <!-- Theme Toggle -->
+        <q-btn flat round dense :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" class="q-mr-sm text-grey-7" @click="toggleDark" />
+
         <!-- Notification Bell -->
         <q-btn flat round dense icon="notifications_none" class="q-mr-sm text-grey-7">
           <q-badge color="red" floating rounded dot />
@@ -188,6 +191,10 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
+function toggleDark () {
+  $q.dark.toggle()
+}
+
 onMounted(() => {
   appStore.initData()
 })
@@ -226,5 +233,55 @@ async function handleLogout() {
 }
 .font-size-14 {
   font-size: 14px;
+}
+
+// Professional Dark Mode (Slate Theme)
+.body--dark {
+  background: #0f172a !important; // Slate 900
+  color: #f1f5f9;
+
+  .q-layout, .q-page-container {
+    background: #0f172a !important;
+  }
+
+  .q-header {
+    background: #1e293b !important; // Slate 800
+    border-bottom: 1px solid #334155 !important; // Slate 700
+    color: #f1f5f9 !important;
+
+    .text-grey-8, .text-grey-7, .text-dark {
+      color: #94a3b8 !important; // Slate 400
+    }
+  }
+
+  .q-drawer {
+    background: #1e293b !important;
+    border-right: 1px solid #334155 !important;
+
+    .text-grey-6 {
+      color: #94a3b8 !important;
+    }
+    
+    // Sidebar Menu Items in Dark Mode
+    .q-item {
+      color: #cbd5e1; // Slate 300
+      
+      &:hover {
+        background: #334155; // Slate 700
+        color: #fff;
+      }
+
+      &.q-router-link-active, &.text-blue-600 {
+        background: rgba(59, 130, 246, 0.15) !important; // Blue 500 with low opacity
+        color: #60a5fa !important; // Blue 400
+      }
+    }
+  }
+  
+  // Card & Surface styling for pages (Global override for teacher layout)
+  .q-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+  }
 }
 </style>
