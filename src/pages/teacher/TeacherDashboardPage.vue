@@ -4,7 +4,12 @@
     <TeacherTimeline />
 
     <!-- Stats & Charts Widget -->
-    <TeacherStatsRow />
+    <TeacherStatsRow 
+      :total-students="weeklyStats.totalStudents"
+      :total-classes="weeklyStats.totalClasses"
+      :avg-attendance="weeklyStats.avgAttendance"
+      :pending-count="pendingGrading.length"
+    />
 
     <!-- Main Content Grid -->
     <div class="row q-col-gutter-lg">
@@ -90,24 +95,78 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useAuthStore } from 'src/stores/auth'
+import { teacherService } from 'src/services/teacherService'
 import TeacherStatsRow from 'components/TeacherStatsRow.vue'
 import TeacherTimeline from 'components/TeacherTimeline.vue'
 
-const date = ref('2026/01/25')
-const events = ['2026/01/25', '2026/01/28']
+const authStore = useAuthStore()
 
-const activeClasses = ref([
-    { id: 1, name: 'Inorganic Chem', grade: 'Grade 12', hall: 'Hall A', students: 45, nextTopic: 'Self-Cheming, Mathemat dietary' },
-    { id: 2, name: 'Physics 101', grade: 'Grade 12', hall: 'Hall A', students: 28, nextTopic: 'Physical fibrations Computer science' },
-    { id: 3, name: 'Combined Maths', grade: 'Grade 12', hall: 'Hall B', students: 50, nextTopic: 'Integration & Derivatives' },
-    { id: 4, name: 'Biology', grade: 'Grade 13', hall: 'Lab 1', students: 35, nextTopic: 'Plant Physiology' }
-])
+const date = ref(new Date().toISOString().split('T')[0].replace(/-/g, '/'))
+const events = ref([])
+const loading = ref(true)
 
-const pendingGrading = ref([
-    { id: 1, assignment: 'Thermodynamics Quiz 1', class: 'AL Physics', count: 12 },
-    { id: 2, assignment: 'Algebra Homework', class: 'Grade 11 Math', count: 5 }
-])
+// Real data from database
+const activeClasses = ref([])
+const pendingGrading = ref([])
+const weeklyStats = ref({
+  totalClasses: 0,
+  totalStudents: 0,
+  avgAttendance: 0
+})
+
+async function fetchDashboardData() {
+  if (!authStore.profile?.id) {
+    console.warn('No teacher profile found')
+    loading.value = false
+    return
+  }
+
+  loading.value = true
+  try {
+    const teacherId = authStore.profile.id
+
+    // Fetch all data in parallel
+    const [classes, todaySchedule, pending, stats] = await Promise.all([
+      teacherService.getMyClasses(teacherId),
+      teacherService.getTodaySchedule(teacherId),
+      teacherService.getPendingGrading(teacherId),
+      teacherService.getWeeklyStats(teacherId)
+    ])
+
+    // Transform classes data for UI
+    activeClasses.value = (classes || []).slice(0, 4).map(cls => ({
+      id: cls.id,
+      name: `${cls.subject?.name || 'Unknown'} - ${cls.name || ''}`,
+      grade: `Grade ${cls.grade}`,
+      hall: cls.hall?.name || 'TBA',
+      students: cls.student_count || 0,
+      nextTopic: cls.next_topic || 'To be announced'
+    }))
+
+    // Set today's schedule for timeline/calendar
+    if (todaySchedule && todaySchedule.length > 0) {
+      const today = new Date().toISOString().split('T')[0].replace(/-/g, '/')
+      events.value = [today]
+    }
+
+    // Set pending grading
+    pendingGrading.value = pending || []
+
+    // Set weekly stats
+    weeklyStats.value = stats
+
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchDashboardData()
+})
 </script>
 
 <style scoped>

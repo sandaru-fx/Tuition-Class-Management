@@ -11,7 +11,7 @@
                </div>
                <div>
                  <div class="text-caption text-slate-500 text-weight-medium">Total Students</div>
-                 <div class="text-h5 text-weight-bold text-slate-800">145</div>
+                 <div class="text-h5 text-weight-bold text-slate-800">{{ totalStudents }}</div>
                </div>
             </div>
           </div>
@@ -26,10 +26,14 @@
           <div class="row items-center justify-between no-wrap">
              <div>
                <div class="text-caption text-slate-500 text-weight-medium">Avg. Attendance</div>
-               <div class="text-h5 text-weight-bold text-slate-800">92%</div>
-               <div class="text-caption text-blue-600 flex items-center q-mt-xs">
+               <div class="text-h5 text-weight-bold text-slate-800">{{ avgAttendance }}%</div>
+               <div class="text-caption text-blue-600 flex items-center q-mt-xs" v-if="avgAttendance >= 75">
                  <q-icon name="trending_up" size="14px" class="q-mr-xs" />
-                 <span>+4.5% vs last week</span>
+                 <span>Good rate</span>
+               </div>
+               <div class="text-caption text-red-600 flex items-center q-mt-xs" v-else>
+                 <q-icon name="trending_down" size="14px" class="q-mr-xs" />
+                 <span>Needs attention</span>
                </div>
              </div>
              <!-- SVG Sparkline -->
@@ -56,7 +60,7 @@
            <div class="row items-center justify-between">
               <div>
                 <div class="text-caption text-slate-500 text-weight-medium">Pending Review</div>
-                <div class="text-h5 text-weight-bold text-amber-500">12</div>
+                <div class="text-h5 text-weight-bold text-amber-500">{{ pendingCount }}</div>
               </div>
               <div class="icon-box bg-amber-50 q-pa-sm rounded-borders text-amber-500">
                 <q-icon name="assignment_late" size="24px" />
@@ -74,7 +78,7 @@
            <div class="row items-center justify-between">
               <div>
                 <div class="text-caption text-slate-500 text-weight-medium">Active Classes</div>
-                <div class="text-h5 text-weight-bold text-slate-800">04</div>
+                <div class="text-h5 text-weight-bold text-slate-800">{{ String(totalClasses).padStart(2, '0') }}</div>
               </div>
               <div class="icon-box bg-blue-50 q-pa-sm rounded-borders text-blue-600">
                 <q-icon name="class" size="24px" />
@@ -85,6 +89,29 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { defineProps } from 'vue'
+
+defineProps({
+  totalStudents: {
+    type: Number,
+    default: 0
+  },
+  totalClasses: {
+    type: Number,
+    default: 0
+  },
+  avgAttendance: {
+    type: Number,
+    default: 0
+  },
+  pendingCount: {
+    type: Number,
+    default: 0
+  }
+})
+</script>
 
 <style scoped>
 .icon-box {
