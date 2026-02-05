@@ -236,6 +236,8 @@ export const teacherService = {
       .eq('id', id)
     if (error) throw error
     return true
+  },
+
   async markAttendance(classId, date, attendanceData) {
     const upsertData = Object.entries(attendanceData).map(([studentId, status]) => ({
       class_id: classId,

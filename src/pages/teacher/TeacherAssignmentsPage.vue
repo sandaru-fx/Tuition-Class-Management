@@ -217,9 +217,9 @@ function getClassName(id) {
     return cls ? `${cls.subject?.name} - Grade ${cls.grade}` : 'Unknown Class'
 }
 
-// Placeholder for pending count
+// Get pending submission count for assignment
 function getPendingCount(assign) {
-    return 0 // TODO: Fetch real count
+    return pendingCountsMap.value[assign.id] || 0
 }
 
 onMounted(() => {

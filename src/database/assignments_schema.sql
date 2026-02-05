@@ -4,10 +4,12 @@ CREATE TABLE assignments (
     title TEXT NOT NULL,
     description TEXT,
     class_id UUID REFERENCES classes(id) ON DELETE CASCADE,
-    type TEXT CHECK (type IN ('homework', 'paper')), -- 'homework' for Primary, 'paper' for Senior
+    teacher_id UUID REFERENCES profiles(id) ON DELETE SET NULL, -- Teacher who created the assignment
+    type TEXT CHECK (type IN ('homework', 'paper', 'mcq')), -- Added 'mcq' for quizzes
     due_date TIMESTAMP WITH TIME ZONE,
     max_score INTEGER DEFAULT 100, -- 5 for Star Rating, 100 for Marks
     attachment_url TEXT,
+    questions JSONB, -- For MCQ type: array of {question, options: [A,B,C,D], correctOption: 0-3}
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -17,6 +19,7 @@ CREATE TABLE submissions (
     assignment_id UUID REFERENCES assignments(id) ON DELETE CASCADE,
     student_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     file_url TEXT, -- URL of the uploaded image/PDF
+    answers JSONB, -- For MCQ submissions: array of selected options [0,2,1,3...]
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'submitted', 'graded', 'late', 'missing')),
     score INTEGER, -- Stars count or Marks
     feedback TEXT,
@@ -34,6 +37,10 @@ ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
 -- 1. Everyone can read assignments (or limit to students in that class)
 CREATE POLICY "Students can view assignments" ON assignments FOR SELECT USING (true);
 CREATE POLICY "Admins can manage assignments" ON assignments FOR ALL USING (true); -- Replace 'true' with Admin Role Check in production
+CREATE POLICY "Teachers can manage own assignments" ON assignments FOR ALL 
+    USING (teacher_id = auth.uid() OR EXISTS (
+        SELECT 1 FROM classes WHERE classes.id = assignments.class_id AND classes.teacher_id = auth.uid()
+    ));
 
 -- 2. Students can manage their own submissions
 CREATE POLICY "Students can view own submissions" ON submissions FOR SELECT USING (auth.uid() = student_id);
