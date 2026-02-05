@@ -17,6 +17,19 @@ export const assignmentService = {
     return data
   },
 
+  // Update an existing assignment
+  async update(id, updates) {
+    const { data, error } = await supabase
+      .from('assignments')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
   // Get assignments for a specific class
   async getByClass(classId) {
     const { data, error } = await supabase
@@ -136,6 +149,38 @@ export const assignmentService = {
 
     if (error) throw error
     return data
+  },
+
+  // Auto-grade a quiz submission
+  async submitQuiz(submission) {
+    // 1. Fetch assignment to get correct answers
+    const { data: assignment, error: assignError } = await supabase
+      .from('assignments')
+      .select('questions, max_score')
+      .eq('id', submission.assignment_id)
+      .single()
+    
+    if (assignError) throw assignError
+
+    // 2. Calculate Score
+    let score = 0
+    const totalQuestions = assignment.questions.length
+    const pointsPerQuestion = assignment.max_score / totalQuestions
+
+    submission.answers.forEach((ans, index) => {
+        const correctOpt = assignment.questions[index].correctOption
+        if (ans === correctOpt) {
+            score += pointsPerQuestion
+        }
+    })
+
+    // Round to nearest integer for display simplicity (or keep decimal)
+    submission.score = Math.round(score)
+    submission.status = 'graded'
+    submission.feedback = 'Auto-graded'
+
+    // 3. Save Submission
+    return await this.submit(submission)
   },
 
   // --- File Upload Helper ---

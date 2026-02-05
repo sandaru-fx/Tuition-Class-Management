@@ -163,6 +163,11 @@
                                     </q-card>
                                 </div>
                             </div>
+
+                            <div class="q-mt-md" v-if="form.type === 'paper'">
+                                <q-checkbox v-model="form.is_quiz" label="Enable Quiz Mode (MCQ)" color="primary" />
+                                <div class="text-caption text-grey q-ml-sm">Allows creation of auto-graded multiple choice questions.</div>
+                            </div>
                         </div>
                     </q-step>
 
@@ -185,24 +190,60 @@
                         </div>
                     </q-step>
 
-                    <q-step :name="3" title="Review" icon="summarize">
+                    <q-step :name="3" title="Questions" icon="quiz" :done="step > 3" v-if="form.is_quiz">
+                        <div class="q-gutter-y-md" style="max-height: 400px; overflow-y: auto;">
+                            <q-card v-for="(q, idx) in form.questions" :key="q.id" flat bordered class="bg-grey-1">
+                                <q-card-section>
+                                    <div class="row items-center q-mb-sm">
+                                        <div class="text-subtitle2">Question {{ idx + 1 }}</div>
+                                        <q-space />
+                                        <q-btn flat round dense icon="delete" color="red" @click="removeQuestion(idx)" />
+                                    </div>
+                                    <q-input outlined v-model="q.text" label="Question Text" dense bg-color="white" />
+                                    
+                                    <div class="row q-col-gutter-sm q-mt-sm">
+                                        <div class="col-6" v-for="(opt, oIdx) in q.options" :key="oIdx">
+                                            <q-input 
+                                                outlined 
+                                                v-model="q.options[oIdx]" 
+                                                :label="`Option ${oIdx + 1}`" 
+                                                dense 
+                                                bg-color="white"
+                                            >
+                                                <template v-slot:prepend>
+                                                    <q-radio v-model="q.correctOption" :val="oIdx" dense />
+                                                </template>
+                                            </q-input>
+                                        </div>
+                                    </div>
+                                </q-card-section>
+                            </q-card>
+                            
+                            <q-btn outline color="primary" label="Add Question" icon="add" class="full-width" @click="addQuestion" />
+                        </div>
+                    </q-step>
+
+                    <q-step :name="4" title="Review" icon="summarize">
                          <div class="bg-grey-1 q-pa-md rounded-borders">
                              <div class="text-subtitle2 text-grey-7">Summary</div>
                              <div class="text-h6">{{ form.title }}</div>
                              <div class="text-body2">{{ form.description }}</div>
                              <q-separator class="q-my-md" />
-                             <div>Type: <b>{{ form.type }}</b></div>
+                             <div>Type: <b>{{ form.type }}</b> <span v-if="form.is_quiz">(Quiz Mode)</span></div>
                              <div>Due: <b>{{ form.date }} at {{ form.time }}</b></div>
+                             <div v-if="form.is_quiz" class="q-mt-sm text-primary">
+                                 <b>{{ form.questions.length }} Questions</b> (Auto-graded)
+                             </div>
                          </div>
                     </q-step>
 
                     <template v-slot:navigation>
                         <q-stepper-navigation class="row justify-end q-mt-lg">
-                            <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Back" class="q-mr-sm" />
+                            <q-btn v-if="step > 1" flat color="primary" @click="step = step === 4 && !form.is_quiz ? 2 : step - 1" label="Back" class="q-mr-sm" />
                             <q-btn 
                                 @click="nextStep" 
                                 color="black" 
-                                :label="step === 3 ? 'Publish Assignment' : 'Continue'" 
+                                :label="step === 4 ? 'Publish Assignment' : 'Continue'" 
                                 unelevated
                                 :loading="submitting"
                             />
@@ -238,7 +279,9 @@ const form = ref({
     type: 'homework',
     date: '',
     time: '23:59',
-    max_score: 5
+    max_score: 5,
+    is_quiz: false,
+    questions: []
 })
 
 // --- Data Fetching ---
@@ -277,10 +320,29 @@ function openCreateDialog() {
         type: 'homework',
         date: date.formatDate(Date.now(), 'YYYY-MM-DD'),
         time: '23:59',
-        max_score: 5
+        max_score: 5,
+        is_quiz: false,
+        questions: [
+            { id: 1, text: '', options: ['', '', '', ''], correctOption: 0 }
+        ]
     }
     step.value = 1
     showCreateDialog.value = true
+}
+
+function addQuestion() {
+    form.value.questions.push({
+        id: Date.now(),
+        text: '',
+        options: ['', '', '', ''],
+        correctOption: 0
+    })
+}
+
+function removeQuestion(index) {
+    if (form.value.questions.length > 1) {
+        form.value.questions.splice(index, 1)
+    }
 }
 
 function nextStep() {
@@ -294,7 +356,13 @@ function nextStep() {
         else form.value.max_score = 100
     }
     
-    if (step.value === 3) {
+    // Skip Question step if not quiz
+    if (step.value === 2 && !form.value.is_quiz) {
+        step.value = 4 // Jump to Review
+        return
+    }
+
+    if (step.value === 4) {
         submitAssignment()
     } else {
         step.value++
@@ -313,7 +381,9 @@ async function submitAssignment() {
             type: form.value.type,
             due_date: dueDate.toISOString(),
             max_score: form.value.max_score,
-            attachment_url: null // TODO: Add file upload in Wizard if needed
+            attachment_url: null,
+            is_quiz: form.value.is_quiz,
+            questions: form.value.is_quiz ? form.value.questions : null
         }
 
         await assignmentService.create(payload)

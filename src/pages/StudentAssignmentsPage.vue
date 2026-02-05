@@ -107,10 +107,10 @@
                       <q-btn 
                         v-if="!task.submission"
                         unelevated 
-                        color="black" 
-                        label="Submit PDF" 
+                        :color="task.is_quiz ? 'primary' : 'black'" 
+                        :label="task.is_quiz ? 'Take Quiz' : 'Submit PDF'" 
                         no-caps 
-                        icon="upload_file"
+                        :icon="task.is_quiz ? 'quiz' : 'upload_file'"
                         class="rounded-lg"
                         @click="openUploadDialog(task)"
                       />
@@ -154,6 +154,56 @@
                     @click="submitFile"
                     :disable="!uploadFile"
                  />
+            </q-card-section>
+        </q-card>
+    </q-dialog>
+
+    <!-- Quiz Dialog -->
+    <q-dialog v-model="showQuizDialog" persistent maximized transition-show="slide-up" transition-hide="slide-down">
+        <q-card class="bg-grey-1">
+            <q-toolbar class="bg-white text-dark shadow-1">
+                <q-toolbar-title class="font-outfit text-weight-bold">
+                    Quiz: {{ currentQuiz?.title }}
+                </q-toolbar-title>
+                <q-btn flat round dense icon="close" v-close-popup />
+            </q-toolbar>
+
+            <q-card-section class="q-pa-lg row justify-center">
+                <div style="max-width: 800px; width: 100%">
+                    <div v-for="(q, idx) in currentQuiz?.questions" :key="idx" class="q-mb-lg">
+                        <q-card flat class="rounded-2xl q-pa-md">
+                            <div class="text-h6 q-mb-md">
+                                <span class="text-grey-6 q-mr-sm">{{ idx + 1 }}.</span>
+                                {{ q.text }}
+                            </div>
+                            
+                            <div class="column q-gutter-sm">
+                                <q-radio 
+                                    v-for="(opt, oIdx) in q.options" 
+                                    :key="oIdx"
+                                    v-model="quizAnswers[idx]" 
+                                    :val="oIdx" 
+                                    :label="opt" 
+                                    color="primary"
+                                    class="bg-grey-1 rounded-borders q-pa-sm"
+                                    keep-color
+                                />
+                            </div>
+                        </q-card>
+                    </div>
+
+                    <div class="row justify-end q-py-xl">
+                        <q-btn 
+                            color="primary" 
+                            size="lg" 
+                            label="Submit Quiz" 
+                            icon-right="send" 
+                            class="rounded-xl q-px-xl"
+                            :loading="uploading"
+                            @click="submitQuiz"
+                        />
+                    </div>
+                </div>
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -207,10 +257,61 @@ async function init() {
     }
 }
 
+const showQuizDialog = ref(false)
+const quizAnswers = ref({})
+const currentQuiz = ref(null)
+
+// ... existing logic ...
+
 function openUploadDialog(task) {
+    if (task.is_quiz) {
+        openQuizDialog(task)
+        return
+    }
     selectedTask.value = task
     uploadFile.value = null
     showUploadDialog.value = true
+}
+
+function openQuizDialog(task) {
+    currentQuiz.value = task
+    // Initialize answers
+    quizAnswers.value = {}
+    task.questions?.forEach((q, idx) => {
+        quizAnswers.value[idx] = null
+    })
+    showQuizDialog.value = true
+}
+
+async function submitQuiz() {
+    uploading.value = true
+    try {
+        // Format answers as array matching question index
+        const answersArray = currentQuiz.value.questions.map((_, idx) => quizAnswers.value[idx])
+
+        // Validate all answered
+        if (answersArray.some(a => a === null || a === undefined)) {
+            $q.notify({ type: 'warning', message: 'Please answer all questions' })
+            return
+        }
+
+        await assignmentService.submitQuiz({
+            assignment_id: currentQuiz.value.id,
+            student_id: authStore.profile.id,
+            answers: answersArray,
+            status: 'graded', // Service will confirm/override
+            submitted_at: new Date().toISOString()
+        })
+        
+        $q.notify({ type: 'positive', message: 'Quiz Submitted! 🌟' })
+        showQuizDialog.value = false
+        init()
+    } catch (e) {
+        console.error(e)
+        $q.notify({ type: 'negative', message: 'Quiz submission failed' })
+    } finally {
+        uploading.value = false
+    }
 }
 
 async function submitFile() {

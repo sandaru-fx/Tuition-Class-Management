@@ -31,6 +31,16 @@ export const studentService = {
     return data
   },
 
+  async bulkCreate(students) {
+    const { data, error } = await supabase
+      .from('students')
+      .insert(students)
+      .select()
+    
+    if (error) throw error
+    return data
+  },
+
   async update(id, updates) {
     const { data, error } = await supabase
       .from('students')

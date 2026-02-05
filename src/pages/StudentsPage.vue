@@ -5,12 +5,37 @@
       <div>
         <h1 class="text-h4 text-weight-bold text-dark q-mb-xs font-outfit">
           Student Management
-          <q-badge color="grey-3" text-color="grey-7" label="v2.1" class="q-ml-sm" />
+          <q-badge color="grey-3" text-color="grey-7" label="v2.2" class="q-ml-sm" />
         </h1>
         <p class="text-grey-7 q-mb-none text-subtitle1">Manage student enrollments, profiles, and status.</p>
       </div>
       <q-space />
-      <q-btn unelevated color="black" text-color="white" label="Register Student" icon="add" no-caps @click="openAddDialog" />
+      <div class="row q-gutter-sm">
+           <q-btn-dropdown unelevated color="white" text-color="grey-9" label="Bulk Actions" icon="layers" class="border-grey">
+                <q-list>
+                    <q-item clickable v-close-popup @click="showPromoteDialog = true">
+                    <q-item-section avatar>
+                        <q-icon name="keyboard_double_arrow_up" color="purple" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Batch Promote</q-item-label>
+                        <q-item-label caption>Move grades up</q-item-label>
+                    </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-close-popup @click="showImportDialog = true">
+                    <q-item-section avatar>
+                        <q-icon name="upload_file" color="green" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>Import CSV</q-item-label>
+                        <q-item-label caption>Bulk registration</q-item-label>
+                    </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
+            <q-btn unelevated color="black" text-color="white" label="Register Student" icon="add" no-caps @click="openAddDialog" />
+      </div>
     </div>
 
     <!-- Students Table -->
@@ -201,6 +226,83 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <!-- Promote Dialog -->
+    <q-dialog v-model="showPromoteDialog">
+        <q-card style="min-width: 400px" class="q-pa-md rounded-borders-lg">
+             <q-card-section>
+                <div class="text-h6 font-outfit text-primary">Batch Promotion</div>
+                <div class="text-caption text-grey-6">Move all students from one grade to another.</div>
+            </q-card-section>
+
+             <q-card-section class="q-gutter-y-md">
+                 <div class="row items-center justify-between">
+                     <div class="col-5">
+                         <q-select outlined v-model="promoteForm.from" :options="gradeOptions" label="From Grade" dense />
+                     </div>
+                     <div class="col-2 text-center">
+                         <q-icon name="arrow_forward" color="grey" size="sm" />
+                     </div>
+                      <div class="col-5">
+                         <q-select outlined v-model="promoteForm.to" :options="gradeOptions" label="To Grade" dense />
+                     </div>
+                 </div>
+                 <div class="bg-amber-1 q-pa-sm text-caption rounded-borders text-amber-9">
+                     <q-icon name="warning" /> This will update all active students in the selected class.
+                 </div>
+             </q-card-section>
+
+             <q-card-actions align="right">
+                 <q-btn flat label="Cancel" color="grey" v-close-popup no-caps />
+                 <q-btn unelevated label="Promote Students" color="purple" @click="promoteStudents" :loading="promoting" no-caps />
+             </q-card-actions>
+        </q-card>
+    </q-dialog>
+
+    <!-- Import CSV Dialog -->
+    <q-dialog v-model="showImportDialog">
+        <q-card style="min-width: 600px" class="q-pa-md rounded-borders-lg">
+            <q-card-section>
+                <div class="text-h6 font-outfit text-green-8">Import Students</div>
+                <div class="text-caption text-grey-6">Upload a CSV with columns: FirstName, LastName, WhatsApp, Grade</div>
+            </q-card-section>
+
+            <q-card-section>
+                 <q-file outlined v-model="csvFile" label="Select CSV File" accept=".csv" @update:model-value="handleFile">
+                    <template v-slot:prepend>
+                        <q-icon name="attach_file" />
+                    </template>
+                 </q-file>
+
+                 <div v-if="previewData.length > 0" class="q-mt-md">
+                     <div class="text-subtitle2 q-mb-xs">Preview ({{ previewData.length }} students)</div>
+                     <q-scroll-area style="height: 200px;" class="border-grey rounded-borders">
+                         <q-markup-table dense flat separator="cell">
+                             <thead>
+                                 <tr>
+                                     <th>First Name</th>
+                                     <th>Last Name</th>
+                                     <th>Grade</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <tr v-for="(row, i) in previewData" :key="i">
+                                     <td>{{ row.first_name }}</td>
+                                     <td>{{ row.last_name }}</td>
+                                     <td>{{ row.grade }}</td>
+                                 </tr>
+                             </tbody>
+                         </q-markup-table>
+                     </q-scroll-area>
+                 </div>
+            </q-card-section>
+
+             <q-card-actions align="right">
+                 <q-btn flat label="Cancel" color="grey" v-close-popup no-caps />
+                 <q-btn unelevated label="Start Import" color="green-7" @click="importStudents" :loading="importing" :disable="previewData.length === 0" no-caps />
+             </q-card-actions>
+        </q-card>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -208,7 +310,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { studentService } from 'src/services/studentService'
-import { supabase } from 'boot/supabase' // Still needed for RPC account creation until moved to service
+import { supabase } from 'boot/supabase'
 import { useAppStore } from 'src/stores/app'
 import { storeToRefs } from 'pinia'
 
@@ -217,7 +319,7 @@ const appStore = useAppStore()
 const { selectedGrade } = storeToRefs(appStore)
 
 const search = ref('')
-const users = ref([]) // Actually students
+const users = ref([]) 
 const loading = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
@@ -226,6 +328,15 @@ const showDialog = ref(false)
 const showDeleteDialog = ref(false)
 const isEditing = ref(false)
 const studentToDelete = ref(null)
+
+// Bulk Action States
+const showPromoteDialog = ref(false)
+const showImportDialog = ref(false)
+const promoteForm = ref({ from: '', to: '' })
+const promoting = ref(false)
+const importing = ref(false)
+const csvFile = ref(null)
+const previewData = ref([])
 
 const gradeOptions = [
   '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'
@@ -243,7 +354,7 @@ const form = ref({
   parent_phone: '',
   school: '',
   grade: '',
-  stream: '', // Added stream field
+  stream: '',
   address: '',
   gender: '',
   is_active: true,
@@ -255,7 +366,6 @@ const form = ref({
 const filteredStudents = computed(() => {
   let result = users.value
 
-  // 1. Filter by Search
   if (search.value) {
     const query = search.value.toLowerCase()
     result = result.filter(s => 
@@ -266,24 +376,19 @@ const filteredStudents = computed(() => {
     )
   }
 
-  // 2. Filter by Grade
   if (selectedGrade.value && selectedGrade.value !== 'all') {
     const grade = selectedGrade.value
-    
-    // Check for ranges
-    if (grade === 'primary') { // 1-5
+    if (grade === 'primary') {
       result = result.filter(s => ['1', '2', '3', '4', '5'].includes(s.grade))
-    } else if (grade === 'junior') { // 6-9
+    } else if (grade === 'junior') {
       result = result.filter(s => ['6', '7', '8', '9'].includes(s.grade))
-    } else if (grade === 'ol') { // 10-11
+    } else if (grade === 'ol') {
       result = result.filter(s => ['10', '11'].includes(s.grade))
-    } else if (grade === 'al') { // 12-13
+    } else if (grade === 'al') {
       result = result.filter(s => ['12', '13'].includes(s.grade))
-    } else if (grade.startsWith('al_')) { // specific A/L streams
-      // If we had stream data, we'd filter by it. For now, just show all A/L
+    } else if (grade.startsWith('al_')) {
       result = result.filter(s => ['12', '13'].includes(s.grade))
     } else {
-      // Specific Grade (e.g. '1', '10')
       result = result.filter(s => s.grade === grade)
     }
   }
@@ -297,7 +402,7 @@ async function fetchStudents() {
     users.value = await studentService.getAll()
   } catch (error) {
     console.error(error)
-    $q.notify({ type: 'negative', message: 'Failed to load students: ' + error.message })
+    $q.notify({ type: 'negative', message: 'Failed to load students' })
   } finally {
     loading.value = false
   }
@@ -338,21 +443,18 @@ async function saveStudent() {
     delete studentData.email
     delete studentData.password
     
-    // Maintain compatibility with old full_name column
     studentData.full_name = `${studentData.first_name} ${studentData.last_name}`.trim()
     
     let studentId = form.value.id
 
     if (isEditing.value) {
       await studentService.update(form.value.id, studentData)
-      $q.notify({ type: 'positive', message: 'Student updated successfully' })
+      $q.notify({ type: 'positive', message: 'Student updated' })
     } else {
-      // 1. Create Student Record
       const data = await studentService.create(studentData)
       studentId = data.id
-      $q.notify({ type: 'positive', message: 'Student registered successfully' })
+      $q.notify({ type: 'positive', message: 'Student registered' })
 
-      // 2. Create Login Account (If checked)
       if (form.value.create_account) {
           const { error: rpcError } = await supabase.rpc('create_student_user', {
               student_email: form.value.email,
@@ -363,9 +465,9 @@ async function saveStudent() {
           
           if (rpcError) {
               console.error('RPC Error:', rpcError)
-              $q.notify({ type: 'warning', message: 'Student created, but Login creation failed: ' + rpcError.message })
+              $q.notify({ type: 'warning', message: 'Login creation failed' })
           } else {
-              $q.notify({ type: 'positive', message: 'Login account created successfully!' })
+              $q.notify({ type: 'positive', message: 'Login account created!' })
           }
       }
     }
@@ -373,12 +475,8 @@ async function saveStudent() {
     await fetchStudents()
     showDialog.value = false
   } catch (error) {
-    console.error('Final Save Error:', error)
-    $q.notify({ 
-        type: 'negative', 
-        message: 'Error saving student: ' + (error.message || 'Unknown error'),
-        caption: error.details || ''
-    })
+    console.error(error)
+    $q.notify({ type: 'negative', message: 'Error saving student' })
   } finally {
     submitting.value = false
   }
@@ -403,6 +501,87 @@ async function deleteStudent() {
   } finally {
     deleting.value = false
   }
+}
+
+// Bulk Promote Logic
+async function promoteStudents() {
+    if (promoteForm.value.from === promoteForm.value.to) {
+        $q.notify({ type: 'warning', message: 'Grades must be different' })
+        return
+    }
+    promoting.value = true
+    try {
+        const count = await studentService.promoteStudents(promoteForm.value.from, promoteForm.value.to)
+        $q.notify({ type: 'positive', message: `Promoted ${count} students successfully!` })
+        await fetchStudents()
+        showPromoteDialog.value = false
+    } catch (e) {
+        console.error(e)
+        $q.notify({ type: 'negative', message: 'Promotion failed' })
+    } finally {
+        promoting.value = false
+    }
+}
+
+// CSV Logic
+function parseCSV(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const text = e.target.result
+            const lines = text.split('\n')
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase())
+            const result = []
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue
+                const currentline = lines[i].split(',')
+                const obj = {}
+                
+                // Simple mapping: 0: first_name, 1: last_name, 2: whatsapp, 3: grade
+                // In production, match headers dynamically
+                if (currentline.length >= 3) {
+                    obj.first_name = currentline[0]?.trim()
+                    obj.last_name = currentline[1]?.trim()
+                    obj.whatsapp_number = currentline[2]?.trim()
+                    obj.grade = currentline[3]?.trim() || '1' // default
+                    obj.full_name = `${obj.first_name} ${obj.last_name}`
+                    obj.is_active = true
+                    result.push(obj)
+                }
+            }
+            resolve(result)
+        }
+        reader.onerror = reject
+        reader.readAsText(file)
+    })
+}
+
+async function handleFile(file) {
+    if (!file) return
+    try {
+        const data = await parseCSV(file)
+        previewData.value = data
+    } catch (e) {
+        $q.notify({ type: 'negative', message: 'Error parsing CSV' })
+    }
+}
+
+async function importStudents() {
+    importing.value = true
+    try {
+        await studentService.bulkCreate(previewData.value)
+         $q.notify({ type: 'positive', message: `Imported ${previewData.value.length} students` })
+         await fetchStudents()
+         showImportDialog.value = false
+         previewData.value = []
+         csvFile.value = null
+    } catch (e) {
+        console.error(e)
+        $q.notify({ type: 'negative', message: 'Import failed' })
+    } finally {
+        importing.value = false
+    }
 }
 
 onMounted(() => {
