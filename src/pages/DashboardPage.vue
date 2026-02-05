@@ -74,7 +74,7 @@
           <q-card-section>
             <div class="row items-center no-wrap">
               <div class="col">
-                <div class="text-caption text-grey-6 text-uppercase text-weight-bold letter-spacing-1">Income (Today)</div>
+                <div class="text-caption text-grey-6 text-uppercase text-weight-bold letter-spacing-1">Income (Month)</div>
                 <div class="text-h4 text-weight-bolder text-dark q-mt-sm font-outfit">{{ formatCurrency(todaysIncome) }}</div>
               </div>
               <div class="col-auto">
@@ -84,9 +84,9 @@
           </q-card-section>
           <q-card-section class="q-pt-none">
             <div class="text-caption text-green-7 text-weight-bold bg-green-1 q-px-sm q-py-xs rounded-borders inline-block">
-              <q-icon name="trending_up" size="14px" /> +5%
+              <q-icon name="trending_up" size="14px" /> Potential
             </div>
-             <span class="text-caption text-grey-6 q-ml-sm">vs yesterday</span>
+             <span class="text-caption text-grey-6 q-ml-sm">Revenue forecast</span>
           </q-card-section>
         </q-card>
       </div>
@@ -109,6 +109,62 @@
               Today
             </div>
             <span class="text-caption text-grey-6 q-ml-sm">Rate</span>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <!-- Analytics Charts -->
+    <div class="row q-col-gutter-lg q-mb-xl">
+      <div class="col-12 col-md-8">
+        <q-card class="shadow-1 rounded-borders-lg">
+          <q-card-section class="row items-center justify-between q-pb-none">
+            <div class="text-h6 text-weight-bold font-outfit">Potential Revenue by Grade</div>
+            <q-badge color="grey-2" text-color="grey-9">Monthly Forecast</q-badge>
+          </q-card-section>
+          <q-card-section>
+            <div style="height: 300px">
+              <Bar 
+                v-if="revenueChartData.datasets[0].data.length > 0"
+                :data="revenueChartData"
+                :options="chartOptions"
+              />
+              <div v-else class="flex flex-center h-100 text-grey-5">
+                  <q-spinner color="primary" size="2rem" />
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="col-12 col-md-4">
+        <q-card class="shadow-1 rounded-borders-lg h-100">
+           <q-card-section class="row items-center justify-between q-pb-none">
+            <div class="text-subtitle1 text-weight-bold font-outfit">Student Distribution</div>
+          </q-card-section>
+          <q-card-section class="flex flex-center">
+            <div style="height: 250px; width: 250px">
+               <Doughnut 
+                v-if="enrollmentChartData.datasets[0].data.length > 0"
+                :data="enrollmentChartData"
+                :options="pieOptions"
+              />
+            </div>
+          </q-card-section>
+          <q-card-section class="q-pt-none">
+              <div class="row q-col-gutter-xs text-center">
+                  <div class="col-4">
+                      <div class="text-weight-bold text-blue">Primary</div>
+                      <div class="text-caption text-grey-6">Grades 1-5</div>
+                  </div>
+                  <div class="col-4">
+                      <div class="text-weight-bold text-purple">Junior</div>
+                      <div class="text-caption text-grey-6">Grades 6-9</div>
+                  </div>
+                  <div class="col-4">
+                      <div class="text-weight-bold text-green">Senior</div>
+                      <div class="text-caption text-grey-6">Grades 10-13</div>
+                  </div>
+              </div>
           </q-card-section>
         </q-card>
       </div>
@@ -175,7 +231,7 @@
             </q-card-section>
         </q-card>
 
-        <q-card class="shadow-1 rounded-borders-lg h-100">
+        <q-card class="shadow-1 rounded-borders-lg">
           <q-card-section class="q-px-lg q-pt-lg">
              <div class="text-h6 text-weight-bold font-outfit q-mb-md">Upcoming Exams</div>
              
@@ -208,67 +264,110 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { supabase } from 'boot/supabase'
-import { useQuasar } from 'quasar'
+import { analyticsService } from 'src/services/analyticsService'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  ArcElement
+} from 'chart.js'
+import { Bar, Doughnut } from 'vue-chartjs'
 
-const $q = useQuasar()
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
+
 const loading = ref(false)
 
 // Reactive State
 const totalStudents = ref(0)
-const todaysIncome = ref(15000) // Mock
+const todaysIncome = ref(0)
 const activeClasses = ref(0)
-const attendanceRate = ref(85) // Mock
+const attendanceRate = ref(0)
 const recentStudents = ref([])
 const upcomingExams = ref([])
 const pinnedNotice = ref(null)
 
+const revenueChartData = reactive({
+  labels: [],
+  datasets: [{
+    label: 'Revenue (LKR)',
+    backgroundColor: '#1976d2',
+    borderRadius: 6,
+    data: []
+  }]
+})
+
+const enrollmentChartData = reactive({
+  labels: [],
+  datasets: [{
+    backgroundColor: ['#1976d2', '#673ab7', '#4caf50', '#ff9800', '#f44336'],
+    data: []
+  }]
+})
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: { display: false }
+    },
+    scales: {
+        y: { beginAtZero: true, grid: { display: false } },
+        x: { grid: { display: false } }
+    }
+}
+
+const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, usePointStyle: true } }
+    }
+}
 
 async function fetchDashboardData() {
   loading.value = true
   try {
-    // 0. Fetch Pinned Notice
+    // Basic Stats
     const { data: notices } = await supabase.from('notices').select('*').eq('is_pinned', true).order('created_at', { ascending: false }).limit(1)
     if (notices && notices.length > 0) pinnedNotice.value = notices[0]
 
-    // 1. Fetch Total Students
-    const { count: studentCount, error: studentError, data: studentsData } = await supabase
+    const { count: studentCount, data: studentsData } = await supabase
       .from('students')
       .select('*', { count: 'exact', head: false })
       .order('created_at', { ascending: false })
       .limit(5)
 
-    if (studentError) throw studentError
     totalStudents.value = studentCount || 0
     recentStudents.value = studentsData || []
 
-    // 2. Fetch Active Classes
-    const { count: classCount, error: classError } = await supabase
-      .from('classes')
-      .select('*', { count: 'exact', head: true })
-    
-    if (classError) throw classError
+    const { count: classCount } = await supabase.from('classes').select('*', { count: 'exact', head: true })
     activeClasses.value = classCount || 0
 
-    // 3. Fetch Upcoming Exams
-    const { data: exams, error: examsError } = await supabase
-        .from('exams')
-        .select('*')
-        .gte('date', new Date().toISOString())
-        .order('date', { ascending: true })
-        .limit(3)
-        
-    if (!examsError) {
-        upcomingExams.value = exams
-    }
+    const { data: exams } = await supabase.from('exams').select('*').gte('date', new Date().toISOString()).order('date', { ascending: true }).limit(3)
+    upcomingExams.value = exams || []
+
+    // Analytics
+    const revenue = await analyticsService.getRevenueByGrade()
+    revenueChartData.labels = revenue.map(r => `G${r.grade}`)
+    revenueChartData.datasets[0].data = revenue.map(r => r.revenue)
+    
+    // Total Potential Income
+    todaysIncome.value = revenue.reduce((acc, curr) => acc + curr.revenue, 0)
+
+    const enrollments = await analyticsService.getEnrollmentStats()
+    enrollmentChartData.labels = enrollments.map(e => e.label)
+    enrollmentChartData.datasets[0].data = enrollments.map(e => e.value)
+
+    attendanceRate.value = 92 // Mock for now
 
   } catch (error) {
     console.error('Error fetching dashboard data:', error)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load dashboard data'
-    })
   } finally {
       loading.value = false
   }
@@ -279,7 +378,7 @@ onMounted(() => {
 })
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(value)
+  return new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', maximumFractionDigits: 0 }).format(value)
 }
 
 function formatDate(dateStr) {
@@ -289,42 +388,17 @@ function formatDate(dateStr) {
 </script>
 
 <style scoped>
-.font-outfit {
-  font-family: 'Outfit', sans-serif;
-}
-.border-grey {
-  border: 1px solid #e0e0e0;
-}
-.border-orange {
-    border: 1px solid #ffe0b2;
-}
-.my-card {
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-}
-.rounded-borders-lg {
-  border-radius: 16px;
-}
-.letter-spacing-1 {
-  letter-spacing: 1px;
-}
-.hover-shadow:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-.transition-all {
-  transition: all 0.3s ease;
-}
-.inline-block {
-  display: inline-block;
-}
-.hover-bg-grey-1:hover {
-  background-color: #fafafa;
-}
-.line-height-tight {
-  line-height: 1.1;
-}
-.bg-gradient-blue {
-    background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
-}
+.font-outfit { font-family: 'Outfit', sans-serif; }
+.border-grey { border: 1px solid #e0e0e0; }
+.border-orange { border: 1px solid #ffe0b2; }
+.my-card { border-radius: 12px; border: 1px solid #f0f0f0; }
+.rounded-borders-lg { border-radius: 16px; }
+.letter-spacing-1 { letter-spacing: 1px; }
+.hover-shadow:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.transition-all { transition: all 0.3s ease; }
+.inline-block { display: inline-block; }
+.hover-bg-grey-1:hover { background-color: #fafafa; }
+.line-height-tight { line-height: 1.1; }
+.bg-gradient-blue { background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); }
+.h-100 { height: 100%; }
 </style>

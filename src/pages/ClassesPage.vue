@@ -177,14 +177,18 @@
 
             <q-select 
                 outlined 
-                v-model="form.teacher_name" 
+                v-model="form.teacher_id" 
                 :options="teachers"
                 option-label="full_name"
-                option-value="full_name"
+                option-value="id"
                 emit-value
                 map-options
                 label="Teacher *" 
                 dense 
+                @update:model-value="(val) => { 
+                    const t = teachers.find(x => x.id === val);
+                    if(t) form.teacher_name = t.full_name;
+                }"
                 :rules="[val => !!val || 'Required']" 
             />
 
@@ -201,9 +205,24 @@
             </div>
 
              <div class="row q-col-gutter-sm">
-                 <div class="col-6">
-                    <q-select outlined v-model="form.hall" :options="['Main Hall', 'Mini Lab', 'Room A', 'Room B']" label="Hall" dense />
-                 </div>
+                  <div class="col-6">
+                    <q-select 
+                        outlined 
+                        v-model="form.hall_id" 
+                        :options="halls" 
+                        option-label="name"
+                        option-value="id"
+                        emit-value
+                        map-options
+                        label="Hall *" 
+                        dense 
+                        @update:model-value="(val) => { 
+                            const h = halls.find(x => x.id === val);
+                            if(h) form.hall = h.name;
+                        }"
+                        :rules="[val => !!val || 'Required']"
+                    />
+                  </div>
                  <div class="col-6">
                     <q-input outlined v-model="form.monthly_fee" label="Monthly Fee" prefix="Rs." dense type="number" />
                  </div>
@@ -244,6 +263,7 @@ import { storeToRefs } from 'pinia'
 import { subjectService } from 'src/services/subjectService'
 import { feeService } from 'src/services/feeService'
 import { teacherService } from 'src/services/teacherService'
+import { hallService } from 'src/services/hallService'
 
 const $q = useQuasar()
 const appStore = useAppStore()
@@ -257,6 +277,7 @@ const submitting = ref(false)
 const deleting = ref(false)
 const subjects = ref([])
 const teachers = ref([])
+const halls = ref([])
 
 const showDialog = ref(false)
 const showDeleteDialog = ref(false)
@@ -275,11 +296,13 @@ const form = ref({
   id: null,
   subject_id: null,
   grade: '',
-  teacher_name: '',
+  teacher_id: null,
+  teacher_name: '', // still used for display/search convenience
   day_of_week: 'Monday',
   start_time: '',
   end_time: '',
-  hall: '',
+  hall_id: null,
+  hall: '', // still used for display
   monthly_fee: ''
 })
 
@@ -381,7 +404,7 @@ async function fetchClasses() {
   try {
     const { data: classData, error: classError } = await supabase
       .from('classes')
-      .select('*, subject:subjects(name)') // Joined with subjects
+      .select('*, subject:subjects(name), teacher:teachers(full_name), hall_ref:halls(name)') 
       .order('created_at', { ascending: false })
     
     if (classError) throw classError
@@ -393,6 +416,9 @@ async function fetchClasses() {
 
     const tData = await teacherService.getAll()
     teachers.value = tData || []
+
+    const hData = await hallService.getAll()
+    halls.value = hData || []
 
   } catch (error) {
     console.error(error)
@@ -408,11 +434,13 @@ function openAddDialog() {
     id: null,
     subject_id: null,
     grade: '',
+    teacher_id: null,
     teacher_name: '',
     day_of_week: 'Monday',
     start_time: '',
     end_time: '',
-    hall: 'Main Hall',
+    hall_id: null,
+    hall: '',
     monthly_fee: ''
   }
   showDialog.value = true
@@ -444,12 +472,12 @@ async function saveClass() {
         c.day_of_week === classData.day_of_week &&
         (
             // Same Hall Check
-            (c.hall === classData.hall && 
+            (c.hall_id === classData.hall_id && 
             ((classData.start_time >= c.start_time && classData.start_time < c.end_time) ||
              (classData.end_time > c.start_time && classData.end_time <= c.end_time))) ||
              
             // Same Teacher Check
-            (c.teacher_name === classData.teacher_name && 
+            (c.teacher_id === classData.teacher_id && 
             ((classData.start_time >= c.start_time && classData.start_time < c.end_time) ||
              (classData.end_time > c.start_time && classData.end_time <= c.end_time)))
         )
@@ -471,10 +499,12 @@ async function saveClass() {
         .update({
             grade: classData.grade,
             subject_id: classData.subject_id,
+            teacher_id: classData.teacher_id,
             teacher_name: classData.teacher_name,
             day_of_week: classData.day_of_week,
             start_time: classData.start_time,
             end_time: classData.end_time,
+            hall_id: classData.hall_id,
             hall: classData.hall,
             monthly_fee: classData.monthly_fee
         })
@@ -487,10 +517,12 @@ async function saveClass() {
         .insert([{
             grade: classData.grade,
             subject_id: classData.subject_id,
+            teacher_id: classData.teacher_id,
             teacher_name: classData.teacher_name,
             day_of_week: classData.day_of_week,
             start_time: classData.start_time,
             end_time: classData.end_time,
+            hall_id: classData.hall_id,
             hall: classData.hall,
             monthly_fee: classData.monthly_fee
         }])
