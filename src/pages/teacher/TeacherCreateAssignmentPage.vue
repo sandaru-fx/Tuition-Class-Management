@@ -112,7 +112,6 @@
         icon="upload_file"
         :done="step > 3"
       >
-        <div class="q-pt-md">
           <!-- File Upload Mode -->
           <div v-if="form.type === 'homework' || form.type === 'paper'">
             <div class="text-h6 text-slate-800 q-mb-md">Upload Materials</div>
@@ -135,11 +134,40 @@
             </q-file>
           </div>
 
-          <!-- Placeholder for MCQ Builder -->
-          <div v-else class="text-center q-pa-xl text-grey-5 border-dashed rounded-borders">
-             <q-icon name="quiz" size="48px" />
-             <div class="text-h6 q-mt-sm">MCQ Builder Coming Soon</div>
-             <p>For now, please upload a question paper instead.</p>
+          <!-- MCQ Builder -->
+          <div v-else-if="form.type === 'mcq'">
+            <div class="row items-center justify-between q-mb-md">
+              <div class="text-h6 text-slate-800">MCQ Builder</div>
+              <q-btn outline color="blue-600" icon="add" label="Add Question" @click="addQuestion" no-caps />
+            </div>
+
+            <q-list separator class="rounded-borders border-dashed q-pa-md">
+              <div v-if="form.questions.length === 0" class="text-center q-pa-lg text-grey-5">
+                No questions added yet. Click "Add Question" to start.
+              </div>
+              
+              <q-card v-for="(q, qIndex) in form.questions" :key="qIndex" flat bordered class="q-mb-md rounded-lg bg-white">
+                <q-card-section class="q-pb-none">
+                  <div class="row items-center justify-between">
+                    <div class="text-subtitle1 text-weight-bold">Question {{ qIndex + 1 }}</div>
+                    <q-btn flat round dense icon="delete" color="red-5" @click="removeQuestion(qIndex)" />
+                  </div>
+                </q-card-section>
+
+                <q-card-section class="q-gutter-y-sm">
+                  <q-input outlined v-model="q.text" label="Question Text *" dense />
+                  
+                  <div class="text-caption text-grey-7">Options (Select the correct one)</div>
+                  <div v-for="(opt, oIndex) in q.options" :key="oIndex" class="row items-center q-gutter-x-sm q-mb-xs">
+                    <q-radio v-model="q.correctOption" :val="oIndex" color="green" />
+                    <q-input outlined v-model="q.options[oIndex]" :placeholder="`Option ${oIndex + 1}`" dense class="col" />
+                    <q-btn v-if="q.options.length > 2" flat round dense icon="close" size="sm" color="grey-5" @click="removeOption(qIndex, oIndex)" />
+                  </div>
+                  
+                  <q-btn v-if="q.options.length < 5" flat dense color="blue-600" label="+ Add Option" no-caps size="sm" @click="addOption(qIndex)" />
+                </q-card-section>
+              </q-card>
+            </q-list>
           </div>
         </div>
       </q-step>
@@ -229,7 +257,8 @@ const assignmentId = route.params.id
 
 const types = [
     { label: 'Paper / Tute', value: 'paper', icon: 'description' },
-    { label: 'Homework', value: 'homework', icon: 'home_work' }
+    { label: 'Homework', value: 'homework', icon: 'home_work' },
+    { label: 'Online Quiz (MCQ)', value: 'mcq', icon: 'quiz' }
 ]
 
 const form = ref({
@@ -239,7 +268,8 @@ const form = ref({
     type: 'paper',
     due_date: '',
     max_score: 100,
-    attachment_url: ''
+    attachment_url: '',
+    questions: [] // Array of { text: '', options: ['', ''], correctOption: 0 }
 })
 
 async function fetchClasses() {
@@ -270,13 +300,41 @@ async function fetchAssignmentData() {
             type: data.type,
             due_date: data.due_date ? data.due_date.slice(0, 16) : '', // Format for datetime-local
             max_score: data.max_score,
-            attachment_url: data.attachment_url
+            attachment_url: data.attachment_url,
+            questions: data.questions || []
         }
-        // In edit mode, we can default to step 2 or 4 to preview, but step 1 is fine to verify class
     } catch (e) {
         console.error(e)
         $q.notify({ type: 'negative', message: 'Failed to load assignment details' })
     }
+}
+
+function addQuestion() {
+  form.value.questions.push({
+    text: '',
+    options: ['', ''],
+    correctOption: 0
+  })
+}
+
+function removeQuestion(index) {
+  form.value.questions.splice(index, 1)
+}
+
+function addOption(qIndex) {
+  if (form.value.questions[qIndex].options.length < 5) {
+    form.value.questions[qIndex].options.push('')
+  }
+}
+
+function removeOption(qIndex, oIndex) {
+  const q = form.value.questions[qIndex]
+  if (q.options.length > 2) {
+    q.options.splice(oIndex, 1)
+    if (q.correctOption >= q.options.length) {
+      q.correctOption = 0
+    }
+  }
 }
 
 function getClassName(id) {
@@ -292,6 +350,9 @@ async function handleNext() {
         if (!form.value.title || !form.value.due_date) return $q.notify({ type: 'warning', message: 'Please fill required fields' })
         step.value = 3
     } else if (step.value === 3) {
+        if (form.value.type === 'mcq' && form.value.questions.length === 0) {
+          return $q.notify({ type: 'warning', message: 'Please add at least one question' })
+        }
         step.value = 4
     } else if (step.value === 4) {
         await saveAssignment()
@@ -315,6 +376,7 @@ async function saveAssignment() {
             due_date: new Date(form.value.due_date).toISOString(),
             max_score: form.value.max_score,
             attachment_url: form.value.attachment_url,
+            questions: form.value.type === 'mcq' ? form.value.questions : null,
             // Only add teacher_id on creation
             ...(isEditing.value ? {} : { teacher_id: authStore.profile.id })
         }

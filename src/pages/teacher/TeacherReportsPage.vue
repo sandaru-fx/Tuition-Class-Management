@@ -1,11 +1,14 @@
 <template>
   <q-page class="q-pa-lg bg-slate-50">
     <div class="row items-center justify-between q-mb-lg">
-      <div>
+      <div class="no-print">
         <div class="text-h4 text-weight-bold text-slate-800 font-outfit">Reports & Analytics</div>
         <div class="text-subtitle1 text-slate-500">Insights into your teaching performance</div>
       </div>
-      <q-btn unelevated color="blue-600" icon="download" label="Export PDF" disable />
+      <div class="q-gutter-sm no-print">
+        <q-btn outline color="green-600" icon="download" label="Export CSV" @click="exportCSV" no-caps />
+        <q-btn unelevated color="blue-600" icon="picture_as_pdf" label="Download PDF" @click="exportPDF" no-caps />
+      </div>
     </div>
 
     <!-- Stats Cards -->
@@ -142,6 +145,22 @@ async function fetchData() {
     }
 }
 
+function exportCSV() {
+  const flatData = classes.value.map(c => ({
+    Subject: c.subject?.name,
+    Grade: c.grade,
+    Students: c.student_count,
+    Hall: c.hall?.name,
+    Schedule: `${c.day_of_week} ${c.start_time}`
+  }))
+  
+  teacherService.exportToCSV(flatData, 'Teacher_Report_Summary')
+}
+
+function exportPDF() {
+  window.print()
+}
+
 onMounted(() => {
     fetchData()
 })
@@ -151,4 +170,11 @@ onMounted(() => {
 .font-outfit { font-family: 'Outfit', sans-serif; }
 .rounded-xl { border-radius: 16px; }
 .bg-slate-50 { background-color: #F8FAFC; }
+
+@media print {
+  .no-print { display: none !important; }
+  .bg-slate-50 { background-color: white !important; }
+  .q-page { padding: 0 !important; }
+  .shadow-sm { box-shadow: none !important; border: 1px solid #eee !important; }
+}
 </style>

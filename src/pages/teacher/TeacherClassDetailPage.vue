@@ -96,6 +96,18 @@
         <q-tab-panels v-model="activeTab" animated>
           <!-- Students Tab -->
           <q-tab-panel name="students" class="q-pa-none">
+            <div class="q-pa-md row items-center justify-between no-print">
+              <div class="text-subtitle1 text-weight-bold">Enrolled Students</div>
+              <q-btn 
+                outline 
+                color="green-600" 
+                icon="download" 
+                label="Export CSV" 
+                no-caps 
+                size="sm"
+                @click="exportStudents"
+              />
+            </div>
             <q-table
               :rows="classData.students"
               :columns="studentColumns"
@@ -103,6 +115,8 @@
               flat
               class="rounded-none"
             >
+// ... unchanged lines ...
+          </q-tab-panel>
               <template v-slot:body-cell-student="props">
                 <q-td :props="props">
                   <div class="text-weight-bold">{{ props.row.student?.full_name || 'N/A' }}</div>
@@ -144,19 +158,79 @@
           </q-tab-panel>
 
           <!-- Attendance Tab -->
-          <q-tab-panel name="attendance" class="q-pa-lg">
-            <div class="text-center q-pa-xl text-grey-5">
-              <q-icon name="event_available" size="64px" />
-              <div class="text-h6 q-mt-md">Attendance History</div>
-              <div class="text-caption">Coming soon: Calendar view with attendance records</div>
-              <q-btn
-                unelevated
-                color="blue-600"
-                label="Mark Today's Attendance"
-                no-caps
-                class="q-mt-lg rounded-borders"
-                @click="showAttendanceDialog = true"
-              />
+          <q-tab-panel name="attendance" class="q-pa-none">
+            <div class="q-pa-md row items-center justify-between">
+              <div class="text-subtitle1 text-weight-bold">Attendance History</div>
+              <div class="q-gutter-sm">
+                <q-btn 
+                  outline 
+                  color="green-600" 
+                  icon="download" 
+                  label="Export CSV" 
+                  no-caps 
+                  size="sm"
+                  @click="exportAttendance"
+                />
+                <q-btn
+                  unelevated
+                  color="blue-600"
+                  label="Mark Today"
+                  no-caps
+                  size="sm"
+                  @click="showAttendanceDialog = true"
+                />
+              </div>
+            </div>
+
+            <q-list separator v-if="attendanceHistory.length > 0">
+              <q-expansion-item
+                v-for="record in attendanceHistory"
+                :key="record.date"
+                class="shadow-sm q-mb-xs"
+                header-class="bg-white"
+              >
+                <template v-slot:header>
+                  <q-item-section avatar>
+                    <q-avatar color="blue-50" text-color="blue-600" icon="calendar_today" size="md" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-weight-bold">{{ formatDate(record.date) }}</q-item-label>
+                    <q-item-label caption>
+                      <span class="text-green text-weight-bold">P: {{ record.present }}</span> | 
+                      <span class="text-red text-weight-bold">A: {{ record.absent }}</span> | 
+                      <span class="text-orange text-weight-bold">L: {{ record.late }}</span>
+                    </q-item-label>
+                  </q-item-section>
+                </template>
+
+                <q-card>
+                  <q-card-section class="q-pa-none">
+                    <q-table
+                      :rows="record.students"
+                      :columns="attendanceDetailColumns"
+                      flat
+                      bordered
+                      dense
+                      hide-pagination
+                      :pagination="{ rowsPerPage: 0 }"
+                    >
+                      <template v-slot:body-cell-status="props">
+                        <q-td :props="props">
+                          <q-badge :color="getStatusColor(props.value)">
+                            {{ props.value.toUpperCase() }}
+                          </q-badge>
+                        </q-td>
+                      </template>
+                    </q-table>
+                  </q-card-section>
+                </q-card>
+              </q-expansion-item>
+            </q-list>
+
+            <div v-else class="text-center q-pa-xl text-grey-5">
+              <q-icon name="event_busy" size="64px" />
+              <div class="text-h6 q-mt-md">No attendance history</div>
+              <div class="text-caption">Attendance records will appear here after marking.</div>
             </div>
           </q-tab-panel>
 
@@ -259,6 +333,7 @@ const router = useRouter()
 const $q = useQuasar()
 
 const classData = ref(null)
+const attendanceHistory = ref([])
 const loading = ref(true)
 const activeTab = ref('students')
 const showAttendanceDialog = ref(false)
@@ -272,12 +347,23 @@ const studentColumns = [
   { name: 'actions', label: '', field: '', align: 'right' }
 ]
 
+const attendanceDetailColumns = [
+  { name: 'student', label: 'Student', field: (row) => row.student?.full_name, align: 'left' },
+  { name: 'status', label: 'Status', field: 'status', align: 'center' }
+]
+
 async function fetchClassDetails() {
   const classId = route.params.id
   loading.value = true
 
   try {
-    classData.value = await teacherService.getClassDetails(classId)
+    const [details, history] = await Promise.all([
+      teacherService.getClassDetails(classId),
+      teacherService.getAttendanceHistory(classId)
+    ])
+    
+    classData.value = details
+    attendanceHistory.value = history
     
     // Initialize attendance data (default to present)
     if (classData.value?.students) {
@@ -302,6 +388,24 @@ function formatTime(time) {
   return `${displayHour}:${minutes} ${period}`
 }
 
+function formatDate(val) {
+  return new Date(val).toLocaleDateString('en-US', { 
+    weekday: 'short', 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  })
+}
+
+function getStatusColor(status) {
+  switch (status) {
+    case 'present': return 'green'
+    case 'absent': return 'red'
+    case 'late': return 'orange'
+    default: return 'grey'
+  }
+}
+
 async function saveAttendance() {
   try {
     const today = new Date().toISOString().split('T')[0]
@@ -316,10 +420,36 @@ async function saveAttendance() {
       message: 'Attendance marked successfully!'
     })
     showAttendanceDialog.value = false
+    fetchClassDetails() // Refresh history
   } catch (e) {
     console.error(e)
     $q.notify({ type: 'negative', message: 'Error saving attendance' })
   }
+}
+
+function exportAttendance() {
+  const flatData = []
+  attendanceHistory.value.forEach(record => {
+    record.students.forEach(s => {
+      flatData.push({
+        Date: record.date,
+        Student: s.student?.full_name,
+        Status: s.status
+      })
+    })
+  })
+  
+  teacherService.exportToCSV(flatData, `Attendance_${classData.value?.subject?.name}_Grade_${classData.value?.grade}`)
+}
+
+function exportStudents() {
+  const flatData = classData.value.students.map(s => ({
+    Name: s.student?.full_name,
+    Phone: s.student?.phone || 'N/A',
+    Enrolled_At: s.enrolled_at ? new Date(s.enrolled_at).toLocaleDateString() : 'N/A'
+  }))
+  
+  teacherService.exportToCSV(flatData, `Students_${classData.value?.subject?.name}_Grade_${classData.value?.grade}`)
 }
 
 onMounted(() => {
