@@ -4,7 +4,7 @@
     <a href="#main-content" class="skip-to-main">Skip to main content</a>
 
     <!-- Top Bar: Clean & Minimal -->
-    <q-header class="bg-white/80 backdrop-blur text-slate-900 border-b border-slate-100" height-hint="72">
+    <q-header class="header-light text-slate-900" height-hint="72" elevated>
       <q-toolbar class="q-py-md q-px-xl">
         <q-btn flat round dense icon="menu" class="lt-md q-mr-sm" @click="toggleLeftDrawer" />
         
@@ -203,12 +203,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useAppStore } from 'src/stores/app'
 
 const router = useRouter()
+const route = useRoute()
 const $q = useQuasar()
 const authStore = useAuthStore()
 const appStore = useAppStore()
@@ -256,6 +257,15 @@ body {
 
 .tracking-tighter {
     letter-spacing: -0.05em;
+}
+
+// Modern Light Mode Header
+.header-light {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
 // SaaS Navigation Item Styles
@@ -315,10 +325,13 @@ body {
     .q-layout {
         background-color: #0f172a !important;
     }
-    .q-header {
-        background-color: rgba(30, 41, 59, 0.8) !important; // slate-800 with opacity
-        border-bottom-color: #334155;
+    .q-header, .header-light {
+        background: rgba(30, 41, 59, 0.9) !important; // slate-800 with opacity
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid #334155;
         color: #f1f5f9 !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
     }
     .q-drawer {
         background-color: #1e293b !important; // slate-800

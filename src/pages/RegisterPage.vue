@@ -44,6 +44,7 @@
             dense
             placeholder="Enter your email address"
             type="email"
+            autocomplete="username"
             class="field-clean"
             :rules="[val => !!val || 'Email is required']"
             hide-bottom-space
@@ -63,6 +64,7 @@
             dense
             placeholder="Create a strong password"
             type="password"
+            autocomplete="new-password"
             class="field-clean"
             :rules="[val => !!val || 'Password is required', val => val.length >= 6 || 'Min 6 characters']"
             hide-bottom-space
