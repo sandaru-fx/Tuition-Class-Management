@@ -29,6 +29,7 @@ const routes = [
       { path: 'exams', component: () => import('pages/ExamsPage.vue') },
       { path: 'assignments', component: () => import('pages/AssignmentsPage.vue') },
       { path: 'communication', component: () => import('pages/CommunicationPage.vue') },
+      { path: 'fees', component: () => import('pages/FeeSettingsPage.vue') },
       { path: 'attendance', component: () => import('pages/AttendancePage.vue') },
       { path: 'payments', component: () => import('pages/PaymentsPage.vue') },
       { path: 'fees', component: () => import('pages/FeeStructurePage.vue') }

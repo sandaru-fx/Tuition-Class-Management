@@ -60,6 +60,31 @@
         </div>
     </div>
 
+    <!-- Teacher Workload Chart -->
+    <div class="row q-mb-xl">
+        <div class="col-12">
+            <q-card class="shadow-1 rounded-borders-lg">
+                <q-card-section>
+                    <div class="text-h6 text-weight-bold font-outfit">Teacher Workload Balance</div>
+                    <div class="text-caption text-grey-6">Number of active classes per teacher</div>
+                </q-card-section>
+                <q-card-section>
+                    <div style="height: 300px">
+                         <Bar 
+                            v-if="workloadData.datasets[0].data.length > 0"
+                            :data="workloadData"
+                            :options="chartOptions"
+                        />
+                         <div v-else class="flex flex-center h-100 text-grey-5">
+                            <q-spinner-dots color="secondary" size="2rem" />
+                            <div class="q-ml-sm">Loading Workload Data...</div>
+                        </div>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </div>
+    </div>
+
     <!-- Teacher Performance Table -->
     <q-card class="shadow-1 rounded-borders-lg">
         <q-card-section class="q-px-lg q-pt-lg">
@@ -130,6 +155,16 @@ const passRateData = reactive({
   }]
 })
 
+const workloadData = reactive({
+  labels: [],
+  datasets: [{
+    label: 'Total Classes',
+    backgroundColor: '#00bcd4',
+    borderRadius: 6,
+    data: []
+  }]
+})
+
 const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -154,13 +189,17 @@ function printPage() {
 
 async function fetchAnalytics() {
     try {
-        const [passRates, teacherData] = await Promise.all([
+        const [passRates, teacherData, workload] = await Promise.all([
             analyticsService.getPassRateByGrade(),
-            analyticsService.getTeacherPerformance()
+            analyticsService.getTeacherPerformance(),
+            analyticsService.getTeacherWorkload()
         ])
 
         passRateData.labels = passRates.map(p => `Grade ${p.grade}`)
         passRateData.datasets[0].data = passRates.map(p => p.passRate)
+        
+        workloadData.labels = workload.map(w => w.teacher)
+        workloadData.datasets[0].data = workload.map(w => w.classes)
         
         teachers.value = teacherData
     } catch (e) {

@@ -60,6 +60,9 @@
         <q-item clickable v-ripple @click="scrollToSection('classes')">
           <q-item-section class="text-weight-bold">Classes</q-item-section>
         </q-item>
+        <q-item clickable v-ripple @click="scrollToSection('fees')">
+          <q-item-section class="text-weight-bold">Fees</q-item-section>
+        </q-item>
         <q-item clickable v-ripple @click="scrollToSection('facilities')">
           <q-item-section class="text-weight-bold">Facilities</q-item-section>
         </q-item>

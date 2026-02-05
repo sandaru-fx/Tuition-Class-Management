@@ -314,6 +314,36 @@ function handleCSVUpload(event) {
     reader.readAsText(file)
 }
 
+function generateRankings() {
+    // 1. Extract valid scores
+    const scores = []
+    Object.keys(marksMap.value).forEach(studentId => {
+        const val = marksMap.value[studentId].marks
+        if (val !== '' && val !== null && !isNaN(val)) {
+            scores.push({ id: studentId, score: Number(val) })
+        }
+    })
+
+    // 2. Sort DESC
+    scores.sort((a, b) => b.score - a.score)
+
+    // 3. Assign Ranks
+    let currentRank = 1
+    scores.forEach((item, index) => {
+         // Handle ties
+         if (index > 0 && item.score === scores[index - 1].score) {
+             // same rank as previous
+         } else {
+             currentRank = index + 1
+         }
+         
+         // Update Remarks with Rank
+         marksMap.value[item.id].remarks = `#${currentRank} (Score: ${item.score})`
+    })
+
+    $q.notify({ type: 'positive', message: 'Ranks calculated & added to Remarks!' })
+}
+
 async function openMarksDialog(exam) {
     selectedExam.value = exam
     showMarksDialog.value = true

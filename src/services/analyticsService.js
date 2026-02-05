@@ -64,6 +64,26 @@ export const analyticsService = {
       }))
   },
 
+  // Get Teacher Workload (Real Data)
+  async getTeacherWorkload() {
+      const { data, error } = await supabase
+        .from('classes')
+        .select('teacher_name') // counting rows
+      
+      if (error) throw error
+
+      const counts = {}
+      data.forEach(c => {
+          const name = c.teacher_name || 'Unknown'
+          counts[name] = (counts[name] || 0) + 1
+      })
+      
+      return Object.keys(counts).map(name => ({
+          teacher: name,
+          classes: counts[name]
+      }))
+  },
+
   // Get Teacher Performance (Mocked for MVP as it requires complex joins on attendance + grades)
   async getTeacherPerformance() {
       // Real implementation would aggregate:

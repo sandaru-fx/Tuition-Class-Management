@@ -347,11 +347,33 @@ const filteredClasses = computed(() => {
 // Filter Subjects based on selected grade in form
 const filteredSubjectOptions = computed(() => {
     if (!form.value.grade) return []
-    // Simple mapping logic: 
-    // If Grade 1-5, show Primary subjects
-    // If Grade 6-9, show Junior subjects
-    // Real implementation would use the 'category' from subjectService
-    return subjects.value.map(s => ({ label: s.name, value: s.id }))
+    
+    const g = Number(form.value.grade)
+    
+    // STRICT VALIDATION LOGIC (12-Point Plan)
+    return subjects.value.filter(s => {
+        const name = s.name.toLowerCase()
+        
+        // 1. Primary (1-5): Only Core Subjects
+        if (g <= 5) {
+            const allowed = ['mathematics', 'sinhala', 'tamil', 'english', 'environment', 'religion']
+            return allowed.some(a => name.includes(a)) && !name.includes('combined') && !name.includes('pure')
+        }
+        
+        // 2. Junior (6-9): No A/L subjects
+        if (g <= 9) {
+            const forbidden = ['combined maths', 'biology', 'physics', 'chemistry', 'economics', 'accounting', 'logic', 'political']
+            return !forbidden.some(f => name.includes(f))
+        }
+
+        // 3. O/L (10-11): Standard + Buckets (Allow most, just block specific A/L terms if needed)
+        if (g <= 11) {
+             return !name.includes('combined maths') // Explicit A/L subject
+        }
+
+        // 4. A/L (12-13): everything allowed (Filters usually happen by Stream, but here we allow all for flexibility)
+        return true
+    }).map(s => ({ label: s.name, value: s.id }))
 })
 
 // Filter Teachers based on qualified grades for the selected class grade
