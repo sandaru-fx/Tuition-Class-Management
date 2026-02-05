@@ -331,3 +331,99 @@ body {
 }
 
 .inline-block { display: inline-block; }
+
+// ===================================
+// ACCESSIBILITY ENHANCEMENTS ♿
+// ===================================
+
+// Enhanced Focus Indicators (WCAG 2.1 AA)
+:focus-visible {
+  outline: 3px solid #2563EB !important; // Blue 600
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+// Button Focus
+.q-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3) !important;
+}
+
+// Input Focus
+.q-input:focus-within {
+  .q-field__control {
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3) !important;
+  }
+}
+
+// Skip to Main Content Link
+// Hidden by default, visible on focus
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: #2563EB; // Blue 600
+  color: white;
+  padding: 12px 24px;
+  z-index: 9999;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 8px 8px;
+  transition: top 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  
+  &:focus {
+    top: 0;
+    outline: 3px solid #F59E0B !important; // Amber 500 for high contrast
+  }
+}
+
+// Screen Reader Only Utility
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// ===================================
+// RESPONSIVE ENHANCEMENTS 📱
+// ===================================
+
+// Fluid Typography (Scale based on viewport)
+.text-h1 { font-size: clamp(2rem, 5vw, 4rem) !important; }
+.text-h2 { font-size: clamp(1.75rem, 4vw, 3rem) !important; }
+.text-h3 { font-size: clamp(1.5rem, 3.5vw, 2.5rem) !important; }
+.text-h4 { font-size: clamp(1.25rem, 3vw, 2rem) !important; }
+.text-h5 { font-size: clamp(1.125rem, 2.5vw, 1.5rem) !important; }
+.text-h6 { font-size: clamp(1rem, 2vw, 1.25rem) !important; }
+
+// Mobile Touch Targets (Minimum 44px)
+@media (max-width: 599px) {
+  .q-btn {
+    min-height: 44px !important;
+    padding: 8px 16px !important;
+  }
+  
+  .q-btn--round {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  
+  .q-item {
+    min-height: 48px !important;
+  }
+}
+
+// Mobile Spacing Adjustments
+@media (max-width: 599px) {
+  .q-pa-lg { padding: 16px !important; }
+  .q-px-lg { padding-left: 16px !important; padding-right: 16px !important; }
+  .q-py-lg { padding-top: 16px !important; padding-bottom: 16px !important; }
+}

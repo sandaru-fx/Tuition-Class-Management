@@ -1,5 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-grey-1">
+    <!-- Accessibility: Skip Link -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
     
     <!-- Top Bar -->
     <q-header class="bg-white text-dark" style="border-bottom: 1px solid rgba(0,0,0,0.05)">
@@ -144,8 +146,38 @@
 
     <!-- Page Content -->
     <q-page-container>
-      <router-view />
+      <main id="main-content" tabindex="-1">
+        <router-view />
+      </main>
     </q-page-container>
+
+    <!-- Mobile Bottom Navigation -->
+    <q-footer bordered class="lt-md bg-white text-primary">
+        <q-tabs
+            :model-value="route.path"
+            active-color="primary"
+            indicator-color="transparent"
+            class="text-grey-7"
+            no-caps
+            align="justify"
+        >
+            <q-route-tab to="/dashboard" icon="dashboard" label="" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Home</div>
+            </q-route-tab>
+            <q-route-tab to="/dashboard/students" icon="school" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Students</div>
+            </q-route-tab>
+            <q-route-tab to="/dashboard/classes" icon="calendar_month" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Classes</div>
+            </q-route-tab>
+            <q-route-tab to="/dashboard/payments" icon="payments" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Payments</div>
+            </q-route-tab>
+            <q-route-tab icon="menu" class="q-px-none" @click="toggleLeftDrawer">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Menu</div>
+            </q-route-tab>
+        </q-tabs>
+    </q-footer>
 
   </q-layout>
 </template>

@@ -1,5 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-grey-1">
+    <!-- Accessibility: Skip Link -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
     
     <!-- Top Bar -->
     <q-header class="bg-white text-dark" style="border-bottom: 1px solid rgba(0,0,0,0.05)">
@@ -131,8 +133,38 @@
 
     <!-- Page Content -->
     <q-page-container>
-      <router-view />
+      <main id="main-content" tabindex="-1">
+        <router-view />
+      </main>
     </q-page-container>
+
+    <!-- Mobile Bottom Navigation -->
+    <q-footer bordered class="lt-md bg-white text-primary">
+        <q-tabs
+            :model-value="route.path"
+            active-color="primary"
+            indicator-color="transparent"
+            class="text-grey-7"
+            no-caps
+            align="justify"
+        >
+            <q-route-tab to="/teacher" icon="dashboard" label="" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Home</div>
+            </q-route-tab>
+            <q-route-tab to="/teacher/classes" icon="class" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Classes</div>
+            </q-route-tab>
+             <q-route-tab to="/teacher/exams" icon="event" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Exams</div>
+            </q-route-tab>
+            <q-route-tab to="/teacher/assignments" icon="assignment" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Tasks</div>
+            </q-route-tab>
+            <q-route-tab to="/teacher/profile" icon="person" class="q-px-none">
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Profile</div>
+            </q-route-tab>
+        </q-tabs>
+    </q-footer>
 
   </q-layout>
 </template>

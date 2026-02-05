@@ -50,7 +50,8 @@
         <q-btn flat round color="grey-7" icon="refresh" @click="fetchStudents" :loading="loading" />
       </q-card-section>
 
-      <q-markup-table flat class="text-left">
+      <!-- Desktop Table View -->
+      <q-markup-table flat class="text-left gt-sm">
         <thead>
           <tr class="bg-grey-1">
             <th class="text-left text-grey-7 text-weight-bold q-pl-lg">Student Name</th>
@@ -107,12 +108,79 @@
               </q-chip>
             </td>
             <td class="text-right q-pr-lg">
-              <q-btn flat round dense color="grey-7" icon="edit" class="q-mr-xs" @click="openEditDialog(student)" />
-              <q-btn flat round dense color="red-4" icon="delete" @click="confirmDelete(student)" />
+              <q-btn flat round dense color="grey-7" icon="edit" class="q-mr-xs" @click="openEditDialog(student)" :aria-label="`Edit ${student.first_name}`" />
+              <q-btn flat round dense color="red-4" icon="delete" @click="confirmDelete(student)" :aria-label="`Delete ${student.first_name}`" />
             </td>
           </tr>
         </tbody>
       </q-markup-table>
+
+      <!-- Mobile Card View -->
+      <div class="lt-md q-pa-sm">
+        <div v-if="loading" class="text-center q-pa-lg">
+            <q-spinner color="primary" size="3em" />
+            <div class="text-grey q-mt-sm">Loading students...</div>
+        </div>
+        <div v-else-if="filteredStudents.length === 0" class="text-center q-pa-lg text-grey">
+            No students found.
+        </div>
+        <div v-else class="q-gutter-y-md">
+            <q-card v-for="student in filteredStudents" :key="student.id" flat bordered class="rounded-borders-lg">
+                <q-card-section>
+                    <div class="row items-center justify-between q-mb-sm">
+                        <div class="row items-center">
+                            <q-avatar size="42px" color="blue-1" text-color="blue-8" class="text-weight-bold">
+                                {{ (student.first_name || student.full_name || '?').charAt(0) }}
+                            </q-avatar>
+                            <div class="q-ml-md">
+                                <div class="text-weight-bold text-subtitle1">{{ student.first_name || student.full_name }} {{ student.last_name || '' }}</div>
+                                <q-badge color="purple-1" text-color="purple-9" class="text-weight-bold">
+                                    Grade {{ student.grade || 'N/A' }}
+                                </q-badge>
+                            </div>
+                        </div>
+                        <q-btn flat round icon="more_vert" color="grey-7">
+                            <q-menu>
+                                <q-list style="min-width: 100px">
+                                    <q-item clickable v-close-popup @click="openEditDialog(student)">
+                                        <q-item-section avatar><q-icon name="edit" /></q-item-section>
+                                        <q-item-section>Edit</q-item-section>
+                                    </q-item>
+                                    <q-item clickable v-close-popup @click="confirmDelete(student)" class="text-red">
+                                        <q-item-section avatar><q-icon name="delete" /></q-item-section>
+                                        <q-item-section>Delete</q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-menu>
+                        </q-btn>
+                    </div>
+                    
+                    <q-separator class="q-my-sm" />
+                    
+                    <div class="row q-col-gutter-sm text-caption">
+                        <div class="col-6">
+                            <div class="text-grey-6">School</div>
+                            <div class="text-dark">{{ student.school || '-' }}</div>
+                        </div>
+                         <div class="col-6">
+                            <div class="text-grey-6">Status</div>
+                            <div :class="student.is_active ? 'text-green-7' : 'text-red-7'" class="text-weight-bold">
+                                {{ student.is_active ? 'Active' : 'Inactive' }}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                             <div class="text-grey-6">WhatsApp</div>
+                             <div class="text-dark">{{ student.whatsapp_number }}</div>
+                        </div>
+                         <div class="col-6" v-if="student.parent_phone">
+                             <div class="text-grey-6">Parent</div>
+                             <div class="text-dark">{{ student.parent_phone }}</div>
+                        </div>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </div>
+      </div>
       
        <q-card-section class="row items-center justify-between bg-grey-1 text-grey-7 text-caption" v-if="!loading">
         <span>Showing {{ filteredStudents.length }} students</span>

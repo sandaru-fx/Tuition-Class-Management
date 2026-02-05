@@ -38,7 +38,8 @@
             </q-input>
           </q-card-section>
 
-          <q-markup-table flat class="text-left">
+          <!-- Desktop Table View -->
+          <q-markup-table flat class="text-left gt-sm">
             <thead>
               <tr class="bg-grey-1">
                 <th class="text-left text-grey-7 text-weight-bold q-pl-lg">Subject</th>
@@ -85,12 +86,69 @@
                   </q-chip>
                 </td>
                 <td class="text-right q-pr-lg">
-                  <q-btn flat round dense color="grey-7" icon="edit" class="q-mr-xs" @click="openEditDialog(cls)" />
-                  <q-btn flat round dense color="red-4" icon="delete" @click="confirmDelete(cls)" />
+                  <q-btn flat round dense color="grey-7" icon="edit" class="q-mr-xs" @click="openEditDialog(cls)" :aria-label="`Edit ${cls.subject?.name}`" />
+                  <q-btn flat round dense color="red-4" icon="delete" @click="confirmDelete(cls)" :aria-label="`Delete ${cls.subject?.name}`" />
                 </td>
               </tr>
             </tbody>
           </q-markup-table>
+
+          <!-- Mobile Card View -->
+          <div class="lt-md q-pa-sm">
+            <div v-if="loading" class="text-center q-pa-lg">
+                <q-spinner color="primary" size="3em" />
+            </div>
+            <div v-else-if="filteredClasses.length === 0" class="text-center q-pa-lg text-grey">
+                No classes found.
+            </div>
+            <div v-else class="q-gutter-y-md">
+                <q-card v-for="cls in filteredClasses" :key="cls.id" flat bordered class="rounded-borders-lg">
+                    <q-card-section>
+                        <div class="row items-center justify-between q-mb-sm">
+                            <div class="row items-center">
+                                 <q-badge color="blue-1" text-color="blue-9" class="q-mr-sm text-weight-bold">
+                                    Grade {{ cls.grade }}
+                                 </q-badge>
+                                 <div class="text-weight-bold text-subtitle2">{{ cls.subject?.name || 'Unknown' }}</div>
+                            </div>
+                             <q-btn flat round icon="more_vert" color="grey-7">
+                                <q-menu>
+                                    <q-list style="min-width: 100px">
+                                        <q-item clickable v-close-popup @click="openEditDialog(cls)">
+                                            <q-item-section avatar><q-icon name="edit" /></q-item-section>
+                                            <q-item-section>Edit</q-item-section>
+                                        </q-item>
+                                        <q-item clickable v-close-popup @click="confirmDelete(cls)" class="text-red">
+                                            <q-item-section avatar><q-icon name="delete" /></q-item-section>
+                                            <q-item-section>Delete</q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                </q-menu>
+                            </q-btn>
+                        </div>
+                        <q-separator class="q-my-sm" />
+                        <div class="row q-col-gutter-sm text-caption">
+                            <div class="col-12">
+                                <div class="text-grey-6">Teacher</div>
+                                <div class="text-dark">{{ cls.teacher_name }}</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-grey-6">Day</div>
+                                <div class="text-dark text-weight-medium">{{ cls.day_of_week }}</div>
+                            </div>
+                             <div class="col-6">
+                                <div class="text-grey-6">Time</div>
+                                <div class="text-dark">{{ formatTime(cls.start_time) }} - {{ formatTime(cls.end_time) }}</div>
+                            </div>
+                             <div class="col-6">
+                                <div class="text-grey-6">Hall</div>
+                                <div class="text-dark">{{ cls.hall }}</div>
+                            </div>
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </div>
+          </div>
         </q-card>
       </q-tab-panel>
 

@@ -1,5 +1,7 @@
 <template>
   <q-layout view="lHh LpR fFf" class="bg-gray-soft">
+    <!-- Accessibility: Skip Link -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
 
     <!-- Top Bar: Clean & Minimal -->
     <q-header class="bg-white/80 backdrop-blur text-slate-900 border-b border-slate-100" height-hint="72">
@@ -163,8 +165,38 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <main id="main-content" tabindex="-1">
+        <router-view />
+      </main>
     </q-page-container>
+
+    <!-- Mobile Bottom Navigation -->
+    <q-footer bordered class="lt-md bg-white text-primary">
+        <q-tabs
+            :model-value="route.path"
+            active-color="primary"
+            indicator-color="transparent"
+            class="text-grey-7"
+            no-caps
+            align="justify"
+        >
+            <q-route-tab to="/student" icon="grid_view" label="One" class="q-px-none" no-caps>
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Home</div>
+            </q-route-tab>
+            <q-route-tab to="/student/courses" icon="auto_stories" class="q-px-none" no-caps>
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Courses</div>
+            </q-route-tab>
+            <q-route-tab to="/student/assignments" icon="assignment_turned_in" class="q-px-none" no-caps>
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Tasks</div>
+            </q-route-tab>
+            <q-route-tab to="/student/schedule" icon="calendar_today" class="q-px-none" no-caps>
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Date</div>
+            </q-route-tab>
+            <q-route-tab to="/student/settings" icon="person" class="q-px-none" no-caps>
+                <div class="text-caption" style="font-size: 10px; line-height: 1;">Profile</div>
+            </q-route-tab>
+        </q-tabs>
+    </q-footer>
 
   </q-layout>
 </template>
