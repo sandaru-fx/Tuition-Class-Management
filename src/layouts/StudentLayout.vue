@@ -216,6 +216,7 @@ const appStore = useAppStore()
 
 const leftDrawerOpen = ref(true)
 const search = ref('')
+const loading = ref(false)
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -226,9 +227,39 @@ function toggleDark() {
 }
 
 async function logout() {
-  await authStore.signOut()
-  router.push('/login')
-  $q.notify({ type: 'positive', message: 'Logged out successfully' })
+  try {
+    console.log('Starting logout...')
+    loading.value = true
+    
+    await authStore.signOut()
+    console.log('Sign out successful')
+    
+    // Clear any local storage
+    localStorage.clear()
+    sessionStorage.clear()
+    
+    $q.notify({ 
+      type: 'positive', 
+      message: 'Logged out successfully',
+      position: 'top'
+    })
+    
+    // Force navigation to login
+    await router.push('/login')
+    console.log('Redirected to login')
+    
+    // Force page reload to clear all state
+    window.location.reload()
+  } catch (error) {
+    console.error('Logout error:', error)
+    $q.notify({ 
+      type: 'negative', 
+      message: 'Logout failed. Please try again.',
+      position: 'top'
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
