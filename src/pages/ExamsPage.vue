@@ -123,6 +123,8 @@
             Marks Entry: {{ selectedExam?.name }} 
             <span class="text-grey-6 text-caption q-ml-sm">({{ selectedExam?.classes?.subject }} - {{ selectedExam?.classes?.grade }})</span>
           </q-toolbar-title>
+          <q-btn flat icon="cloud_upload" label="Import CSV" color="green-7" no-caps @click="triggerFileUpload" class="q-mr-sm" />
+          <input type="file" ref="csvInput" accept=".csv" style="display: none" @change="handleCSVUpload" />
           <q-btn flat label="Save All" color="primary" @click="saveMarks" :loading="savingMarks" />
         </q-toolbar>
 
@@ -130,7 +132,10 @@
             <!-- Instructions -->
              <div class="row q-mb-md justify-center">
                  <div class="col-12 col-md-8 bg-blue-1 text-blue-9 q-pa-sm rounded-borders text-caption text-center">
-                     <q-icon name="info" size="xs" /> Enter marks for each student. Leave empty if absent.
+                     <div class="row items-center justify-center">
+                        <q-icon name="info" size="xs" class="q-mr-xs" /> 
+                        <span>Enter marks manually OR upload a CSV. <strong>CSV Format:</strong> <code>phone, marks, remarks</code></span>
+                     </div>
                  </div>
              </div>
              
