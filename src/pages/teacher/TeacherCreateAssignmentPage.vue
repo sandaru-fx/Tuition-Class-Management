@@ -169,7 +169,6 @@
               </q-card>
             </q-list>
           </div>
-        </div>
       </q-step>
 
       <!-- Step 4: Review -->

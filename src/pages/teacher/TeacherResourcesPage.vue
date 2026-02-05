@@ -384,7 +384,7 @@ function viewResource(resource) {
   window.open(resource.file_url, '_blank')
 }
 
-function editResource(resource) {
+function editResource() {
   $q.notify({ type: 'info', message: 'Edit feature coming soon' })
 }
 

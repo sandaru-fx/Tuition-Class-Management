@@ -276,8 +276,8 @@ async function fetchData() {
       label: `${c.subject?.name} - Grade ${c.grade}`,
       id: c.id
     }))
-  } catch (e) {
-    console.error(e)
+  } catch {
+    console.error('Failed to load exam data')
     $q.notify({ type: 'negative', message: 'Failed to load exam data' })
   } finally {
     loading.value = false
@@ -369,8 +369,8 @@ async function saveExam() {
 
     showExamDialog.value = false
     fetchData()
-  } catch (e) {
-    console.error(e)
+  } catch {
+    console.error('Failed to save exam')
     $q.notify({ type: 'negative', message: 'Failed to save exam' })
   } finally {
     saving.value = false
@@ -389,8 +389,8 @@ async function deleteExam() {
     $q.notify({ type: 'positive', message: 'Exam deleted successfully' })
     showDeleteDialog.value = false
     fetchData()
-  } catch (e) {
-    console.error(e)
+  } catch {
+    console.error('Failed to delete exam')
     $q.notify({ type: 'negative', message: 'Failed to delete exam' })
   } finally {
     saving.value = false

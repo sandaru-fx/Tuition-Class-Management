@@ -230,7 +230,7 @@ async function deleteAnnouncement() {
         $q.notify({ type: 'positive', message: 'Deleted' })
         showDeleteDialog.value = false
         fetchData()
-    } catch (e) {
+    } catch {
         $q.notify({ type: 'negative', message: 'Error deleting' })
     }
 }

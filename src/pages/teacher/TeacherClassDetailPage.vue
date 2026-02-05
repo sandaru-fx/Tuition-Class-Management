@@ -115,8 +115,6 @@
               flat
               class="rounded-none"
             >
-// ... unchanged lines ...
-          </q-tab-panel>
               <template v-slot:body-cell-student="props">
                 <q-td :props="props">
                   <div class="text-weight-bold">{{ props.row.student?.full_name || 'N/A' }}</div>
@@ -324,12 +322,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { teacherService } from 'src/services/teacherService'
 import { useQuasar } from 'quasar'
 
 const route = useRoute()
-const router = useRouter()
 const $q = useQuasar()
 
 const classData = ref(null)

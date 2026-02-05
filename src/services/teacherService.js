@@ -239,12 +239,14 @@ export const teacherService = {
   },
 
   async markAttendance(classId, date, attendanceData) {
+    const { data: { user } } = await supabase.auth.getUser()
+    
     const upsertData = Object.entries(attendanceData).map(([studentId, status]) => ({
       class_id: classId,
       student_id: studentId,
       date: date, // 'YYYY-MM-DD'
       status: status,
-      marked_by: (await supabase.auth.getUser()).data.user?.id
+      marked_by: user?.id
     }))
 
     if (upsertData.length === 0) return
