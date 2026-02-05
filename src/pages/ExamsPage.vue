@@ -124,6 +124,7 @@
             <span class="text-grey-6 text-caption q-ml-sm">({{ selectedExam?.classes?.subject }} - {{ selectedExam?.classes?.grade }})</span>
           </q-toolbar-title>
           <q-btn flat icon="cloud_upload" label="Import CSV" color="green-7" no-caps @click="triggerFileUpload" class="q-mr-sm" />
+          <q-btn flat icon="leaderboard" label="Auto-Rank" color="secondary" no-caps @click="generateRankings" class="q-mr-sm" />
           <input type="file" ref="csvInput" accept=".csv" style="display: none" @change="handleCSVUpload" />
           <q-btn flat label="Save All" color="primary" @click="saveMarks" :loading="savingMarks" />
         </q-toolbar>
