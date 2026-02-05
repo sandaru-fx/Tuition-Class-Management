@@ -175,7 +175,18 @@
                 </div>
             </div>
 
-            <q-input outlined v-model="form.teacher_name" label="Teacher Name *" dense :rules="[val => !!val || 'Required']" />
+            <q-select 
+                outlined 
+                v-model="form.teacher_name" 
+                :options="teachers"
+                option-label="full_name"
+                option-value="full_name"
+                emit-value
+                map-options
+                label="Teacher *" 
+                dense 
+                :rules="[val => !!val || 'Required']" 
+            />
 
              <div class="row q-col-gutter-sm">
                 <div class="col-4">
@@ -231,6 +242,8 @@ import { supabase } from 'boot/supabase'
 import { useAppStore } from 'src/stores/app'
 import { storeToRefs } from 'pinia'
 import { subjectService } from 'src/services/subjectService'
+import { feeService } from 'src/services/feeService'
+import { teacherService } from 'src/services/teacherService'
 
 const $q = useQuasar()
 const appStore = useAppStore()
@@ -243,6 +256,7 @@ const loading = ref(false)
 const submitting = ref(false)
 const deleting = ref(false)
 const subjects = ref([])
+const teachers = ref([])
 
 const showDialog = ref(false)
 const showDeleteDialog = ref(false)
@@ -349,6 +363,17 @@ function suggestTimeSlot(grade) {
         form.value.start_time = '08:00'
         form.value.end_time = '10:00'
     }
+
+    // Auto-Suggest Fee
+    suggestFee(grade)
+}
+
+async function suggestFee(grade) {
+    if (form.value.monthly_fee) return // Don't overwrite if already set
+    try {
+        const amount = await feeService.getFeeForGrade(grade)
+        if (amount > 0) form.value.monthly_fee = amount
+    } catch (e) { console.error(e) }
 }
 
 async function fetchClasses() {
@@ -365,6 +390,9 @@ async function fetchClasses() {
     // Fetch Subjects for dropdown
     const { data: subData } = await subjectService.getAll()
     subjects.value = subData || []
+
+    const tData = await teacherService.getAll()
+    teachers.value = tData || []
 
   } catch (error) {
     console.error(error)

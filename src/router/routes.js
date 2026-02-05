@@ -21,13 +21,15 @@ const routes = [
       { path: 'users', component: () => import('pages/UsersPage.vue') },
       { path: 'roles', component: () => import('pages/RolesPage.vue') },
       { path: 'students', component: () => import('pages/StudentsPage.vue') },
+      { path: 'teachers', component: () => import('pages/TeachersPage.vue') },
       { path: 'classes', component: () => import('pages/ClassesPage.vue') },
       { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },
       { path: 'exams', component: () => import('pages/ExamsPage.vue') },
       { path: 'assignments', component: () => import('pages/AssignmentsPage.vue') },
       { path: 'communication', component: () => import('pages/CommunicationPage.vue') },
       { path: 'attendance', component: () => import('pages/AttendancePage.vue') },
-      { path: 'payments', component: () => import('pages/PaymentsPage.vue') }
+      { path: 'payments', component: () => import('pages/PaymentsPage.vue') },
+      { path: 'fees', component: () => import('pages/FeeStructurePage.vue') }
     ]
   },
   {
