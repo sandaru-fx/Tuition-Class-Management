@@ -65,6 +65,15 @@ const routes = [
     ]
   },
 
+  {
+    path: '/parent',
+    component: () => import('layouts/ParentLayout.vue'),
+    children: [
+        { path: 'login', component: () => import('pages/parent/ParentLoginPage.vue') },
+        { path: 'dashboard', component: () => import('pages/parent/ParentDashboardPage.vue') }
+    ]
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {
