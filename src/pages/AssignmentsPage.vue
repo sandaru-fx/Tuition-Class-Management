@@ -217,7 +217,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useQuasar, date } from 'quasar'
 import { assignmentService } from 'src/services/assignmentService'
 import { classService } from 'src/services/classService'
@@ -335,12 +335,12 @@ async function deleteAssignment(task) {
         await assignmentService.delete(task.id)
         fetchAssignments()
         $q.notify({ type: 'positive', message: 'Deleted' })
-    } catch (e) {
+    } catch {
         $q.notify({ type: 'negative', message: 'Error deleting' })
     }
 }
 
-function viewSubmissions(task) {
+function viewSubmissions() {
     $q.notify({ message: 'Submission view coming soon!', color: 'info' })
 }
 

@@ -227,7 +227,7 @@ function confirmDelete(subject) {
             await subjectService.delete(subject.id)
             $q.notify({ type: 'positive', message: 'Subject deleted' })
             fetchSubjects()
-        } catch (e) {
+        } catch {
              $q.notify({ type: 'negative', message: 'Failed to delete' })
         }
     })
