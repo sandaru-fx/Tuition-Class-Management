@@ -1,0 +1,79 @@
+# Media Creation Guide 📸🎥
+
+Since I cannot take screenshots or record videos directly on your computer, please follow this checklist to create the visuals for your documentation.
+
+---
+
+## 📸 Screenshots Checklist
+
+Please take these screenshots and save them in the `docs/screenshots/` folder.
+
+### 1. Admin Portal (`docs/screenshots/admin/`)
+- [ ] **dashboard.png**: The main admin dashboard showing the 4 stat cards.
+- [ ] **students_page.png**: The list of students table.
+- [ ] **create_student.png**: The "Add New Student" form popup.
+- [ ] **classes_page.png**: The list of classes.
+- [ ] **weekly_schedule.png**: The weekly timetable view (colorful events).
+
+### 2. Teacher Portal (`docs/screenshots/teacher/`)
+- [ ] **create_assignment.png**: The form for creating a new assignment.
+- [ ] **create_quiz.png**: The interface for adding quiz questions.
+- [ ] **grading_interface.png**: The screen where you grade a student's submission.
+- [ ] **attendance_marking.png**: The screen for marking attendance.
+
+### 3. Student Portal (`docs/screenshots/student/`)
+- [ ] **student_dashboard.png**: The main student home screen (ELEVATE branding).
+- [ ] **assignments_primary.png**: The "My Homework" page for a Primary student (colorful cards).
+- [ ] **assignments_senior.png**: The Assignments list for a Senior student.
+- [ ] **quiz_interface.png**: The screen while taking a quiz.
+
+---
+
+## 🎥 Video Tutorials Script
+
+Use a screen recorder (like OBS or Loom) to record these short clips.
+
+### Clip 1: Adding a Student (Admin)
+**Script:**
+1. Start at Admin Dashboard.
+2. Click "Students" in sidebar.
+3. Click "Add New Student".
+4. Fill in: Name="Test Student", Email="test@test.com", Grade="10".
+5. Click "Create".
+6. Show the student appearing in the list.
+**Save as:** `adding_student.mp4`
+
+### Clip 2: Creating a Class (Admin)
+**Script:**
+1. Start at "Classes" page.
+2. Click "Add New Class".
+3. Select Grade: "10".
+4. Select Subject: "Mathematics".
+5. Select Teacher & Set Time (e.g., Monday 8:00 AM).
+6. Click "Create".
+7. Show the class in the Schedule view.
+**Save as:** `creating_class.mp4`
+
+### Clip 3: Teacher Grading (Teacher)
+**Script:**
+1. Log in as Teacher.
+2. Go to "Assignments".
+3. Click on a submission.
+4. Enter a grade (e.g., 85).
+5. Type a comment: "Good work!".
+6. Click "Save".
+**Save as:** `teacher_grading.mp4`
+
+### Clip 4: Student Taking Quiz (Student)
+**Script:**
+1. Log in as Student.
+2. Go to assignments.
+3. Click "Take Quiz".
+4. Answer 2-3 questions.
+5. Click "Submit".
+6. Show the score appearing instantly.
+**Save as:** `student_quiz.mp4`
+
+---
+
+**Tip:** Keep videos under 1 minute each for easier sharing! 🚀
