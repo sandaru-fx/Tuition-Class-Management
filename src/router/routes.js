@@ -59,6 +59,8 @@ const routes = [
     children: [
         { path: '', component: () => import('pages/teacher/TeacherDashboardPage.vue') },
         { path: 'classes', component: () => import('pages/teacher/TeacherClassesPage.vue') },
+        { path: 'classes/:id', component: () => import('pages/teacher/TeacherClassDetailPage.vue') },
+        { path: 'attendance', component: () => import('pages/teacher/TeacherAttendancePage.vue') },
         { path: 'assignments', component: () => import('pages/teacher/TeacherAssignmentsPage.vue') },
         { path: 'students', component: () => import('pages/teacher/TeacherStudentsPage.vue') },
         { path: 'reports', component: () => import('pages/teacher/TeacherReportsPage.vue') },
