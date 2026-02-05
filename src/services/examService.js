@@ -10,12 +10,35 @@ export const examService = {
     return data
   },
 
-  async create(examData) {
+  // Get exams for a specific teacher's classes
+  async getByTeacher(teacherId) {
     const { data, error } = await supabase
       .from('exams')
-      .insert([examData])
+      .select(`
+        *,
+        classes!inner (
+            id,
+            grade,
+            subject: subjects(name),
+            teacher_id
+        )
+      `)
+      .eq('classes.teacher_id', teacherId)
+      .order('exam_date', { ascending: true })
+
+    if (error) throw error
+    return data
+  },
+
+  // Update an existing exam
+  async update(id, updates) {
+    const { data, error } = await supabase
+      .from('exams')
+      .update(updates)
+      .eq('id', id)
       .select()
       .single()
+
     if (error) throw error
     return data
   },
@@ -30,7 +53,6 @@ export const examService = {
   },
 
   async getStudentMarks(examId) {
-    // 1. Fetch students for the class (assuming all for now, but should use enrollments)
     const { data: students, error: sError } = await supabase
       .from('students')
       .select('*')
@@ -38,7 +60,6 @@ export const examService = {
       .order('first_name')
     if (sError) throw sError
 
-    // 2. Fetch results
     const { data: results, error: rError } = await supabase
       .from('exam_results')
       .select('*')

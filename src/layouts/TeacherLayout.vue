@@ -71,12 +71,19 @@
                <q-item-section class="text-weight-medium">My Classes</q-item-section>
              </q-item>
 
-             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/assignments'" to="/teacher/assignments" class="rounded-borders q-mb-xs">
-               <q-item-section avatar>
-                 <q-icon name="assignment" />
-               </q-item-section>
-               <q-item-section class="text-weight-medium">Assignments</q-item-section>
-             </q-item>
+              <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/assignments'" to="/teacher/assignments" class="rounded-borders q-mb-xs">
+                <q-item-section avatar>
+                  <q-icon name="assignment" />
+                </q-item-section>
+                <q-item-section class="text-weight-medium">Assignments</q-item-section>
+              </q-item>
+
+              <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/exams'" to="/teacher/exams" class="rounded-borders q-mb-xs">
+                <q-item-section avatar>
+                  <q-icon name="event" />
+                </q-item-section>
+                <q-item-section class="text-weight-medium">Exam Calendar</q-item-section>
+              </q-item>
 
              <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/students'" to="/teacher/students" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
