@@ -246,9 +246,12 @@ function resetAttendance() {
 async function saveAttendance() {
   saving.value = true
   try {
-    // TODO: Save to Supabase attendance table
-    // For now, just simulate success
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const today = new Date().toISOString().split('T')[0]
+    await teacherService.markAttendance(
+        selectedClass.value.id, 
+        today, 
+        attendanceData.value
+    )
     
     $q.notify({
       type: 'positive',

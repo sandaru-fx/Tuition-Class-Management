@@ -303,13 +303,23 @@ function formatTime(time) {
 }
 
 async function saveAttendance() {
-  // TODO: Save attendance to database
-  $q.notify({
-    type: 'positive',
-    message: 'Attendance marked successfully!',
-    caption: 'Note: Actual saving to database will be implemented in next phase'
-  })
-  showAttendanceDialog.value = false
+  try {
+    const today = new Date().toISOString().split('T')[0]
+    await teacherService.markAttendance(
+        route.params.id, 
+        today, 
+        attendanceData.value
+    )
+    
+    $q.notify({
+      type: 'positive',
+      message: 'Attendance marked successfully!'
+    })
+    showAttendanceDialog.value = false
+  } catch (e) {
+    console.error(e)
+    $q.notify({ type: 'negative', message: 'Error saving attendance' })
+  }
 }
 
 onMounted(() => {

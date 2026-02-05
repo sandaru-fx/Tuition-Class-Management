@@ -236,5 +236,22 @@ export const teacherService = {
       .eq('id', id)
     if (error) throw error
     return true
+  async markAttendance(classId, date, attendanceData) {
+    const upsertData = Object.entries(attendanceData).map(([studentId, status]) => ({
+      class_id: classId,
+      student_id: studentId,
+      date: date, // 'YYYY-MM-DD'
+      status: status,
+      marked_by: (await supabase.auth.getUser()).data.user?.id
+    }))
+
+    if (upsertData.length === 0) return
+
+    const { error } = await supabase
+      .from('attendance_logs')
+      .upsert(upsertData, { onConflict: 'class_id, student_id, date' })
+
+    if (error) throw error
+    return true
   }
 }
