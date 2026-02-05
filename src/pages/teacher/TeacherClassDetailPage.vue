@@ -122,7 +122,7 @@
                   >
                     <q-menu>
                       <q-list style="min-width: 150px">
-                        <q-item clickable v-close-popup>
+                        <q-item clickable v-close-popup :to="`/teacher/students/${props.row.student_id}`">
                           <q-item-section>View Profile</q-item-section>
                         </q-item>
                         <q-item clickable v-close-popup>
