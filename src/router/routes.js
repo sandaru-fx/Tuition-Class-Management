@@ -21,6 +21,7 @@ const routes = [
       { path: 'users', component: () => import('pages/UsersPage.vue') },
       { path: 'roles', component: () => import('pages/RolesPage.vue') },
       { path: 'students', component: () => import('pages/StudentsPage.vue') },
+      { path: 'promotions', component: () => import('pages/PromotionPage.vue') },
       { path: 'teachers', component: () => import('pages/TeachersPage.vue') },
       { path: 'classes', component: () => import('pages/ClassesPage.vue') },
       { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },

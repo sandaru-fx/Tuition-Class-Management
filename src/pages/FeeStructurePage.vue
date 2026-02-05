@@ -164,7 +164,7 @@ async function saveTemplate() {
         $q.notify({ type: 'positive', message: 'Saved successfully' })
         showDialog.value = false
         fetchTemplates()
-    } catch (e) {
+    } catch {
         $q.notify({ type: 'negative', message: 'Error saving template' })
     } finally {
         submitting.value = false

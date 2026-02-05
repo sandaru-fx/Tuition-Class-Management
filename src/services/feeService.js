@@ -48,7 +48,7 @@ export const feeService = {
     if (g >= 10 && g <= 11) category = 'ol'
     if (g >= 12 && g <= 13) category = 'al'
 
-    const { data, error } = await supabase
+    const { data } = await supabase
         .from('fee_templates')
         .select('amount')
         .eq('grade_category', category)
