@@ -530,7 +530,7 @@ function parseCSV(file) {
         reader.onload = (e) => {
             const text = e.target.result
             const lines = text.split('\n')
-            const headers = lines[0].split(',').map(h => h.trim().toLowerCase())
+            lines[0].split(',').map(h => h.trim().toLowerCase()) // Parse headers (unused currently)
             const result = []
             
             for (let i = 1; i < lines.length; i++) {
@@ -562,7 +562,8 @@ async function handleFile(file) {
     try {
         const data = await parseCSV(file)
         previewData.value = data
-    } catch (e) {
+    } catch (error) {
+        console.error(error)
         $q.notify({ type: 'negative', message: 'Error parsing CSV' })
     }
 }
