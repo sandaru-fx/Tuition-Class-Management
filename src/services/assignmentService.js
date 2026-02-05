@@ -30,12 +30,51 @@ export const assignmentService = {
     return data
   },
 
+  // Get single assignment by ID
+  async getById(id) {
+    const { data, error } = await supabase
+      .from('assignments')
+      .select(`
+        *,
+        classes (
+            id,
+            grade,
+            subject: subjects(name)
+        )
+      `)
+      .eq('id', id)
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
   // Get assignments for a specific class
   async getByClass(classId) {
     const { data, error } = await supabase
       .from('assignments')
       .select('*')
       .eq('class_id', classId)
+      .order('due_date', { ascending: true })
+
+    if (error) throw error
+    return data
+  },
+
+  // Get assignments created by a specific teacher (via classes)
+  async getByTeacher(teacherId) {
+    const { data, error } = await supabase
+      .from('assignments')
+      .select(`
+        *,
+        classes!inner (
+           id,
+           grade,
+           subject: subjects(name),
+           teacher_id
+        )
+      `)
+      .eq('classes.teacher_id', teacherId)
       .order('due_date', { ascending: true })
 
     if (error) throw error
