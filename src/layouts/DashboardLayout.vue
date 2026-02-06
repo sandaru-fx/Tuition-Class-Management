@@ -14,10 +14,8 @@
 
         <q-space />
 
-        <!-- Notification Bell -->
-        <q-btn flat round dense icon="notifications_none" class="q-mr-sm text-grey-7">
-          <q-badge color="red" floating rounded dot />
-        </q-btn>
+        <!-- Notification Bell Component -->
+        <NotificationBell />
         
         <!-- Profile Dropdown -->
         <q-btn flat no-caps no-wrap>
@@ -192,6 +190,7 @@ import { storeToRefs } from 'pinia'
 import GradeFilter from 'src/components/Sidebar/GradeFilter.vue'
 import SidebarSection from 'src/components/Sidebar/SidebarSection.vue'
 import QuickStats from 'src/components/Sidebar/QuickStats.vue'
+import NotificationBell from 'src/components/NotificationBell.vue'
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
@@ -254,7 +253,8 @@ const groupedMenuItems = [
     icon: 'admin_panel_settings',
     items: [
       { label: 'Users', icon: 'group', path: '/dashboard/users' },
-      { label: 'Roles', icon: 'admin_panel_settings', path: '/dashboard/roles' }
+      { label: 'Roles', icon: 'admin_panel_settings', path: '/dashboard/roles' },
+      { label: 'Notifications', icon: 'campaign', path: '/dashboard/notifications' }
     ]
   }
 ]

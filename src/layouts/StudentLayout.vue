@@ -36,10 +36,8 @@
             <!-- Theme Toggle -->
             <q-btn flat round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" size="12px" class="text-slate-500 hover:bg-slate-50" @click="toggleDark" />
 
-            <!-- Notifications -->
-            <q-btn flat round icon="notifications_none" size="12px" class="text-slate-500 hover:bg-slate-50">
-                <q-badge color="red" floating size="sm" rounded border-white />
-            </q-btn>
+            <!-- Notifications Component -->
+            <NotificationBell />
 
             <q-separator vertical inset class="q-mx-sm bg-slate-100" />
 
@@ -207,6 +205,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useAppStore } from 'src/stores/app'
+import NotificationBell from 'src/components/NotificationBell.vue'
 
 const router = useRouter()
 const route = useRoute()

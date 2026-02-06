@@ -17,10 +17,8 @@
         <!-- Theme Toggle -->
         <q-btn flat round dense :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" class="q-mr-sm text-grey-7" @click="toggleDark" />
 
-        <!-- Notification Bell -->
-        <q-btn flat round dense icon="notifications_none" class="q-mr-sm text-grey-7">
-          <q-badge color="red" floating rounded dot />
-        </q-btn>
+        <!-- Notification Bell Component -->
+        <NotificationBell />
         
         <!-- Profile Dropdown -->
         <q-btn flat no-caps no-wrap>
@@ -103,6 +101,13 @@
                </q-item-section>
                <q-item-section class="text-weight-medium">Announcements</q-item-section>
              </q-item>
+
+             <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/notifications'" to="/teacher/notifications" class="rounded-borders q-mb-xs">
+               <q-item-section avatar>
+                 <q-icon name="notifications" />
+               </q-item-section>
+               <q-item-section class="text-weight-medium">Notifications</q-item-section>
+             </q-item>
              
              <q-item clickable v-ripple active-class="bg-blue-50 text-blue-600" :active="route.path === '/teacher/reports'" to="/teacher/reports" class="rounded-borders q-mb-xs">
                <q-item-section avatar>
@@ -178,6 +183,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useAppStore } from 'src/stores/app'
+import NotificationBell from 'src/components/NotificationBell.vue'
 
 const authStore = useAuthStore()
 const appStore = useAppStore()

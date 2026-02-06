@@ -32,7 +32,16 @@ const routes = [
       { path: 'fees', component: () => import('pages/FeeSettingsPage.vue') },
       { path: 'attendance', component: () => import('pages/AttendancePage.vue') },
       { path: 'payments', component: () => import('pages/PaymentsPage.vue') },
-      { path: 'fees', component: () => import('pages/FeeStructurePage.vue') }
+      { path: 'fees', component: () => import('pages/FeeStructurePage.vue') },
+      { path: 'notifications', name: 'AdminNotifications', component: () => import('pages/NotificationsPage.vue') }
+    ]
+  },
+  {
+    path: '/notifications',
+    component: () => import('layouts/MainLayout.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      { path: '', name: 'NotificationsViewer', component: () => import('pages/NotificationsViewerPage.vue') }
     ]
   },
   {
@@ -71,7 +80,8 @@ const routes = [
         { path: 'resources', component: () => import('pages/teacher/TeacherResourcesPage.vue') },
         { path: 'exams', component: () => import('pages/teacher/TeacherExamCalendarPage.vue') },
         { path: 'reports', component: () => import('pages/teacher/TeacherReportsPage.vue') },
-        { path: 'profile', component: () => import('pages/teacher/TeacherProfilePage.vue') }
+        { path: 'profile', component: () => import('pages/teacher/TeacherProfilePage.vue') },
+        { path: 'notifications', name: 'TeacherNotifications', component: () => import('pages/NotificationsPage.vue') }
     ]
   },
 
