@@ -172,8 +172,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { useAuthStore } from '../stores/auth'
-import notificationService from '../services/notificationService'
+import { useAuthStore } from 'src/stores/auth'
+import notificationService from 'src/services/notificationService'
 
 export default {
   name: 'NotificationsViewerPage',

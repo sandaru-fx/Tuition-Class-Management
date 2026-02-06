@@ -127,8 +127,8 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../../stores/auth'
-import notificationService from '../../services/notificationService'
+import { useAuthStore } from 'src/stores/auth'
+import notificationService from 'src/services/notificationService'
 
 export default {
   name: 'NotificationBell',
